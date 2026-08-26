@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+/*
+ * Theme tokens ported from design/kitchen-screens.html.
+ *
+ * Light is the base on :root; dark is redefined twice — once for the system
+ * preference (guarded so an explicit light choice still wins) and once for an
+ * explicit [data-app-theme="dark"]. Flipping that one attribute on <html>
+ * re-themes every component, which is why no component hardcodes a colour.
+ */
+:root {
+  --ground: #f0e7d3;
+  --surface: #f9f4e7;
+  --surface-2: #e6d9bc;
+  --ink: #2b2318;
+  --ink-soft: #6b5f47;
+  --ink-faint: #7d7057;
+  --line: #d9c79c;
+  --line-soft: #e9dfc3;
+  --accent: #4a6b47;
+  --accent-ink: #ffffff;
+  --accent-soft: #dee7d2;
+  --amber: #8f5f22;
+  --amber-soft: #eedbb0;
+  --elevation-sm: 0 1px 2px rgba(43, 35, 24, 0.06);
+  --elevation-lg: 0 1px 2px rgba(43, 35, 24, 0.05), 0 10px 30px rgba(43, 35, 24, 0.09);
+
+  --font-display-stack: "Iowan Old Style", "Palatino Linotype", Palatino,
+    "Book Antiqua", Georgia, serif;
+  --font-sans-stack: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    sans-serif;
+  --font-mono-stack: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas,
+    monospace;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-app-theme="light"]) {
+    --ground: #17150f;
+    --surface: #201d17;
+    --surface-2: #282419;
+    --ink: #f1ede3;
+    --ink-soft: #a79e8d;
+    --ink-faint: #7c7364;
+    --line: #332e24;
+    --line-soft: #2a261d;
+    --accent: #93b389;
+    --accent-ink: #17150f;
+    --accent-soft: #26301f;
+    --amber: #d6a45f;
+    --amber-soft: #2f2617;
+    --elevation-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --elevation-lg: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.35);
+
+    color-scheme: dark;
+  }
+}
+
+:root[data-app-theme="dark"] {
+  --ground: #17150f;
+  --surface: #201d17;
+  --surface-2: #282419;
+  --ink: #f1ede3;
+  --ink-soft: #a79e8d;
+  --ink-faint: #7c7364;
+  --line: #332e24;
+  --line-soft: #2a261d;
+  --accent: #93b389;
+  --accent-ink: #17150f;
+  --accent-soft: #26301f;
+  --amber: #d6a45f;
+  --amber-soft: #2f2617;
+  --elevation-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --elevation-lg: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.35);
+
+  color-scheme: dark;
+}
+
+/*
+ * Tailwind v4 is CSS-first — there is no tailwind.config.ts. `@theme inline`
+ * maps the tokens above onto utility names (bg-ground, text-ink, shadow-frame)
+ * and `inline` keeps them as var() references, so the runtime theme swap above
+ * actually reaches the utilities.
+ */
+@theme inline {
+  --color-ground: var(--ground);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-amber: var(--amber);
+  --color-amber-soft: var(--amber-soft);
+
+  --shadow-raised: var(--elevation-sm);
+  --shadow-frame: var(--elevation-lg);
+
+  --font-display: var(--font-display-stack);
+  --font-sans: var(--font-sans-stack);
+  --font-mono: var(--font-mono-stack);
+
+  --animate-check-pop: check-pop 160ms ease;
+}
+
+@keyframes check-pop {
+  from {
+    transform: scale(0.75);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/*
+ * Every element cross-fades background/border/text color rather than
+ * snapping — the payoff of theming being one attribute flip (see the
+ * component architecture doc): this rule, not per-component work, is what
+ * makes toggling dark mode fade instead of flash. Interactive elements that
+ * also animate transform (buttons, checkboxes) opt into Tailwind's `transition`
+ * utility instead of relying on this one — a class selector's transition-property
+ * replaces this universal rule's for that element rather than merging with it.
+ */
+* {
+  transition-property: background-color, border-color, color;
+  transition-duration: 180ms;
+  transition-timing-function: ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-sans-stack);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Quantities align down a column only if the figures are tabular. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}

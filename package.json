@@ -1,0 +1,49 @@
+{
+  "name": "cookhouse-webplatform",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "@clerk/nextjs": "^6.12.0",
+    "@headlessui/react": "^2.2.10",
+    "@hookform/resolvers": "^5.9.1",
+    "@tanstack/react-query": "^5.59.0",
+    "@trpc/client": "^11.0.0-rc.502",
+    "@trpc/react-query": "^11.0.0-rc.502",
+    "clsx": "^2.1.1",
+    "next": "16.3.2",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-hook-form": "^7.85.0",
+    "recharts": "^3.10.1",
+    "tailwind-merge": "^3.6.0",
+    "zod": "^3.23.8",
+    "zustand": "^4.5.5"
+  },
+  "devDependencies": {
+    "@cookhouse/api-contract": "file:../cookhouse-api/contract",
+    "@storybook/addon-a11y": "^10.5.10",
+    "@storybook/addon-docs": "^10.5.10",
+    "@storybook/nextjs-vite": "^10.5.10",
+    "@tailwindcss/postcss": "^4",
+    "@trpc/server": "^11.0.0-rc.502",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.2",
+    "eslint-plugin-storybook": "^10.5.10",
+    "storybook": "^10.5.10",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "vite": "latest"
+  },
+  "packageManager": "pnpm@9.3.0"
+}
