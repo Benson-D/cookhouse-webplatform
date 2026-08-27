@@ -1,13 +1,18 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { CHButton, CHLink, ErrorState, LoadingState, TagBadge } from "@/components/common";
+import { useAddFromRecipes } from "@/modules/grocery-lists/hooks/useAddFromRecipes";
 import { useRecipe } from "./hooks/useRecipe";
 import { useFavoriteRecipe } from "./hooks/useFavoriteRecipe";
 import { IngredientList } from "./components/IngredientList";
 import { MethodSteps } from "./components/MethodSteps";
 import { RecipeGallery } from "./components/RecipeGallery";
 import { formatTotalTime } from "./utils";
+
+/** How long the post-add "Added" confirmation shows before reverting — this app has no toast system. */
+const ADDED_CONFIRMATION_MS = 2500;
 
 function SectionLabel({ children }: { children: string }) {
   return (
@@ -22,6 +27,19 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
   const { recipe, steps, images, isLoading, isError, error, refetch, canEdit } =
     useRecipe(recipeId);
   const { setFavorite, pendingRecipeId } = useFavoriteRecipe();
+  const { addFromRecipes, isAdding, error: addError } = useAddFromRecipes();
+
+  const [justAdded, setJustAdded] = useState(false);
+  const confirmationTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => {
+    if (confirmationTimer.current) clearTimeout(confirmationTimer.current);
+  }, []);
+
+  async function handleAddToList() {
+    await addFromRecipes([recipeId]);
+    setJustAdded(true);
+    confirmationTimer.current = setTimeout(() => setJustAdded(false), ADDED_CONFIRMATION_MS);
+  }
 
   if (isLoading) {
     return <LoadingState label="Loading recipe…" rows={5} />;
@@ -103,8 +121,12 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
         <MethodSteps steps={steps} />
 
         <div className="mt-5 flex flex-wrap items-center gap-[9px]">
-          <CHButton variant="primary" disabled title="Not built yet">
-            Add to grocery list
+          <CHButton
+            variant="primary"
+            onClick={() => void handleAddToList()}
+            disabled={isAdding || justAdded}
+          >
+            {isAdding ? "Adding…" : justAdded ? "Added ✓" : "Add to grocery list"}
           </CHButton>
 
           <CHButton
@@ -129,6 +151,12 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
             ← All recipes
           </Link>
         </div>
+
+        {addError && (
+          <p className="mt-2 text-[13px] text-[#B4442F]" role="alert">
+            {addError.message}
+          </p>
+        )}
       </div>
     </div>
   );
