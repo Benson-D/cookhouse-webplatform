@@ -33,8 +33,15 @@ export function RecipeCard({
   return (
     <div className="group relative flex flex-col gap-[9px]">
       <div className="relative aspect-[4/3]">
+        {/*
+          The lift (`translate-y`) animates directly; the shadow lives on a
+          separate `::after` fading in via opacity instead of animating
+          `box-shadow` itself — box-shadow forces a repaint every frame,
+          where opacity and transform are compositor-only, so this is what
+          keeps the hover smooth rather than janky.
+        */}
         <div
-          className="h-full w-full rounded-lg border border-line-soft transition duration-260 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1.5 group-hover:shadow-frame"
+          className="relative h-full w-full rounded-lg border border-line-soft transition-transform duration-260 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1.5 after:absolute after:inset-0 after:rounded-lg after:opacity-0 after:shadow-frame after:transition-opacity after:duration-260 after:[transition-timing-function:cubic-bezier(0.22,1,0.36,1)] after:content-[''] group-hover:after:opacity-100"
           style={{ background: placeholderGradient(recipe.id) }}
         />
 
