@@ -1,10 +1,14 @@
 "use client";
 
+import { keepPreviousData } from "@tanstack/react-query";
 import { trpc } from "@/lib/trpc";
 import type { DateRange } from "../types";
 
 export function useSpendingSummary(range: DateRange) {
-  const query = trpc.spending.summary.useQuery({ from: range.from, to: range.to });
+  const query = trpc.spending.summary.useQuery(
+    { from: range.from, to: range.to },
+    { placeholderData: keepPreviousData }
+  );
 
   return {
     summary: query.data,

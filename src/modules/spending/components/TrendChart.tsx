@@ -1,7 +1,7 @@
 "use client";
 
-import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, XAxis, YAxis } from "recharts";
-import type { BarRectangleItem, LabelProps } from "recharts";
+import { Bar, BarChart, CartesianGrid, Rectangle, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import type { BarRectangleItem, BarShapeProps, LabelProps } from "recharts";
 import { formatCurrency, formatMonthShort } from "../utils";
 import type { TrendMonth } from "../types";
 
@@ -35,7 +35,7 @@ function MonthTick({
 }
 
 /** The dollar figure that floats above only the selected bar. */
-function ValueLabel({ x, y, width, value, selectedIndex, index }: LabelProps & { selectedIndex: number }) {
+function SelectedBarLabel({ x, y, width, value, selectedIndex, index }: LabelProps & { selectedIndex: number }) {
   if (index !== selectedIndex || typeof x !== "number" || typeof y !== "number" || typeof width !== "number") {
     return null;
   }
@@ -43,6 +43,18 @@ function ValueLabel({ x, y, width, value, selectedIndex, index }: LabelProps & {
     <text x={x + width / 2} y={y - 8} textAnchor="middle" fontSize={12} fontWeight={600} fill="var(--ink)">
       {formatCurrency(Number(value))}
     </text>
+  );
+}
+
+/** Solid for the selected bar, faded for the rest — `Cell` is deprecated in Recharts, so this is the `shape` prop's replacement for per-bar styling. */
+function BarShape({ selectedIndex, ...rectangleProps }: BarShapeProps & { selectedIndex: number }) {
+  return (
+    <Rectangle
+      {...rectangleProps}
+      cursor="pointer"
+      fill="var(--accent)"
+      opacity={rectangleProps.index === selectedIndex ? 1 : 0.55}
+    />
   );
 }
 
@@ -63,39 +75,39 @@ export function TrendChart({
   const selectedIndex = months.findIndex((month) => month.month === selectedMonth);
 
   return (
-    <ResponsiveContainer width="100%" height={200}>
-      <BarChart data={months} margin={{ top: 24, right: 8, left: 0, bottom: 4 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="var(--line-soft)" vertical={false} />
-        <XAxis
-          dataKey="month"
-          axisLine={false}
-          tickLine={false}
-          tick={<MonthTick selectedMonth={selectedMonth} />}
-        />
-        <YAxis
-          axisLine={false}
-          tickLine={false}
-          width={44}
-          tickFormatter={(value: number) => `$${value}`}
-          tick={{ fontSize: 9.5, fill: "var(--ink-faint)" }}
-        />
-        <Bar
-          dataKey="total"
-          barSize={22}
-          radius={[4, 4, 0, 0]}
-          onClick={(data: BarRectangleItem) => onSelectMonth((data.payload as TrendMonth).month)}
-          label={<ValueLabel selectedIndex={selectedIndex} />}
-        >
-          {months.map((month, index) => (
-            <Cell
-              key={month.month}
-              cursor="pointer"
-              fill="var(--accent)"
-              opacity={index === selectedIndex ? 1 : 0.55}
-            />
-          ))}
-        </Bar>
-      </BarChart>
-    </ResponsiveContainer>
+    // A rounded panel behind the whole chart — bars, gridlines and axis
+    // labels all sit inside it, not on the bare page background.
+    <div className="rounded-[10px] bg-surface-2 pt-3 pr-2">
+      <ResponsiveContainer width="100%" height={200}>
+        <BarChart data={months} margin={{ top: 24, right: 8, left: 0, bottom: 4 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--line-soft)" vertical={false} />
+          <XAxis
+            dataKey="month"
+            axisLine={false}
+            tickLine={false}
+            tick={<MonthTick selectedMonth={selectedMonth} />}
+          />
+          <YAxis
+            axisLine={false}
+            tickLine={false}
+            width={44}
+            tickFormatter={(value: number) => `$${value}`}
+            tick={{ fontSize: 9.5, fill: "var(--ink-faint)" }}
+          />
+          <Bar
+            dataKey="total"
+            barSize={22}
+            radius={[4, 4, 0, 0]}
+            // A $0 month renders a zero-height bar with no clickable area at
+            // all — this floors it to a thin sliver so every month stays a
+            // real tap target, not just the ones with purchases.
+            minPointSize={3}
+            onClick={(data: BarRectangleItem) => onSelectMonth((data.payload as TrendMonth).month)}
+            label={<SelectedBarLabel selectedIndex={selectedIndex} />}
+            shape={(props: BarShapeProps) => <BarShape {...props} selectedIndex={selectedIndex} />}
+          />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   );
 }

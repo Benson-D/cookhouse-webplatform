@@ -1,6 +1,6 @@
 "use client";
 
-import { CHLink, EmptyState, ErrorState, LoadingState } from "@/components/common";
+import { CHLink, EmptyState, ErrorState } from "@/components/common";
 import { useSpendingRange } from "./hooks/useSpendingRange";
 import { useSpendingSummary } from "./hooks/useSpendingSummary";
 import { useSpendingTrend } from "./hooks/useSpendingTrend";
@@ -9,6 +9,7 @@ import { useSpendingByStore } from "./hooks/useSpendingByStore";
 import { SpendingHeader } from "./components/SpendingHeader";
 import { DateRangeChips } from "./components/DateRangeChips";
 import { SpendingHero } from "./components/SpendingHero";
+import { SpendingLoadingState } from "./components/SpendingLoadingState";
 import { TrendSection } from "./components/TrendSection";
 import { SpendBarList } from "./components/SpendBarList";
 import { formatRangeLabel } from "./utils";
@@ -27,7 +28,7 @@ export function SpendingScreen() {
   const byStore = useSpendingByStore(range);
 
   if (isLoading) {
-    return <LoadingState label="Loading spending…" rows={6} />;
+    return <SpendingLoadingState />;
   }
 
   if (isError || !summary) {
@@ -86,7 +87,7 @@ export function SpendingScreen() {
         />
       </div>
 
-      <div className="mb-[9px] mt-1 px-[22px] text-[10.5px] font-bold uppercase tracking-[0.13em] text-ink-faint">
+      <div className="mb-1 mt-1 px-[22px] text-[10.5px] font-bold uppercase tracking-[0.13em] text-ink-faint">
         By category
       </div>
       <SpendBarList
@@ -95,13 +96,14 @@ export function SpendingScreen() {
         moreLabel={(n) => `${n} more categor${n === 1 ? "y" : "ies"}`}
       />
 
-      <div className="mb-[9px] mt-1 px-[22px] text-[10.5px] font-bold uppercase tracking-[0.13em] text-ink-faint">
+      <div className="mb-1 mt-1 px-[22px] text-[10.5px] font-bold uppercase tracking-[0.13em] text-ink-faint">
         By store
       </div>
       <SpendBarList
         rows={byStore.rows}
         previewCount={4}
         moreLabel={(n) => `${n} more store${n === 1 ? "" : "s"}`}
+        paddingBottom={22}
       />
     </div>
   );

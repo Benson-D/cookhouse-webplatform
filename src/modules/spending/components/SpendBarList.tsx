@@ -16,10 +16,13 @@ export function SpendBarList({
   rows,
   previewCount,
   moreLabel,
+  /** 14px matches every use but the last section on the page, which wants a bit more room before the page ends. */
+  paddingBottom = 14,
 }: {
   rows: SpendBarRow[];
   previewCount: number;
   moreLabel: (remaining: number) => string;
+  paddingBottom?: number;
 }) {
   const [expanded, setExpanded] = useState(false);
 
@@ -32,7 +35,7 @@ export function SpendBarList({
   const remaining = rows.length - visible.length;
 
   return (
-    <div className="px-[22px] pb-[14px]">
+    <div className="px-[22px]" style={{ paddingBottom }}>
       <div className="flex flex-col">
         {visible.map((row) => (
           <div

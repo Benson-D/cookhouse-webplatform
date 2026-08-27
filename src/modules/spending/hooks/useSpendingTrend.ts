@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { keepPreviousData } from "@tanstack/react-query";
 import { trpc } from "@/lib/trpc";
 import { monthKeyToRange } from "../utils";
 import type { DateRange } from "../types";
@@ -15,7 +16,10 @@ import type { DateRange } from "../types";
  * computed at render rather than seeded via an effect.
  */
 export function useSpendingTrend(range: DateRange) {
-  const trendQuery = trpc.spending.trend.useQuery({ from: range.from, to: range.to });
+  const trendQuery = trpc.spending.trend.useQuery(
+    { from: range.from, to: range.to },
+    { placeholderData: keepPreviousData }
+  );
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
 
   const months = trendQuery.data?.months ?? [];
@@ -24,7 +28,7 @@ export function useSpendingTrend(range: DateRange) {
 
   const topItemsQuery = trpc.spending.topItems.useQuery(
     { from: monthRange?.from ?? range.from, to: monthRange?.to ?? range.to },
-    { enabled: monthRange !== null }
+    { enabled: monthRange !== null, placeholderData: keepPreviousData }
   );
 
   function selectMonth(monthKey: string) {

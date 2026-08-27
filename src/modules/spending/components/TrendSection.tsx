@@ -29,15 +29,15 @@ export function TrendSection({
   const [tableExpanded, setTableExpanded] = useState(false);
 
   return (
-    <div>
-      <div className="mb-[9px] mt-[18px] text-[10.5px] font-bold uppercase tracking-[0.13em] text-ink-faint">
+    <div className="pb-5">
+      <div className="mb-1 mt-[22px] text-[10.5px] font-bold uppercase tracking-[0.13em] text-ink-faint">
         Spend by month
       </div>
       <div className="mb-2 font-mono text-[11px] text-ink-faint">Tap a month for its top items</div>
 
       <TrendChart months={months} selectedMonth={selectedMonth} onSelectMonth={onSelectMonth} />
 
-      <div className="mt-1.5 mb-4">
+      <div className="mt-1.5 mb-5">
         {tableExpanded ? (
           <>
             <ExpandRow
