@@ -42,6 +42,17 @@ So the app needs an organization gate before any household feature: surface
 `<OrganizationSwitcher />` (or a create-household flow) and treat that
 `FORBIDDEN` as "pick a household", never as a generic error toast.
 
+**`ClerkProvider`'s `appearance.variables` (`app/layout.tsx`) points Clerk at
+this app's own CSS custom properties** (`colorPrimary: "var(--accent)"`,
+`colorText: "var(--ink)"`, etc.), not resolved hex values. Left unset, Clerk
+renders `<OrganizationSwitcher />`/`<UserButton />` with its own defaults — a
+purple brand color nowhere in this design, and text colored for a light
+background that goes illegible once the app switches to dark. Pointing at
+the `var()` references directly means this needed setting once: the browser
+repaints Clerk's UI the same way it repaints everything else when the
+underlying custom property changes on theme toggle, no reactive plumbing
+needed.
+
 ## State
 
 **Don't reach for a state library by default.** tRPC runs on TanStack Query,
@@ -179,6 +190,17 @@ else actually needs it, not because it looks reusable.
 `--surface`, `--ink`, `--accent`, etc. — for both light and dark. That token
 system is ported into `app/globals.css`, and the tokens are mapped onto
 Tailwind utility names there too.
+
+**`--ground` is not this app's background — `--surface` is, including on
+`<body>`.** In the mockup, `--ground` belongs to `.page`, the design
+artifact's own background behind each mocked-up browser frame; `.frame`
+(the actual app content, one browser window) sits on `--surface`. This app
+has no outer page — it *is* the frame — so `body` uses `bg-surface`, matching
+`.frame`, not `bg-ground`. Got this backwards once already: `body` shipped on
+`--ground`, which is a shade darker/more tan than intended and made
+`AppNav` (which sets no background of its own, inheriting `body`'s) read as
+faintly the wrong color everywhere, not just on one screen. `--ground` stays
+defined in the token set for fidelity but has no real usage in this app.
 
 **This is Tailwind v4, so there is no `tailwind.config.ts`** — configuration is
 CSS-first. The mapping lives in an `@theme inline` block in `globals.css`
