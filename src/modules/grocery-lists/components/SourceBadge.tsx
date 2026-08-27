@@ -6,8 +6,29 @@ const VARIANT_CLASSES: Record<string, string> = {
   staple: "bg-amber-soft text-amber",
 };
 
-/** Recipe/staple get their own colour, manual stays neutral. */
-export function SourceBadge({ source }: { source: string }) {
+/**
+ * Recipe/staple get their own colour, manual stays neutral.
+ *
+ * `alreadyStocked` overrides the label entirely — set when a recipe line was
+ * pre-checked because the household was recently checked off for it as a
+ * staple (see `getFreshlyStockedStaples` on the backend). Uses the same amber
+ * tone as the staple badge: both mean "you don't need to act on this."
+ */
+export function SourceBadge({
+  source,
+  alreadyStocked = false,
+}: {
+  source: string;
+  alreadyStocked?: boolean;
+}) {
+  if (alreadyStocked) {
+    return (
+      <span className="whitespace-nowrap rounded bg-amber-soft font-mono text-[9.5px] uppercase tracking-[0.05em] text-amber px-1.5 py-0.5">
+        Stocked
+      </span>
+    );
+  }
+
   return (
     <span
       className={cn(

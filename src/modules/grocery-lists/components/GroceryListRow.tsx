@@ -60,7 +60,7 @@ export function GroceryListRow({
       </span>
 
       <div className="relative z-10 flex items-center gap-2">
-        <SourceBadge source={item.source} />
+        <SourceBadge source={item.source} alreadyStocked={item.checked && !item.checkedBy} />
         <button
           type="button"
           onClick={onRemove}
