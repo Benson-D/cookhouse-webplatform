@@ -2,11 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CHTextInput, ErrorState } from "@/components/common";
+import { CHTextInput, ErrorState, SubpageHeader } from "@/components/common";
 import { useIngredientPicker } from "@/hooks/useIngredientPicker";
 import { useReceiptScan } from "./hooks/useReceiptScan";
 import { useConfirmPurchases } from "./hooks/useConfirmPurchases";
-import { ReceiptScanHeader } from "./components/ReceiptScanHeader";
 import { ReceiptPickerPrompt } from "./components/ReceiptPickerPrompt";
 import { ReceiptLineRow } from "./components/ReceiptLineRow";
 import { ReceiptMatchedList } from "./components/ReceiptMatchedList";
@@ -87,7 +86,7 @@ export function ReceiptScanScreen() {
   if (!receiptId) {
     return (
       <div className="flex flex-col">
-        <ReceiptScanHeader title="Scan receipt" />
+        <SubpageHeader backHref="/grocery-list" title="Scan receipt" />
         <ReceiptPickerPrompt onPick={handlePick} isDisabled={isScanning} />
         {scanError && (
           <div className="px-[22px] pb-6">
@@ -106,9 +105,15 @@ export function ReceiptScanScreen() {
 
   return (
     <div className="flex flex-col">
-      <ReceiptScanHeader
+      <SubpageHeader
+        backHref="/grocery-list"
         title="Review receipt"
-        subtitle={`${items.length} item${items.length === 1 ? "" : "s"} scanned · ${needsLook.length} need${needsLook.length === 1 ? "s" : ""} a look`}
+        right={
+          <span className="tabular font-mono text-xs text-ink-faint">
+            {items.length} item{items.length === 1 ? "" : "s"} scanned · {needsLook.length} need
+            {needsLook.length === 1 ? "s" : ""} a look
+          </span>
+        }
       />
 
       <div className="grid gap-[26px] px-[22px] pb-6 pt-5 md:grid-cols-[1.05fr_1fr]">

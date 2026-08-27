@@ -54,6 +54,8 @@ type CHSelectProps<T> = {
   options: T[];
   getOptionId: (item: T) => string;
   getOptionLabel: (item: T) => string;
+  /** Greys an option out and blocks picking it — still shown, not filtered out (e.g. an ingredient that's already a staple). */
+  getOptionDisabled?: (item: T) => boolean;
   onSearch?: (query: string) => void;
   onSelect: (item: T) => void;
   onCreate?: (name: string) => Promise<T>;
@@ -74,6 +76,7 @@ export function CHSelect<T>({
   options,
   getOptionId,
   getOptionLabel,
+  getOptionDisabled,
   onSearch,
   onSelect,
   onCreate,
@@ -137,17 +140,28 @@ export function CHSelect<T>({
 
       {(options.length > 0 || canCreate) && (
         <ComboboxOptions anchor={false} className={panelClasses}>
-          {options.map((option) => (
-            <ComboboxOption
-              key={getOptionId(option)}
-              value={{ kind: "existing", item: option } satisfies ChosenItem<T>}
-              className={({ focus }) =>
-                cn(optionBaseClasses, focus ? optionFocusClasses : "text-ink")
-              }
-            >
-              {getOptionLabel(option)}
-            </ComboboxOption>
-          ))}
+          {options.map((option) => {
+            const disabled = getOptionDisabled?.(option) ?? false;
+            return (
+              <ComboboxOption
+                key={getOptionId(option)}
+                value={{ kind: "existing", item: option } satisfies ChosenItem<T>}
+                disabled={disabled}
+                className={({ focus }) =>
+                  cn(
+                    optionBaseClasses,
+                    disabled
+                      ? "cursor-not-allowed text-ink-faint"
+                      : focus
+                        ? optionFocusClasses
+                        : "text-ink"
+                  )
+                }
+              >
+                {getOptionLabel(option)}
+              </ComboboxOption>
+            );
+          })}
 
           {canCreate && (
             <ComboboxOption

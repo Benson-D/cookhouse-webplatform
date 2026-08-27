@@ -2,14 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CardGridLoadingState, ErrorState, EmptyState } from "@/components/common";
+import { CardGridLoadingState, ErrorState, EmptyState, SubpageHeader } from "@/components/common";
 import { useRecipeList } from "@/modules/recipes/hooks/useRecipeList";
 import { useTags } from "@/modules/recipes/hooks/useTags";
 import { TagFilterBar } from "@/modules/recipes/components/TagFilterBar";
 import { RecipePickCard } from "@/modules/recipes/components/RecipePickCard";
 import { Pager } from "@/modules/recipes/components/Pager";
 import { useAddFromRecipes } from "./hooks/useAddFromRecipes";
-import { PickerBar } from "./components/PickerBar";
 import { PickerFooter } from "./components/PickerFooter";
 
 /**
@@ -50,7 +49,13 @@ export function AddFromRecipesScreen() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <PickerBar selectedCount={selected.size} />
+      <SubpageHeader
+        backHref="/grocery-list"
+        title="Add from recipes"
+        right={
+          <span className="tabular font-mono text-xs text-ink-faint">{selected.size} selected</span>
+        }
+      />
 
       <div className="flex flex-wrap items-center gap-3 px-[22px] pb-3.5 pt-[18px]">
         <div className="flex min-w-[180px] flex-1 items-center gap-[9px] rounded-lg border border-line bg-surface-2 px-3 py-2">

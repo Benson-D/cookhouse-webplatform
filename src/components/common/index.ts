@@ -16,6 +16,7 @@ export { EmptyState } from "./EmptyState";
 export { ErrorState } from "./ErrorState";
 export { ExpandRow } from "./ExpandRow";
 export { CardGridLoadingState, LoadingState } from "./LoadingState";
+export { SubpageHeader } from "./SubpageHeader";
 export { TagBadge } from "./TagBadge";
 export { TagChip } from "./TagChip";
 export { ThemeToggle } from "./ThemeToggle";
