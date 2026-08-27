@@ -1,3 +1,5 @@
+import { differenceInDays, differenceInHours, differenceInMinutes } from "date-fns";
+
 /**
  * Pure, React-free helpers for the grocery-lists module — promote to `lib/`
  * only once a second module needs the same thing.
@@ -20,18 +22,16 @@ export function formatStartedDay(date: Date): string {
   return `started ${date.toLocaleDateString(undefined, { weekday: "short" })}`;
 }
 
-const MINUTE_MS = 60 * 1000;
-const HOUR_MS = 60 * MINUTE_MS;
-const DAY_MS = 24 * HOUR_MS;
-
 /** "4 min ago" / "3 hr ago" / "2 days ago" — coarse on purpose, this is a footer, not a log. */
 export function formatRelativeTime(date: Date, now: Date = new Date()): string {
-  const elapsed = now.getTime() - date.getTime();
+  const minutes = differenceInMinutes(now, date);
+  if (minutes < 1) return "just now";
+  if (minutes < 60) return `${minutes} min ago`;
 
-  if (elapsed < MINUTE_MS) return "just now";
-  if (elapsed < HOUR_MS) return `${Math.floor(elapsed / MINUTE_MS)} min ago`;
-  if (elapsed < DAY_MS) return `${Math.floor(elapsed / HOUR_MS)} hr ago`;
-  return `${Math.floor(elapsed / DAY_MS)} days ago`;
+  const hours = differenceInHours(now, date);
+  if (hours < 24) return `${hours} hr ago`;
+
+  return `${differenceInDays(now, date)} days ago`;
 }
 
 const SOURCE_LABELS: Record<string, string> = {
