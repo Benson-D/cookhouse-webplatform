@@ -142,8 +142,14 @@
   }
 }
 
+/*
+ * `--surface`, not `--ground` — the mockup's `--ground` belongs to `.page`,
+ * the design artifact's own outer background behind each mocked-up browser
+ * frame. This app has no such outer page; it *is* the frame, so it uses
+ * `.frame`'s background (`--surface`) directly.
+ */
 body {
-  background: var(--ground);
+  background: var(--surface);
   color: var(--ink);
   font-family: var(--font-sans-stack);
   font-size: 15px;
@@ -154,4 +160,17 @@ body {
 /* Quantities align down a column only if the figures are tabular. */
 .tabular {
   font-variant-numeric: tabular-nums;
+}
+
+/*
+ * Some browsers (Safari especially, and Recharts' own tabIndex-driven chart
+ * wrapper) still match plain `:focus` on a mouse click even though it isn't
+ * `:focus-visible` — the native default outline then shows regardless of
+ * this app's own `focus-visible:` styling, since that only ever targets the
+ * `:focus-visible` case. Suppressed globally for the non-visible case, so
+ * every button/chip/chart gets this once instead of patching each site;
+ * a real keyboard tab still matches `:focus-visible` and keeps its ring.
+ */
+:focus:not(:focus-visible) {
+  outline: none;
 }
