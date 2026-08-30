@@ -80,7 +80,7 @@ export function TrendChart({
     <div className="rounded-[10px] bg-surface-2 pt-3 pr-2">
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={months} margin={{ top: 24, right: 8, left: 0, bottom: 4 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--line-soft)" vertical={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--ink)" strokeOpacity={0.12} />
           <XAxis
             dataKey="month"
             axisLine={false}
