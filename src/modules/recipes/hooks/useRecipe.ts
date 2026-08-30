@@ -1,41 +1,24 @@
 "use client";
 
 import { useMemo } from "react";
-import { useUser } from "@clerk/nextjs";
 import { trpc } from "@/lib/trpc";
 import type { RecipeDetail, RecipeImageWithUrl } from "../types";
 import { parseSteps } from "../utils";
 
-// ~10-15s, per root CLAUDE.md's "Real-time layer" decision — recipe detail is
-// the more motivated of the two recipe screens specifically because any
-// household member can now delete a recipe, not just its author, so someone
-// viewing one while another member deletes it benefits from that reaching
-// their screen without a manual refresh.
+// 12s poll, per root CLAUDE.md's "Real-time layer" decision.
 const RECIPE_POLL_MS = 12_000;
 
 /**
- * One recipe in full, plus its render-ready image URLs.
+ * One recipe in full, plus its render-ready image URLs — fetched separately,
+ * since each image needs its own presigned URL.
  *
- * Images are a second call because `RecipeImage.storageKey` is a bucket key,
- * not a URL — `recipes.images` mints presigned links per request. It's gated on
- * the recipe having loaded so a missing or other-household recipe produces one
- * NOT_FOUND rather than two.
- *
- * `instructions` is a `Json` column typed as unknown, so it's parsed here
- * (via the module's pure helper) rather than in the Screen.
- *
- * `poll` defaults off — this hook is also used by `RecipeFormScreen` (edit
- * mode), where `useForm`'s `values: fromRecipeDetail(recipe, steps)` re-seeds
- * the form whenever `recipe` changes identity. Polling there would risk
- * silently discarding an in-progress, unsaved edit the moment a background
- * refetch lands. Only `RecipeDetailScreen` passes `poll: true`.
+ * `poll` defaults off — `RecipeFormScreen`'s edit mode also uses this hook,
+ * and polling there could reset an in-progress edit when the form re-seeds
+ * from a changed `recipe`. Only `RecipeDetailScreen` passes `poll: true`.
  */
 export function useRecipe(recipeId: string | null, { poll = false }: { poll?: boolean } = {}) {
-  const { user } = useUser();
-
-  // `recipeId` is null while a brand-new recipe is being filled in — there is
-  // nothing to fetch yet, so the query is disabled rather than sent with a
-  // placeholder id.
+  // Null recipeId means a new recipe — nothing to fetch, so disable the query
+  // instead of sending a placeholder id.
   const recipeQuery = trpc.recipes.getById.useQuery(
     { id: recipeId ?? "" },
     {
@@ -48,23 +31,17 @@ export function useRecipe(recipeId: string | null, { poll = false }: { poll?: bo
     { enabled: recipeId !== null && recipeQuery.isSuccess }
   );
 
-  // Annotated rather than inferred: letting TypeScript widen the tRPC query
-  // data through this hook's return object trips TS2589 ("excessively deep"),
-  // and the alias in types.ts is the same type by construction.
+  // Annotated to dodge TS2589 ("excessively deep") — same type either way.
   const recipe: RecipeDetail | undefined = recipeQuery.data;
 
+  const images: RecipeImageWithUrl[] = imagesQuery.data ?? [];
+
+  // `instructions` is a `Json` column typed `unknown` at the wire boundary,
+  // so it needs parsing before use rather than being trusted as-is.
   const steps = useMemo(
     () => parseSteps(recipe?.instructions),
     [recipe?.instructions]
   );
-
-  // Any household member may edit or delete a recipe server-side now, same as
-  // grocery lists — so this only needs a recipe to have loaded, not an
-  // authorship check. Being able to reach this screen at all already implies
-  // household membership (the route is behind HouseholdGate).
-  const canEdit = Boolean(user && recipe);
-
-  const images: RecipeImageWithUrl[] = imagesQuery.data ?? [];
 
   return {
     recipe,
@@ -76,7 +53,5 @@ export function useRecipe(recipeId: string | null, { poll = false }: { poll?: bo
     isError: recipeQuery.isError,
     error: recipeQuery.error,
     refetch: () => void recipeQuery.refetch(),
-
-    canEdit,
   };
 }
