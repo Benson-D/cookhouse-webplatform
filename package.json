@@ -19,7 +19,7 @@
     "@trpc/react-query": "^11.0.0-rc.502",
     "clsx": "^2.1.1",
     "date-fns": "^4.4.0",
-    "next": "16.3.2",
+    "next": "16.3.3",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-hook-form": "^7.85.0",
@@ -46,5 +46,10 @@
     "typescript": "^5",
     "vite": "latest"
   },
-  "packageManager": "pnpm@9.3.0"
+  "packageManager": "pnpm@9.3.0",
+  "pnpm": {
+    "overrides": {
+      "valibot": ">=1.4.2"
+    }
+  }
 }
