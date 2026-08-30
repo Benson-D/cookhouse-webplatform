@@ -37,7 +37,7 @@ export function TrendSection({
 
       <TrendChart months={months} selectedMonth={selectedMonth} onSelectMonth={onSelectMonth} />
 
-      <div className="mt-1.5 mb-5">
+      <div className="mt-5 mb-5">
         {tableExpanded ? (
           <>
             <ExpandRow

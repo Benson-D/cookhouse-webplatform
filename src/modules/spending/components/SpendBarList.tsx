@@ -55,7 +55,7 @@ export function SpendBarList({
       </div>
 
       {remaining > 0 && (
-        <div className="mt-0.5">
+        <div className="mt-5">
           <ExpandRow label={moreLabel(remaining)} actionLabel="view all" onClick={() => setExpanded(true)} />
         </div>
       )}
