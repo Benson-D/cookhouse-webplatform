@@ -53,7 +53,7 @@ export function StepRows({ control }: { control: Control<RecipeFormInput, unknow
             </div>
 
             {rowErrors?.text?.message && (
-              <p className="m-0 pl-[31px] text-[11.5px] text-[#B4442F]" role="alert">
+              <p className="m-0 pl-[31px] text-[11.5px] text-danger" role="alert">
                 {rowErrors.text.message}
               </p>
             )}

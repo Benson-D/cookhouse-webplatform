@@ -5,7 +5,7 @@ import type { Staple } from "../types";
 const TONE_CLASSES: Record<DueTone, string> = {
   default: "text-ink-faint",
   warn: "text-amber",
-  late: "text-[#B4442F]",
+  late: "text-danger",
 };
 
 export function StapleRow({ staple, onRemove }: { staple: Staple; onRemove: () => void }) {

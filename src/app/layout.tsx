@@ -33,7 +33,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           colorInputBackground: "var(--surface-2)",
           colorInputText: "var(--ink)",
           colorNeutral: "var(--ink-faint)",
-          colorDanger: "#B4442F",
+          colorDanger: "var(--danger)",
           colorSuccess: "var(--accent)",
           colorWarning: "var(--amber)",
           colorShimmer: "var(--line-soft)",

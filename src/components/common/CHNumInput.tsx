@@ -48,7 +48,7 @@ export function CHNumInput({
       type="text"
       inputMode="numeric"
       aria-invalid={invalid || undefined}
-      className={cn(classes, invalid && "border-[#B4442F]", className)}
+      className={cn(classes, invalid && "border-danger", className)}
       onChange={(event) => {
         const sanitized = sanitize(event.target.value, minValue);
         if (sanitized !== event.target.value) {

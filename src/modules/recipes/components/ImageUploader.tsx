@@ -97,7 +97,7 @@ export function ImageUploader({
       />
 
       {uploadError && (
-        <p className="m-0 text-[11.5px] text-[#B4442F]" role="alert">
+        <p className="m-0 text-[11.5px] text-danger" role="alert">
           {uploadError}
         </p>
       )}

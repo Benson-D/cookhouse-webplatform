@@ -22,6 +22,7 @@
   --accent-soft: #dee7d2;
   --amber: #8f5f22;
   --amber-soft: #eedbb0;
+  --danger: #b4442f;
   --elevation-sm: 0 1px 2px rgba(43, 35, 24, 0.06);
   --elevation-lg: 0 1px 2px rgba(43, 35, 24, 0.05), 0 10px 30px rgba(43, 35, 24, 0.09);
 
@@ -50,6 +51,7 @@
     --accent-soft: #26301f;
     --amber: #d6a45f;
     --amber-soft: #2f2617;
+    --danger: #e0806b;
     --elevation-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
     --elevation-lg: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.35);
 
@@ -71,6 +73,7 @@
   --accent-soft: #26301f;
   --amber: #d6a45f;
   --amber-soft: #2f2617;
+  --danger: #e0806b;
   --elevation-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
   --elevation-lg: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.35);
 
@@ -97,6 +100,7 @@
   --color-accent-soft: var(--accent-soft);
   --color-amber: var(--amber);
   --color-amber-soft: var(--amber-soft);
+  --color-danger: var(--danger);
 
   --shadow-raised: var(--elevation-sm);
   --shadow-frame: var(--elevation-lg);

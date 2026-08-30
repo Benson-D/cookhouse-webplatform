@@ -28,7 +28,7 @@ export function FavoriteButton({
       }
       className={cn(
         "grid h-6 w-6 place-items-center rounded-full bg-white/90 text-xs shadow-raised transition-opacity disabled:opacity-50",
-        isFavorited ? "text-[#B4442F]" : "text-[#B4442F]/35 hover:text-[#B4442F]/70"
+        isFavorited ? "text-danger" : "text-danger/35 hover:text-danger/70"
       )}
     >
       <span aria-hidden>{isFavorited ? "♥" : "♡"}</span>

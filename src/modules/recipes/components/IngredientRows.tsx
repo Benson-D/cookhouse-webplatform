@@ -97,12 +97,12 @@ export function IngredientRows({
             </div>
 
             {rowErrors?.ingredientId?.message && (
-              <p className="m-0 text-[11.5px] text-[#B4442F]" role="alert">
+              <p className="m-0 text-[11.5px] text-danger" role="alert">
                 {rowErrors.ingredientId.message}
               </p>
             )}
             {rowErrors?.amount?.message && (
-              <p className="m-0 text-[11.5px] text-[#B4442F]" role="alert">
+              <p className="m-0 text-[11.5px] text-danger" role="alert">
                 {rowErrors.amount.message}
               </p>
             )}

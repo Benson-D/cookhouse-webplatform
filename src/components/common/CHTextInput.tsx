@@ -18,7 +18,7 @@ export function CHTextInput({
       aria-invalid={invalid || undefined}
       className={cn(
         "rounded-[7px] border border-line bg-surface-2 px-[11px] py-2 text-[13.5px] text-ink placeholder:text-ink-faint focus:outline-2 focus:outline-offset-1 focus:outline-accent",
-        invalid && "border-[#B4442F]",
+        invalid && "border-danger",
         className
       )}
     />

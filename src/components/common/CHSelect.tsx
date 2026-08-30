@@ -130,7 +130,7 @@ export function CHSelect<T>({
           setQuery(event.target.value);
           onSearch?.(event.target.value);
         }}
-        className={cn(inputClasses, invalid ? "border-[#B4442F]" : "border-line")}
+        className={cn(inputClasses, invalid ? "border-danger" : "border-line")}
       />
 
       {/* A click target separate from typing — opens the panel without a keystroke. */}

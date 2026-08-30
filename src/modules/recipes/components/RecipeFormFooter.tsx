@@ -13,7 +13,7 @@ export function RecipeFormFooter({
   return (
     <div className="flex flex-col gap-[9px]">
       {saveError && (
-        <p className="m-0 text-[13px] text-[#B4442F]" role="alert">
+        <p className="m-0 text-[13px] text-danger" role="alert">
           {saveError.message}
         </p>
       )}
