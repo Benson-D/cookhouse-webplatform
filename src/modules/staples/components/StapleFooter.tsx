@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CHButton, CHSelect } from "@/components/common";
+import { CHButton, CHSelect } from "@/common";
 import { useIngredientSearchPicker } from "@/hooks/useIngredientSearchPicker";
 import { FREQUENCY_OPTIONS } from "../utils";
 import type { Staple } from "../types";

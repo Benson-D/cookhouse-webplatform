@@ -1,6 +1,6 @@
 "use client";
 
-import { CHLink, EmptyState, ErrorState } from "@/components/common";
+import { CHLink, CHSectionLabel, EmptyState, ErrorState } from "@/common";
 import { useSpendingRange } from "./hooks/useSpendingRange";
 import { useSpendingSummary } from "./hooks/useSpendingSummary";
 import { useSpendingTrend } from "./hooks/useSpendingTrend";
@@ -87,18 +87,14 @@ export function SpendingScreen() {
         />
       </div>
 
-      <div className="mb-1 mt-1 px-[22px] text-[10.5px] font-bold uppercase tracking-[0.13em] text-ink-faint">
-        By category
-      </div>
+      <CHSectionLabel className="mb-1 mt-1 px-[22px]">By category</CHSectionLabel>
       <SpendBarList
         rows={byCategory.rows}
         previewCount={5}
         moreLabel={(n) => `${n} more categor${n === 1 ? "y" : "ies"}`}
       />
 
-      <div className="mb-1 mt-1 px-[22px] text-[10.5px] font-bold uppercase tracking-[0.13em] text-ink-faint">
-        By store
-      </div>
+      <CHSectionLabel className="mb-1 mt-1 px-[22px]">By store</CHSectionLabel>
       <SpendBarList
         rows={byStore.rows}
         previewCount={4}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { CHButton } from "@/components/common";
+import { CHButton } from "@/common";
 import { cn } from "@/lib/cn";
 import styles from "./ReceiptScanning.module.css";
 

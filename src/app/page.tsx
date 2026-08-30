@@ -1,7 +1,7 @@
 "use client";
 
 import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
-import { CHButton, CHLink } from "@/components/common";
+import { CHButton, CHLink } from "@/common";
 
 export default function Home() {
   return (

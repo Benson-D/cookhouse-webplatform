@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type SubmitEvent } from "react";
-import { CHButton } from "@/components/common";
+import { CHButton } from "@/common";
 import { useAddGroceryItem } from "../hooks/useAddGroceryItem";
 
 /**

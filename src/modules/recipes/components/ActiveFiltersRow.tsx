@@ -1,6 +1,6 @@
 "use client";
 
-import { TagChip } from "@/components/common";
+import { TagChip } from "@/common";
 import { formatCookTimeFilter } from "../utils";
 import type { Tag } from "../types";
 

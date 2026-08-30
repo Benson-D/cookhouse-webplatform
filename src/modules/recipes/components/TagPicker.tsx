@@ -1,4 +1,4 @@
-import { TagChip } from "@/components/common";
+import { TagChip } from "@/common";
 import type { Tag } from "../types";
 import { groupTagsByType } from "../utils";
 

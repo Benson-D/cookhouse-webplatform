@@ -1,38 +1,3 @@
-import type { ReactNode } from "react";
-
-/** Uppercase micro-label above the control. */
-export function Field({
-  label,
-  htmlFor,
-  error,
-  hint,
-  children,
-}: {
-  label: string;
-  htmlFor?: string;
-  error?: string;
-  hint?: string;
-  children: ReactNode;
-}) {
-  return (
-    <div className="flex flex-col gap-[5px]">
-      <label
-        htmlFor={htmlFor}
-        className="text-[10.5px] font-bold uppercase tracking-[0.11em] text-ink-faint"
-      >
-        {label}
-      </label>
-      {children}
-      {hint && !error && <p className="m-0 text-[11.5px] text-ink-faint">{hint}</p>}
-      {error && (
-        <p className="m-0 text-[11.5px] text-danger" role="alert">
-          {error}
-        </p>
-      )}
-    </div>
-  );
-}
-
 /** A quiet accent-coloured "add another" action. */
 export function AddLineButton({
   onClick,

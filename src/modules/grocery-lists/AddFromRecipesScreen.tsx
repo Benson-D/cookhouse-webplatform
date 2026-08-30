@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CardGridLoadingState, ErrorState, EmptyState, SubpageHeader } from "@/components/common";
+import { CardGridLoadingState, ErrorState, EmptyState, SubpageHeader } from "@/common";
 import { useRecipeList } from "@/modules/recipes/hooks/useRecipeList";
 import { useTags } from "@/modules/recipes/hooks/useTags";
 import { TagFilterBar } from "@/modules/recipes/components/TagFilterBar";

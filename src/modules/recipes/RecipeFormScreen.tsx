@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ErrorState, LoadingState } from "@/components/common";
+import { ErrorState, LoadingState } from "@/common";
 import { useRecipe } from "./hooks/useRecipe";
 import { useSaveRecipe } from "./hooks/useSaveRecipe";
 import { useIngredientSearchPicker, useUnits } from "@/hooks/useIngredientSearchPicker";
@@ -72,16 +72,16 @@ export function RecipeFormScreen({ recipeId }: { recipeId?: string }) {
     );
   }
 
-  function onToggleTag(tagId: string) {
+  const onToggleTag = (tagId: string) => {
     form.setValue(
       "tagIds",
       selectedTagIds.includes(tagId)
         ? selectedTagIds.filter((tag) => tag !== tagId)
         : [...selectedTagIds, tagId]
     );
-  }
+  };
 
-  async function onSubmit(values: RecipeFormValues) {
+  const onSubmit = async (values: RecipeFormValues) => {
     if (id) {
       await update(id, values);
       router.push(`/recipes/${id}`);
@@ -97,7 +97,7 @@ export function RecipeFormScreen({ recipeId }: { recipeId?: string }) {
       return;
     }
     router.push(`/recipes/${newId}`);
-  }
+  };
 
   return (
     <FormProvider {...form}>

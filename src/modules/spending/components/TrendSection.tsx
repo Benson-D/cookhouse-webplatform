@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ExpandRow } from "@/components/common";
+import { CHSectionLabel, ExpandRow } from "@/common";
 import { TrendChart } from "./TrendChart";
 import { TopItemsDrilldown } from "./TopItemsDrilldown";
 import { formatCurrency, formatMonthLong } from "../utils";
@@ -30,9 +30,7 @@ export function TrendSection({
 
   return (
     <div className="pb-5">
-      <div className="mb-1 mt-[22px] text-[10.5px] font-bold uppercase tracking-[0.13em] text-ink-faint">
-        Spend by month
-      </div>
+      <CHSectionLabel className="mb-1 mt-[22px]">Spend by month</CHSectionLabel>
       <div className="mb-2 font-mono text-[11px] text-ink-faint">Tap a month for its top items</div>
 
       <TrendChart months={months} selectedMonth={selectedMonth} onSelectMonth={onSelectMonth} />

@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { TagChip } from "@/components/common";
+import { TagChip } from "@/common";
 import { cn } from "@/lib/cn";
 import type { Tag } from "../types";
 import { groupTagsByType } from "../utils";

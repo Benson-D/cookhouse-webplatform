@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ExpandRow } from "@/components/common";
+import { ExpandRow } from "@/common";
 import { formatCurrency } from "../utils";
 import type { SpendBarRow } from "../types";
 

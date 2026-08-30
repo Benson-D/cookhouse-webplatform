@@ -1,6 +1,6 @@
 "use client";
 
-import { ErrorState, LoadingState, SubpageHeader } from "@/components/common";
+import { ErrorState, LoadingState, SubpageHeader } from "@/common";
 import { useStaples } from "./hooks/useStaples";
 import { StapleRow } from "./components/StapleRow";
 import { StapleFooter } from "./components/StapleFooter";

@@ -1,4 +1,4 @@
-import { TagChip } from "@/components/common";
+import { TagChip } from "@/common";
 import { RANGE_PRESETS } from "../utils";
 import type { RangePreset } from "../types";
 

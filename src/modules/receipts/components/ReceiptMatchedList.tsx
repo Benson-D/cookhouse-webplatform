@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ExpandRow } from "@/components/common";
+import { ExpandRow } from "@/common";
 import type { ReviewLineItem } from "../types";
 
 const PREVIEW_COUNT = 6;

@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { SignInButton, useAuth } from "@clerk/nextjs";
-import { CHButton, EmptyState, LoadingState } from "@/components/common";
+import { CHButton, EmptyState, LoadingState } from "@/common";
 import { NoHouseholdScreen } from "./components/NoHouseholdScreen";
 
 /**

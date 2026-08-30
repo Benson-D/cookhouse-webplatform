@@ -1,7 +1,7 @@
 "use client";
 
 import { useFieldArray, useFormContext, type Control } from "react-hook-form";
-import { CHSelect, CHTextInput, UnitPicker } from "@/components/common";
+import { CHSelect, CHTextInput, UnitPicker } from "@/common";
 import type { RecipeFormInput, RecipeFormValues } from "../recipe-form.schema";
 import { AddLineButton, RemoveRowButton } from "./FormControls";
 

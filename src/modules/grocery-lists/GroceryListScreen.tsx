@@ -1,6 +1,6 @@
 "use client";
 
-import { EmptyState, ErrorState, LoadingState } from "@/components/common";
+import { EmptyState, ErrorState, LoadingState } from "@/common";
 import { useGroceryList } from "./hooks/useGroceryList";
 import { GroceryListHeader } from "./components/GroceryListHeader";
 import { QuickAddItem } from "./components/QuickAddItem";

@@ -1,6 +1,6 @@
 "use client";
 
-import { CHSelect, CHTextInput, TagBadge } from "@/components/common";
+import { CHSelect, CHTextInput, TagBadge } from "@/common";
 import type { ReviewLineItem } from "../types";
 
 type Ingredient = { id: string; name: string };

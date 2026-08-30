@@ -1,11 +1,10 @@
 "use client";
 
 import { useFormContext } from "react-hook-form";
-import { CHNumInput, CHTextArea, CHTextInput } from "@/components/common";
-import type { GalleryItem } from "../hooks/useRecipeImages";
+import { CHFormField, CHNumInput, CHTextArea, CHTextInput } from "@/common";
+import type { GalleryItem } from "../types";
 import type { RecipeFormInput, RecipeFormValues } from "../recipe-form.schema";
 import type { Tag } from "../types";
-import { Field } from "./FormControls";
 import { ImageUploader } from "./ImageUploader";
 import { IngredientRows } from "./IngredientRows";
 import { StepRows } from "./StepRows";
@@ -55,17 +54,17 @@ export function RecipeFormBody({
 
   return (
     <div className="flex flex-col gap-[18px]">
-      <Field label="Description" htmlFor="recipe-description">
+      <CHFormField label="Description" htmlFor="recipe-description">
         <CHTextArea
           id="recipe-description"
           rows={2}
           placeholder="One pot, pantry staples, done inside 35 minutes."
           {...register("description")}
         />
-      </Field>
+      </CHFormField>
 
       <div className="grid gap-3 sm:grid-cols-3">
-        <Field
+        <CHFormField
           label="Servings"
           htmlFor="recipe-servings"
           error={formState.errors.servings?.message}
@@ -76,8 +75,8 @@ export function RecipeFormBody({
             {...register("servings")}
             invalid={Boolean(formState.errors.servings)}
           />
-        </Field>
-        <Field
+        </CHFormField>
+        <CHFormField
           label="Prep (min)"
           htmlFor="recipe-prep"
           error={formState.errors.prepTime?.message}
@@ -87,8 +86,8 @@ export function RecipeFormBody({
             {...register("prepTime")}
             invalid={Boolean(formState.errors.prepTime)}
           />
-        </Field>
-        <Field
+        </CHFormField>
+        <CHFormField
           label="Cook (min)"
           htmlFor="recipe-cook"
           error={formState.errors.cookingTime?.message}
@@ -98,10 +97,10 @@ export function RecipeFormBody({
             {...register("cookingTime")}
             invalid={Boolean(formState.errors.cookingTime)}
           />
-        </Field>
+        </CHFormField>
       </div>
 
-      <Field
+      <CHFormField
         label="Photos"
         hint={
           isEditing
@@ -116,9 +115,9 @@ export function RecipeFormBody({
           onAdd={onAddImage}
           onRemove={onRemoveImage}
         />
-      </Field>
+      </CHFormField>
 
-      <Field label="Ingredients">
+      <CHFormField label="Ingredients">
         <IngredientRows
           control={control}
           ingredientOptions={ingredientOptions}
@@ -126,19 +125,19 @@ export function RecipeFormBody({
           onSearchIngredients={onSearchIngredients}
           onResolveIngredient={onResolveIngredient}
         />
-      </Field>
+      </CHFormField>
 
-      <Field label="Method">
+      <CHFormField label="Method">
         <StepRows control={control} />
-      </Field>
+      </CHFormField>
 
-      <Field label="Tags">
+      <CHFormField label="Tags">
         <TagPicker
           tags={tags}
           selectedTagIds={selectedTagIds}
           onToggle={onToggleTag}
         />
-      </Field>
+      </CHFormField>
     </div>
   );
 }

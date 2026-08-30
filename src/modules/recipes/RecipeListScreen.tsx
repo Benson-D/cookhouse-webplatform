@@ -1,6 +1,6 @@
 "use client";
 
-import { CardGridLoadingState, CHButton, EmptyState, ErrorState } from "@/components/common";
+import { CardGridLoadingState, CHButton, EmptyState, ErrorState } from "@/common";
 import { useRecipeList } from "./hooks/useRecipeList";
 import { useTags } from "./hooks/useTags";
 import { useFavoriteRecipe } from "./hooks/useFavoriteRecipe";

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CHTextInput, ErrorState, SubpageHeader } from "@/components/common";
+import { CHFormField, CHSectionLabel, CHTextInput, ErrorState, SubpageHeader } from "@/common";
 import { useIngredientSearchPicker } from "@/hooks/useIngredientSearchPicker";
 import { useReceiptScan } from "./hooks/useReceiptScan";
 import { useConfirmPurchases } from "./hooks/useConfirmPurchases";
@@ -134,22 +134,17 @@ export function ReceiptScanScreen() {
         </div>
 
         <div>
-          <div className="mb-4 flex flex-col gap-[5px]">
-            <label className="text-[10.5px] font-bold uppercase tracking-[0.11em] text-ink-faint">
-              Store
-            </label>
+          <CHFormField label="Store" className="mb-4">
             <CHTextInput
               value={storeName}
               onChange={(event) => setStoreName(event.target.value)}
               placeholder="Where was this bought?"
             />
-          </div>
+          </CHFormField>
 
           {needsLook.length > 0 && (
             <>
-              <div className="mb-[9px] mt-[18px] text-[10.5px] font-bold uppercase tracking-[0.13em] text-ink-faint">
-                Needs a look · {needsLook.length}
-              </div>
+              <CHSectionLabel>Needs a look · {needsLook.length}</CHSectionLabel>
               <div className="flex flex-col">
                 {needsLook.map((item) => (
                   <ReceiptLineRow
@@ -168,9 +163,7 @@ export function ReceiptScanScreen() {
 
           {matchedAutomatically.length > 0 && (
             <>
-              <div className="mb-[9px] mt-[18px] text-[10.5px] font-bold uppercase tracking-[0.13em] text-ink-faint">
-                Matched automatically
-              </div>
+              <CHSectionLabel>Matched automatically</CHSectionLabel>
               <ReceiptMatchedList items={matchedAutomatically} onPromote={promoteItem} />
             </>
           )}

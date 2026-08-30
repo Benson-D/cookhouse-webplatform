@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { CHButton } from "@/components/common";
+import { CHButton } from "@/common";
 
 export function ReceiptScanFooter({
   itemCount,

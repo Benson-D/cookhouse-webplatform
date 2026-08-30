@@ -1,4 +1,4 @@
-import { CHButton } from "@/components/common";
+import { CHButton } from "@/common";
 
 /** Save error, then Cancel/Save — the form's one exit and one commit action. */
 export function RecipeFormFooter({

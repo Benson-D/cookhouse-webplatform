@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { AppNav } from "@/components/common/AppNav";
-import { MobileTabBar } from "@/components/common/MobileTabBar";
+import { AppNav } from "@/common/AppNav";
+import { MobileTabBar } from "@/common/MobileTabBar";
 import { HouseholdGate } from "@/modules/household/HouseholdGate";
 
 /**

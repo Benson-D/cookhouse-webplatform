@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ExpandRow, TagChip } from "@/components/common";
+import { CHSectionLabel, ExpandRow, TagChip } from "@/common";
 import { COOK_TIME_OPTIONS, groupTagsByType, labelForTagGroup } from "../utils";
 import type { Tag } from "../types";
 
@@ -85,9 +85,7 @@ export function FilterPanel({
 
         return (
           <div key={type ?? "other"}>
-            <div className="mb-[9px] mt-[18px] text-[10.5px] font-bold uppercase tracking-[0.13em] text-ink-faint first:mt-0">
-              {labelForTagGroup(type)}
-            </div>
+            <CHSectionLabel className="first:mt-0">{labelForTagGroup(type)}</CHSectionLabel>
             {isCuisine ? (
               <CuisineGroup tags={group} selectedTagIds={selectedTagIds} onToggleTag={onToggleTag} />
             ) : (
@@ -106,9 +104,7 @@ export function FilterPanel({
         );
       })}
 
-      <div className="mb-[9px] mt-[18px] text-[10.5px] font-bold uppercase tracking-[0.13em] text-ink-faint">
-        Cook time
-      </div>
+      <CHSectionLabel>Cook time</CHSectionLabel>
       <div className="flex flex-wrap gap-[7px]">
         {COOK_TIME_OPTIONS.map((option) => (
           <TagChip

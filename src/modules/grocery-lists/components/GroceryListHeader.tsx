@@ -1,7 +1,7 @@
 "use client";
 
 import { useOrganization } from "@clerk/nextjs";
-import { CHButton, CHLink } from "@/components/common";
+import { CHButton, CHLink } from "@/common";
 import { formatStartedDay } from "../utils";
 
 /**

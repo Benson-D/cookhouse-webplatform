@@ -1,4 +1,4 @@
-import { CHButton } from "@/components/common";
+import { CHButton } from "@/common";
 
 /** Sticky so the count and confirm action stay reachable on a long, scrolled list — the case this screen most needs to handle on a phone. */
 export function PickerFooter({

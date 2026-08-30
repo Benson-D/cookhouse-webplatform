@@ -1,4 +1,4 @@
-import { CHButton, CHLink } from "@/components/common";
+import { CHButton, CHLink } from "@/common";
 import { FilterButton } from "./FilterButton";
 import type { Tag } from "../types";
 
