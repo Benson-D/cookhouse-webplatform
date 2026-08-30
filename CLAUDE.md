@@ -209,6 +209,22 @@ CSS-first. The mapping lives in an `@theme inline` block in `globals.css`
 component then just writes `bg-surface text-ink`. Don't add a config file to
 get colours in — that's the v3 shape.
 
+**`--danger` is a token now, not a hardcoded hex.** The error/destructive red
+(`#B4442F` light, `#E0806B` dark) had been repeated as a raw `text-[#B4442F]`/
+`border-[#B4442F]` literal across ~18 files — form validation errors,
+`DeleteRecipeLink`'s armed state, `GroceryListFooter`'s "Remove all," the
+favorite heart, `StapleRow`'s overdue status, and Clerk's own `colorDanger` in
+`layout.tsx` — with no token backing any of them, unlike every other colour in
+the app. Added `--danger` to `:root` and both dark blocks plus
+`--color-danger: var(--danger)` in `@theme inline`, same as `--accent`/
+`--amber`, then swapped every occurrence to `text-danger`/`border-danger`
+(including the `/35`/`/70` opacity-modified ones on the favorite heart) and
+`colorDanger: "var(--danger)"`. No token existed for this in
+`design/kitchen-screens.html` either — its own CSS repeats the same raw hex —
+so the dark-mode value is a new pick (a lighter, warmer red for a dark
+background), not a ported one, following the same lighten-for-dark
+relationship `--accent` and `--amber` already establish.
+
 Theme is switched by a `data-app-theme` attribute on `<html>`. **Absent means
 "follow the system"** — `globals.css` handles that with `prefers-color-scheme`,
 so the default path needs no attribute, no inline script, and has no hydration
@@ -385,8 +401,34 @@ These look like bugs if you don't know them. Full reasoning is in the root
   `parseSteps` in `modules/recipes/utils.ts`, which drops malformed entries
   rather than trusting the shape. Adding another deeply-included `Json` field
   to a router output will hit the same wall.
-- **Edit/delete are author-or-admin.** Other members can view a recipe but not
-  change it, so those controls should be conditional rather than erroring.
+- **Edit/delete are open to any household member**, not just the recipe's
+  author — see root `CLAUDE.md` for why the original author-or-admin rule was
+  dropped. `useRecipe`'s `canEdit` just checks that the recipe loaded and
+  someone's signed in; no per-recipe authorship check is needed since reaching
+  the screen at all already implies household membership.
+- **`Recipe.sourceUrl` has no frontend surface at all** — the create/edit
+  form's field and the detail page's "View original recipe" link were both
+  built and then pulled the same session, once it became clear nothing on
+  the backend actually does anything with the URL (no scraper, no metadata
+  fetch — just a plain nullable string column). Exposing a field for that
+  read as an orphaned, half-finished feature rather than something worth
+  keeping around unused. The column and the backend's `.url()` input
+  validation are untouched — this was a frontend-only call — so reintroducing
+  the field is cheap if the real import feature below ever gets built.
+- **Polling (`refetchInterval`) is opt-in on both recipe hooks, not
+  unconditional** — see root `CLAUDE.md`'s "Real-time layer" decision for the
+  interval values and why grocery lists poll faster than recipes.
+  `useGroceryList` polls unconditionally (its query has exactly one
+  consumer), but `useRecipeList` and `useRecipe` are each shared by a second
+  screen the polling decision doesn't cover, so both take a `{ poll?:
+  boolean }` option defaulting to `false`: `RecipeListScreen` and
+  `RecipeDetailScreen` pass `poll: true`; `AddFromRecipesScreen` (also built
+  on `useRecipeList`) and `RecipeFormScreen`'s edit mode (also built on
+  `useRecipe`) don't. The edit-mode case is the one that actually matters —
+  `useForm`'s `values: fromRecipeDetail(recipe, steps)` re-seeds the form
+  whenever `recipe` changes identity, so polling there would risk a
+  background refetch silently discarding an in-progress, unsaved edit the
+  moment it lands.
 
 ## Spending reports UI
 
@@ -429,6 +471,58 @@ exact-figures and both spending bar-lists' truncation — generalized to accept
 `label`/`actionLabel` text directly rather than baking in "view all" or
 "collapse," since a expand-once row and a expand/collapse toggle read
 differently and the component shouldn't need to know which.
+
+## Mobile nav
+
+**Built** — a cross-cutting nav pattern (`design/kitchen-screens.html` screen
+09), not one more per-screen mobile pass, since the problem (too much crammed
+into the top bar, no thumb-reach nav) shows up everywhere at once. Uses the
+same `md:` breakpoint the grid already does (`RecipeListScreen`'s
+`grid-cols-2 md:grid-cols-3`).
+
+- **`AppNav`'s top bar collapses to just the brand `Link` and `UserButton`**
+  below `md:`. The three `NAV_LINKS` (now exported from `AppNav.tsx` so
+  `MobileTabBar` reuses the exact same array and `pathname.startsWith` active
+  check rather than a second copy) hide via `hidden md:flex`;
+  `OrganizationSwitcher` and `ThemeToggle` hide via `hidden md:block`.
+- **`MobileTabBar`** renders those same three links as a `position: sticky;
+  bottom: 0` bar, `md:hidden`, mounted once in `app/(app)/layout.tsx` after
+  `HouseholdGate` — exactly three destinations is the textbook case for this
+  pattern, and it keeps navigation in thumb reach the whole time the grocery
+  list scrolls underneath it, worth more here than usual given that screen's
+  own one-handed-in-a-shop goal.
+- **The household switcher and theme toggle don't fold into `UserButton`'s
+  own popover** — checked directly against Clerk's current docs (not assumed
+  from training data, per this project's own verify-before-diagnosing habit):
+  `UserButton.MenuItems` only accepts `UserButton.Action`/`UserButton.Link`
+  items (`label` + `labelIcon` + an `onClick` or `href`), no slot for
+  arbitrary component content, so `OrganizationSwitcher` and `ThemeToggle`
+  can't literally render inside it. **`MobileAccountPanel`** is the mockup's
+  own documented fallback for exactly this case: a real floating panel, the
+  same `position: absolute`, anchored-right, no-backdrop mechanism
+  `FilterPanel` already proved out, holding the real `OrganizationSwitcher`
+  and `ThemeToggle` components. It's opened by one custom `UserButton.Action`
+  ("Household & theme") inside `UserButton`'s own menu rather than a second
+  avatar-like trigger competing for top-bar space — so the visible top bar
+  really is just the two things the spec asked for. That action item renders
+  at every width rather than being conditionally suppressed above `md:`
+  (redundant with the always-visible desktop controls, but harmless, and
+  avoids a `useMediaQuery`-style hook this project has no other use for).
+- **`RecipeToolbar` stacks below `md:`**: search, then Favorites, then
+  Filters, then New recipe, each its own full-width row — search first,
+  refining next, creating last, not however `flex-wrap` happens to break it
+  (today's behavior). Favorites and Filters are plain direct children rather
+  than paired into one row, on purpose: `FilterPanel` renders inline
+  (`position: static`) at this width, and pairing them in a shared flex row
+  was tried first — `align-items: stretch`'s default meant the panel opening
+  and growing that row's height stretched Favorites' cell to match, floating
+  the button's centered label in the middle of the now-tall row instead of
+  pinned at the top. One row each sidesteps the whole class of bug rather
+  than patching it with `items-start`. At `md:` all four are plain flex items
+  in one row via the same classes, reproducing today's desktop layout.
+  `FilterButton` gained `className` (the wrapper `FilterPanel` anchors to)
+  and `triggerClassName` (the button itself) so the toolbar can size it
+  without `FilterButton` needing to know why.
 
 ## Design
 
