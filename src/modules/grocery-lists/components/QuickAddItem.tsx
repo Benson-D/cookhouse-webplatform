@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, type SubmitEvent } from "react";
 import { CHButton } from "@/components/common";
 import { useAddGroceryItem } from "../hooks/useAddGroceryItem";
 
@@ -13,14 +13,14 @@ export function QuickAddItem() {
   const [name, setName] = useState("");
   const { addByName, isAdding, error } = useAddGroceryItem();
 
-  async function handleSubmit(event: FormEvent) {
+  const handleSubmit = async (event: SubmitEvent) => {
     event.preventDefault();
     const trimmed = name.trim();
     if (!trimmed) return;
 
     await addByName(trimmed);
     setName("");
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-1.5 px-[22px] pb-3.5">
@@ -44,7 +44,7 @@ export function QuickAddItem() {
       </div>
 
       {error && (
-        <p className="m-0 text-[13px] text-[#B4442F]" role="alert">
+        <p className="m-0 text-[13px] text-danger" role="alert">
           {error.message}
         </p>
       )}

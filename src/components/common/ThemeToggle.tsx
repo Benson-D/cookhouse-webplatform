@@ -48,10 +48,10 @@ export function ThemeToggle() {
     }
   }, []);
 
-  function choose(next: Theme) {
+  const choose = (next: Theme) => {
     document.documentElement.setAttribute(ATTRIBUTE, next);
     window.localStorage.setItem(STORAGE_KEY, next);
-  }
+  };
 
   return (
     <div className="inline-flex gap-px rounded-full border border-line p-0.5">
