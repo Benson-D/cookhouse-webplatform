@@ -6,7 +6,7 @@ import { differenceInDays, differenceInHours, differenceInMinutes } from "date-f
  */
 
 /** A person's initials for source-of-truth-free display, or a placeholder for nobody. */
-export function initials(
+export function getInitials(
   person: { firstName: string | null; lastName: string | null; email: string } | null
 ): string {
   if (!person) return "—";
@@ -43,4 +43,11 @@ const SOURCE_LABELS: Record<string, string> = {
 /** Falls back to the raw value for any source the UI doesn't have a specific label for. */
 export function formatSource(source: string): string {
   return SOURCE_LABELS[source] ?? source;
+}
+
+/** A-Z by ingredient name — the merged list otherwise renders in whatever order the backend produced it, which gets hard to scan once a list has many items. Returns a new array; doesn't mutate. */
+export function sortByIngredientName<T extends { ingredient: { name: string } }>(
+  items: T[]
+): T[] {
+  return [...items].sort((a, b) => a.ingredient.name.localeCompare(b.ingredient.name));
 }
