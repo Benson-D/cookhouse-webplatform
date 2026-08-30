@@ -7,6 +7,7 @@ import { QuickAddItem } from "./components/QuickAddItem";
 import { GroceryListRow } from "./components/GroceryListRow";
 import { GroceryListFooter } from "./components/GroceryListFooter";
 import { SourceLegend } from "./components/SourceLegend";
+import { sortByIngredientName } from "./utils";
 
 /**
  * Logical component: composes `useGroceryList` with the module's
@@ -62,7 +63,7 @@ export function GroceryListScreen() {
         />
       ) : (
         <ul className="m-0 flex list-none flex-col px-[22px] pb-2">
-          {list.items.map((item) => (
+          {sortByIngredientName(list.items).map((item) => (
             <GroceryListRow
               key={item.id}
               item={item}
