@@ -2,6 +2,12 @@
 
 import { trpc } from "@/lib/trpc";
 
+// 3-5s, per root CLAUDE.md's "Real-time layer" decision — a shared shopping
+// trip is the case that actually needs another member's edit to show up
+// without a manual refresh, so this polls faster than anything else in the
+// app (recipes' ~10-15s, see useRecipeList/useRecipe).
+const GROCERY_LIST_POLL_MS = 4_000;
+
 /**
  * The household's active grocery list.
  *
@@ -17,7 +23,9 @@ export function useGroceryList() {
   const utils = trpc.useUtils();
   const invalidate = () => utils.groceryLists.getActive.invalidate();
 
-  const query = trpc.groceryLists.getActive.useQuery();
+  const query = trpc.groceryLists.getActive.useQuery(undefined, {
+    refetchInterval: GROCERY_LIST_POLL_MS,
+  });
   const setChecked = trpc.groceryLists.setChecked.useMutation({ onSuccess: invalidate });
   const removeItem = trpc.groceryLists.removeItem.useMutation({ onSuccess: invalidate });
   const complete = trpc.groceryLists.complete.useMutation({ onSuccess: invalidate });
