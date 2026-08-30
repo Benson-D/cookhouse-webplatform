@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import type { GalleryItem } from "../hooks/useRecipeImages";
+import type { GalleryItem } from "../types";
 
 /**
  * The photo row. First image is the cover.
