@@ -2,22 +2,23 @@
 
 import { useState } from "react";
 import { CHButton, CHSelect } from "@/components/common";
-import { useIngredientPicker } from "@/hooks/useIngredientPicker";
+import { useIngredientSearchPicker } from "@/hooks/useIngredientSearchPicker";
 import { FREQUENCY_OPTIONS } from "../utils";
 import type { Staple } from "../types";
 
 type Ingredient = { id: string; name: string };
 
 /**
- * One inline row — ingredient + frequency + Add — same shape as the recipe
- * form's "+ Add ingredient" row, reusing `useIngredientPicker` and
- * `CHSelect`'s search/create-on-type behavior wholesale.
+ * The screen's footer: an inline ingredient + frequency + Add row, same
+ * shape as the recipe form's "+ Add ingredient" row, reusing
+ * `useIngredientSearchPicker` and `CHSelect`'s search/create-on-type
+ * behavior wholesale.
  *
  * Already-staple ingredients grey out in the picker rather than being
  * filtered out — still worth seeing what's already covered. The backend's
  * CONFLICT on a duplicate is a backstop for a race, not the primary defense.
  */
-export function AddStapleRow({
+export function StapleFooter({
   existingStaples,
   onAdd,
   isAdding,
@@ -26,7 +27,7 @@ export function AddStapleRow({
   onAdd: (ingredientId: string, frequencyDays: number) => void;
   isAdding: boolean;
 }) {
-  const picker = useIngredientPicker();
+  const { options: ingredientOptions, setSearch, resolve } = useIngredientSearchPicker();
   const [ingredient, setIngredient] = useState<Ingredient | null>(null);
   const [frequencyDays, setFrequencyDays] = useState<number>(FREQUENCY_OPTIONS[1].days);
 
@@ -44,27 +45,23 @@ export function AddStapleRow({
         label="Ingredient"
         placeholder="search or add an ingredient"
         value={ingredient}
-        options={picker.options}
+        options={ingredientOptions}
         getOptionId={(item) => item.id}
         getOptionLabel={(item) => item.name}
         getOptionDisabled={(item) => existingIngredientIds.has(item.id)}
-        onSearch={picker.setSearch}
+        onSearch={setSearch}
         onSelect={setIngredient}
-        onCreate={picker.resolve}
+        onCreate={resolve}
       />
 
-      <select
-        value={frequencyDays}
-        onChange={(event) => setFrequencyDays(Number(event.target.value))}
-        aria-label="Frequency"
-        className="rounded-[7px] border border-line bg-surface-2 px-[11px] py-2 text-[13.5px] text-ink focus:outline-2 focus:outline-offset-1 focus:outline-accent"
-      >
-        {FREQUENCY_OPTIONS.map((option) => (
-          <option key={option.days} value={option.days}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+      <CHSelect<(typeof FREQUENCY_OPTIONS)[number]>
+        label="Frequency"
+        value={FREQUENCY_OPTIONS.find((option) => option.days === frequencyDays) ?? null}
+        options={[...FREQUENCY_OPTIONS]}
+        getOptionId={(option) => String(option.days)}
+        getOptionLabel={(option) => option.label}
+        onSelect={(option) => setFrequencyDays(option.days)}
+      />
 
       <CHButton variant="primary" onClick={handleAdd} disabled={!ingredient || isAdding}>
         {isAdding ? "Adding…" : "Add"}

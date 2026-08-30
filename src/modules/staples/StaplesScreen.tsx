@@ -3,7 +3,7 @@
 import { ErrorState, LoadingState, SubpageHeader } from "@/components/common";
 import { useStaples } from "./hooks/useStaples";
 import { StapleRow } from "./components/StapleRow";
-import { AddStapleRow } from "./components/AddStapleRow";
+import { StapleFooter } from "./components/StapleFooter";
 
 /** Its own route reached from the grocery list's source legend, not a modal — infrequent enough (set up once, not every trip) that it doesn't belong in the main list flow. */
 export function StaplesScreen() {
@@ -55,14 +55,14 @@ export function StaplesScreen() {
           </ul>
         )}
 
-        <AddStapleRow
+        <StapleFooter
           existingStaples={staples}
           onAdd={(ingredientId, frequencyDays) => void addStaple(ingredientId, frequencyDays)}
           isAdding={isAdding}
         />
 
         {addError && (
-          <p className="mt-2 text-[13px] text-[#B4442F]" role="alert">
+          <p className="mt-2 text-[13px] text-danger" role="alert">
             {addError.message}
           </p>
         )}
