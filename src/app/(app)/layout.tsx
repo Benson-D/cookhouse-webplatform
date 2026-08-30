@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { AppNav } from "@/components/common/AppNav";
+import { MobileTabBar } from "@/components/common/MobileTabBar";
 import { HouseholdGate } from "@/modules/household/HouseholdGate";
 
 /**
@@ -17,6 +18,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
     <div className="mx-auto flex w-full max-w-[1180px] flex-1 flex-col">
       <AppNav />
       <HouseholdGate>{children}</HouseholdGate>
+      <MobileTabBar />
     </div>
   );
 }
