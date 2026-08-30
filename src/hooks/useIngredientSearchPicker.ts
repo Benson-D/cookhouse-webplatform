@@ -4,6 +4,8 @@ import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { useDebounce } from "@/hooks/useDebounce";
 
+const MIN_SEARCH_LENGTH = 3;
+
 /**
  * Autocomplete over the shared ingredient list, with create-on-demand.
  *
@@ -15,14 +17,26 @@ import { useDebounce } from "@/hooks/useDebounce";
  *
  * This is the opposite of the tag picker on purpose: ingredients *can* be
  * typed and created by anyone, tags cannot.
+ *
+ * An empty search queries too — `ingredients.list` already returns a
+ * bounded, alphabetical default page when `search` is omitted, so opening
+ * the picker (or clearing it back to empty) shows that general list rather
+ * than nothing. What's still gated is a *partial* search: 1-2 typed
+ * characters don't query, since that's a noisy, wasteful search term, not
+ * "no search" — the query only fires once the trimmed search is empty or
+ * reaches `MIN_SEARCH_LENGTH`.
  */
-export function useIngredientPicker() {
+export function useIngredientSearchPicker() {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search);
+  const trimmedSearch = debouncedSearch.trim();
 
   const query = trpc.ingredients.list.useQuery(
-    { search: debouncedSearch.trim() || undefined },
-    { staleTime: 30 * 1000 }
+    { search: trimmedSearch || undefined },
+    {
+      staleTime: 30 * 1000,
+      enabled: trimmedSearch.length === 0 || trimmedSearch.length >= MIN_SEARCH_LENGTH,
+    }
   );
 
   const create = trpc.ingredients.create.useMutation();

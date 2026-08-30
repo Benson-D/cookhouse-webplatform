@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ErrorState, LoadingState } from "@/components/common";
 import { useRecipe } from "./hooks/useRecipe";
 import { useSaveRecipe } from "./hooks/useSaveRecipe";
-import { useIngredientPicker, useUnits } from "@/hooks/useIngredientPicker";
+import { useIngredientSearchPicker, useUnits } from "@/hooks/useIngredientSearchPicker";
 import { useRecipeImages } from "./hooks/useRecipeImages";
 import { useTags } from "./hooks/useTags";
 import { RecipeFormHeader } from "./components/RecipeFormHeader";
@@ -35,7 +35,7 @@ export function RecipeFormScreen({ recipeId }: { recipeId?: string }) {
   const { create, update, isSaving, saveError } = useSaveRecipe();
   const { tags } = useTags();
   const { units } = useUnits();
-  const picker = useIngredientPicker();
+  const picker = useIngredientSearchPicker();
   const images = useRecipeImages(id);
 
   // Three type params: fields hold strings (RecipeFormInput), the submit
