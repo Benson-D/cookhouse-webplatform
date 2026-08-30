@@ -129,11 +129,22 @@
  * also animate transform (buttons, checkboxes) opt into Tailwind's `transition`
  * utility instead of relying on this one — a class selector's transition-property
  * replaces this universal rule's for that element rather than merging with it.
+ *
+ * Wrapped in `@layer base` deliberately: Tailwind's own utilities compile
+ * into `@layer utilities`, and per CSS Cascade Layers, unlayered CSS beats
+ * layered CSS outright regardless of specificity. Left unlayered, this rule
+ * silently won over every utility class trying to override it, no matter
+ * how specific the transition/duration/ease combination on an element was.
+ * Placing it in `base` (which sits below `utilities` in Tailwind's own
+ * layer order) is what actually makes the "class selector overrides this"
+ * comment above true.
  */
-* {
-  transition-property: background-color, border-color, color;
-  transition-duration: 180ms;
-  transition-timing-function: ease;
+@layer base {
+  * {
+    transition-property: background-color, border-color, color;
+    transition-duration: 180ms;
+    transition-timing-function: ease;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
