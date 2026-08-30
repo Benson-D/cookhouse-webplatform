@@ -76,6 +76,7 @@ export function useRecipeImages(recipeId: string | null) {
     const { storageKey, uploadUrl } = await createUpload.mutateAsync({
       recipeId: targetRecipeId,
       contentType: file.type,
+      contentLength: file.size,
     });
 
     const response = await fetch(uploadUrl, {

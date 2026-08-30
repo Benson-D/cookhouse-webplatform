@@ -24,6 +24,7 @@ export function useReceiptScan() {
     try {
       const { storageKey, uploadUrl } = await createUpload.mutateAsync({
         contentType: file.type,
+        contentLength: file.size,
       });
 
       const response = await fetch(uploadUrl, {
