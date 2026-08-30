@@ -7,6 +7,11 @@ import { useDebounce } from "@/hooks/useDebounce";
 /** Well under the server-side cap of 100, and a clean multiple of the 3-col grid. */
 const PAGE_SIZE = 12;
 
+// ~10-15s, per root CLAUDE.md's "Real-time layer" decision — slower than the
+// grocery list's 3-5s, since nobody's waiting on a recipe-list update the way
+// two people shopping from the same list are.
+const RECIPE_POLL_MS = 12_000;
+
 /**
  * Owns the recipe list query and every filter that feeds it.
  *
@@ -18,11 +23,16 @@ const PAGE_SIZE = 12;
  * Any filter change resets to the first page: page 3 of the old result set has
  * no meaning against a new one, and silently showing an empty page reads as
  * "no matches" when there are plenty.
+ *
+ * `poll` defaults off — this hook is also used by the "Add from recipes"
+ * picker (`AddFromRecipesScreen`), which the polling decision doesn't cover.
+ * Only `RecipeListScreen` passes `poll: true`.
  */
-export function useRecipeList() {
+export function useRecipeList({ poll = false }: { poll?: boolean } = {}) {
   const [search, setSearchValue] = useState("");
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
   const [favoritesOnly, setFavoritesOnlyValue] = useState(false);
+  const [maxCookingTime, setMaxCookingTimeValue] = useState<number | null>(null);
   const [skip, setSkip] = useState(0);
 
   const debouncedSearch = useDebounce(search);
@@ -32,12 +42,16 @@ export function useRecipeList() {
       search: debouncedSearch.trim() || undefined,
       tagIds: selectedTagIds.length > 0 ? selectedTagIds : undefined,
       favoritesOnly: favoritesOnly || undefined,
+      maxCookingTime: maxCookingTime ?? undefined,
       skip,
       take: PAGE_SIZE,
     },
-    // Keeps the previous page on screen while the next one loads, so paging
-    // doesn't blank the grid on every click.
-    { placeholderData: (previous) => previous }
+    {
+      // Keeps the previous page on screen while the next one loads, so
+      // paging doesn't blank the grid on every click.
+      placeholderData: (previous) => previous,
+      ...(poll && { refetchInterval: RECIPE_POLL_MS }),
+    }
   );
 
   const setSearch = useCallback((value: string) => {
@@ -64,6 +78,11 @@ export function useRecipeList() {
     setSkip(0);
   }, []);
 
+  const setMaxCookingTime = useCallback((value: number | null) => {
+    setMaxCookingTimeValue(value);
+    setSkip(0);
+  }, []);
+
   const total = query.data?.total ?? 0;
   const recipes = query.data?.recipes ?? [];
 
@@ -84,11 +103,14 @@ export function useRecipeList() {
     clearTags,
     favoritesOnly,
     setFavoritesOnly,
+    maxCookingTime,
+    setMaxCookingTime,
     /** Distinguishes "this household has no recipes" from "nothing matched". */
     hasActiveFilters:
       debouncedSearch.trim().length > 0 ||
       selectedTagIds.length > 0 ||
-      favoritesOnly,
+      favoritesOnly ||
+      maxCookingTime !== null,
 
     skip,
     pageSize: PAGE_SIZE,

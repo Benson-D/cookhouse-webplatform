@@ -120,3 +120,56 @@ export function groupTagsByType<T extends { type?: string | null }>(
     .map((key) => groups.get(key))
     .filter((group): group is T[] => group !== undefined && group.length > 0);
 }
+
+const MEAL_TIME_NAMES = ["breakfast", "lunch", "dinner"];
+
+/**
+ * Breakfast/lunch/dinner are fixed at exactly three and won't grow like the
+ * rest of the (admin-curated) meal_type group, so they get pulled out into
+ * their own always-visible row instead of living in the filter panel.
+ */
+export function splitMealTimeTags<T extends { type?: string | null; name: string }>(
+  tags: T[]
+): { mealTimeTags: T[]; panelTags: T[] } {
+  const mealTimeTags: T[] = [];
+  const panelTags: T[] = [];
+
+  for (const tag of tags) {
+    if (tag.type === "meal_type" && MEAL_TIME_NAMES.includes(tag.name)) {
+      mealTimeTags.push(tag);
+    } else {
+      panelTags.push(tag);
+    }
+  }
+
+  mealTimeTags.sort(
+    (a, b) => MEAL_TIME_NAMES.indexOf(a.name) - MEAL_TIME_NAMES.indexOf(b.name)
+  );
+  return { mealTimeTags, panelTags };
+}
+
+const GROUP_LABELS: Record<string, string> = {
+  cuisine: "Cuisine",
+  diet: "Diet",
+  meal_type: "Meal type",
+};
+
+/** Falls back to the raw type for anything outside the three known groups, same as groupTagsByType's own "__other" bucket. */
+export function labelForTagGroup(type: string | null | undefined): string {
+  return (type && GROUP_LABELS[type]) ?? "Other";
+}
+
+export const COOK_TIME_OPTIONS = [
+  { label: "Under 20 min", value: 20 },
+  { label: "Under 30 min", value: 30 },
+  { label: "Under 45 min", value: 45 },
+  { label: "Under 1hr", value: 60 },
+] as const;
+
+/** Backend takes a plain int with no fixed enum, so anything outside the four presets still needs a label. */
+export function formatCookTimeFilter(maxCookingTime: number): string {
+  return (
+    COOK_TIME_OPTIONS.find((option) => option.value === maxCookingTime)?.label ??
+    `Under ${maxCookingTime} min`
+  );
+}

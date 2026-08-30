@@ -7,16 +7,27 @@ import { useFavoriteRecipe } from "./hooks/useFavoriteRecipe";
 import { Pager } from "./components/Pager";
 import { RecipeCard } from "./components/RecipeCard";
 import { RecipeToolbar } from "./components/RecipeToolbar";
-import { TagFilterBar } from "./components/TagFilterBar";
+import { ActiveFiltersRow } from "./components/ActiveFiltersRow";
+import { splitMealTimeTags } from "./utils";
 
 /**
  * Logical component: composes the list hook with presentational pieces and
  * holds no query of its own.
  */
 export function RecipeListScreen() {
-  const list = useRecipeList();
+  const list = useRecipeList({ poll: true });
   const { tags } = useTags();
   const { setFavorite, pendingRecipeId } = useFavoriteRecipe();
+
+  const { mealTimeTags, panelTags } = splitMealTimeTags(tags);
+  const activeFilterCount =
+    panelTags.filter((tag) => list.selectedTagIds.includes(tag.id)).length +
+    (list.maxCookingTime !== null ? 1 : 0);
+
+  function clearAllFilters() {
+    list.clearTags();
+    list.setMaxCookingTime(null);
+  }
 
   return (
     <div className="flex flex-1 flex-col">
@@ -25,13 +36,22 @@ export function RecipeListScreen() {
         onSearchChange={list.setSearch}
         favoritesOnly={list.favoritesOnly}
         onFavoritesOnlyChange={list.setFavoritesOnly}
-      />
-
-      <TagFilterBar
-        tags={tags}
+        panelTags={panelTags}
         selectedTagIds={list.selectedTagIds}
         onToggleTag={list.toggleTag}
-        onClear={list.clearTags}
+        maxCookingTime={list.maxCookingTime}
+        onSetMaxCookingTime={list.setMaxCookingTime}
+        activeFilterCount={activeFilterCount}
+      />
+
+      <ActiveFiltersRow
+        mealTimeTags={mealTimeTags}
+        panelTags={panelTags}
+        selectedTagIds={list.selectedTagIds}
+        onToggleTag={list.toggleTag}
+        maxCookingTime={list.maxCookingTime}
+        onSetMaxCookingTime={list.setMaxCookingTime}
+        onClearAll={clearAllFilters}
       />
 
       {list.isLoading && <CardGridLoadingState />}
@@ -62,6 +82,7 @@ export function RecipeListScreen() {
                   list.clearTags();
                   list.setSearch("");
                   list.setFavoritesOnly(false);
+                  list.setMaxCookingTime(null);
                 }}
               >
                 Clear filters
