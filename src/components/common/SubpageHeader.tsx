@@ -16,7 +16,8 @@ export function SubpageHeader({
 }: {
   backHref: string;
   backLabel?: string;
-  title: string;
+  /** Omit where the page's own heading already shows the title right below (e.g. recipe detail). */
+  title?: string;
   right?: ReactNode;
 }) {
   return (
@@ -31,7 +32,9 @@ export function SubpageHeader({
           </span>
           {backLabel}
         </Link>
-        <span className="font-display text-[17px] font-semibold text-ink">{title}</span>
+        {title && (
+          <span className="font-display text-[17px] font-semibold text-ink">{title}</span>
+        )}
       </div>
 
       {right}
