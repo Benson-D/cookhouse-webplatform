@@ -1,0 +1,64 @@
+/*
+ * The sweeping line over the receipt photo while it's being read. A real CSS
+ * animation, not JS-driven — pulled out of Tailwind per CLAUDE.md's note on
+ * highly conditional/multi-keyframe cases. Exact spec from
+ * design/kitchen-screens.html's .scan-line / @keyframes scan-sweep.
+ *
+ * Reduced motion needs no handling here: globals.css's global
+ * prefers-reduced-motion rule already forces animation-duration to ~0.01ms
+ * for every element, including this one.
+ */
+.scanLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--accent);
+  box-shadow:
+    0 0 10px 2px var(--accent),
+    0 0 2px var(--accent);
+  opacity: 0;
+  animation: scanSweep 2.1s ease-in-out infinite;
+}
+
+/*
+ * Entrance for the whole scanning block. The idle prompt and this block are
+ * structurally unrelated trees rendered at the same position, so React
+ * unmounts one and mounts the other outright — without this, that swap is a
+ * hard, jarring cut the instant "Scan receipt" is tapped.
+ */
+.scanEnter {
+  animation: scanEnter 220ms ease-out;
+}
+
+@keyframes scanEnter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scanSweep {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.85;
+  }
+  50% {
+    top: 100%;
+    opacity: 0.85;
+  }
+  58% {
+    opacity: 0;
+  }
+  100% {
+    top: 0%;
+    opacity: 0;
+  }
+}

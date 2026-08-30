@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CHTextInput, ErrorState, SubpageHeader } from "@/components/common";
-import { useIngredientPicker } from "@/hooks/useIngredientPicker";
+import { useIngredientSearchPicker } from "@/hooks/useIngredientSearchPicker";
 import { useReceiptScan } from "./hooks/useReceiptScan";
 import { useConfirmPurchases } from "./hooks/useConfirmPurchases";
 import { ReceiptPickerPrompt } from "./components/ReceiptPickerPrompt";
@@ -27,7 +27,7 @@ export function ReceiptScanScreen() {
   const router = useRouter();
   const { scan, isScanning, scanError } = useReceiptScan();
   const { confirm, isConfirming, confirmError } = useConfirmPurchases();
-  const picker = useIngredientPicker();
+  const picker = useIngredientSearchPicker();
 
   const [receiptId, setReceiptId] = useState<string | null>(null);
   const [storeName, setStoreName] = useState("");
@@ -87,7 +87,12 @@ export function ReceiptScanScreen() {
     return (
       <div className="flex flex-col">
         <SubpageHeader backHref="/grocery-list" title="Scan receipt" />
-        <ReceiptPickerPrompt onPick={handlePick} isDisabled={isScanning} />
+        <ReceiptPickerPrompt
+          onPick={handlePick}
+          isDisabled={isScanning}
+          previewUrl={previewUrl}
+          isScanning={isScanning}
+        />
         {scanError && (
           <div className="px-[22px] pb-6">
             <ErrorState title="Couldn't scan that receipt" message={scanError} />
@@ -171,7 +176,7 @@ export function ReceiptScanScreen() {
           )}
 
           {confirmError && (
-            <p className="mt-3 text-[13px] text-[#B4442F]" role="alert">
+            <p className="mt-3 text-[13px] text-danger" role="alert">
               {confirmError.message}
             </p>
           )}
