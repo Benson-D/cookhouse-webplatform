@@ -89,7 +89,7 @@ src/
 │   ├── utils.ts                 module-local pure helpers (added once one earns it)
 │   └── *.module.css            feature-local styles (added when Tailwind alone gets unwieldy)
 ├── modules/household/         HouseholdGate — the org gate, ahead of every feature
-├── components/common/         promoted here only once 2+ modules genuinely need it
+├── common/                    promoted here only once 2+ modules genuinely need it
 │   ├── LoadingState.tsx, ErrorState.tsx, EmptyState.tsx
 │   ├── AppNav.tsx, ThemeToggle.tsx
 │   └── *.stories.tsx
@@ -130,7 +130,7 @@ trivial: a presentational component needs no provider mocking to render in
 isolation, because it doesn't depend on any.
 
 **Loading, error, and empty states are shared components, not ad hoc JSX per
-screen.** `LoadingState`, `ErrorState`, `EmptyState` in `components/common/` —
+screen.** `LoadingState`, `ErrorState`, `EmptyState` in `common/` —
 empty is easy to forget and is a real, common state, not an edge case: a
 brand-new household's recipe list is legitimately empty, not broken. Every
 hook-consuming Screen renders one of these for its `isLoading`/`isError`/
@@ -145,19 +145,19 @@ new idiom, but know you're extrapolating, not matching an approved design —
 worth a real design pass once these exist, the same scrutiny the four main
 screens got.
 
-**`components/common/` has a barrel (`index.ts`), and nothing else does.**
-Once a file imports two or more things from `components/common/` — which
+**`common/` has a barrel (`index.ts`), and nothing else does.**
+Once a file imports two or more things from `common/` — which
 happens constantly, since every hook-consuming Screen needs a loading/error
 state plus whatever field primitives it uses — importing each by its own file
 path is pure boilerplate, so `import { CHTextInput, CHSelect } from
-"@/components/common"` replaces two (or more) lines with one. A single import
-from this folder stays a direct path (`@/components/common/AppNav`) — the
+"@/common"` replaces two (or more) lines with one. A single import
+from this folder stays a direct path (`@/common/AppNav`) — the
 barrel earns its keep on 2+, not on principle. Module-local `components/`
 folders (`modules/recipes/components/`, etc.) don't get one: those are usually
 one or two named things per file for that module alone, not a shared,
-growing set the way `components/common/` is.
+growing set the way `common/` is.
 
-**Most of `components/common/` is flat — `Component.tsx` beside a future
+**Most of `common/` is flat — `Component.tsx` beside a future
 `Component.stories.tsx` — except `CHButton/` and `CHLink/`, which are each
 their own folder** (just `CHButton/CHButton.tsx`, no local `index.ts` — the
 top-level barrel imports the file directly, `export { CHButton } from
@@ -177,7 +177,7 @@ module-local `modules/recipes/utils.ts` for logic specific to that module
 (formatting a cook time as "25 min"); promote to shared `lib/` only once,
 again, a second module needs the same thing.
 
-**Promote to `components/common/` on the rule of three, not on sight** —
+**Promote to `common/` on the rule of three, not on sight** —
 the same principle as the backend's "add a service file when the logic
 earns it." A `Pill` used only by recipes stays in
 `modules/recipes/components/` until a *second* module genuinely needs the
@@ -243,7 +243,7 @@ than working around.
 concrete payoff of the props-in/JSX-out rule above, not a separate initiative.
 Because these components own no data fetching, a story needs no `tRPC`
 mock, no `QueryClientProvider`, no Clerk provider — just the props. Every
-component in a `components/` folder (both `components/common/` and a
+component in a `components/` folder (both `common/` and a
 module's own) gets a co-located `Component.stories.tsx`; Screens don't, since
 they need real providers and live data to mean anything and mocking that is
 not worth it here.
@@ -338,7 +338,7 @@ recipe gallery, instead of two near-duplicate uploaders.
 Why it's not built now: there is exactly one form in the entire app so far
 (recipes). Building a generic engine from one data point is the
 abstraction-before-evidence trap this project avoids everywhere else
-(services added when they earn it, `components/common/` promoted on the rule
+(services added when they earn it, `common/` promoted on the rule
 of three, not on sight). Revisit once a **second** form exists and the
 repetition is observed firsthand rather than predicted — ideally once the
 `MeasuredIngredient` shape shows up in a real second UI, such as a grocery
@@ -459,7 +459,7 @@ follows is what actually got built, not just the plan.
   months and "this year" are both offered on purpose even though they
   overlap heavily — most of the year they show genuinely different numbers.
 
-Two more promotions to `components/common/` happened building this, same
+Two more promotions to `common/` happened building this, same
 rule-of-three logic as `TagBadge`: **`TagChip`** (recipes' filter pill) is now
 also spending's date-range chip — same selectable-pill component serving
 both multi-select (tag filtering) and single-select (one active preset)

@@ -36,7 +36,7 @@ import is the only feature with a backend and no frontend consumer yet.
 - `src/modules/<domain>/` — one folder per feature, each split into a
   `Screen`, presentational `components/`, and `hooks/` that own the tRPC
   calls.
-- `src/components/common/` — shared components, promoted once a second
+- `src/common/` — shared components, promoted once a second
   module needs one.
 - `src/app/` — routes only, no logic.
 - Types are inferred from the backend's published `@cookhouse/api-contract`
