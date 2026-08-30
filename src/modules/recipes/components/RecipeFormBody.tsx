@@ -139,20 +139,6 @@ export function RecipeFormBody({
           onToggle={onToggleTag}
         />
       </Field>
-
-      <Field
-        label="Source URL"
-        htmlFor="recipe-source"
-        error={formState.errors.sourceUrl?.message}
-        hint="If you got this from a website."
-      >
-        <CHTextInput
-          id="recipe-source"
-          placeholder="https://…"
-          {...register("sourceUrl")}
-          invalid={Boolean(formState.errors.sourceUrl)}
-        />
-      </Field>
     </div>
   );
 }

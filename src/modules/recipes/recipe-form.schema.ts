@@ -43,22 +43,6 @@ const optionalPositiveNumber = z
     { message: "Must be more than zero" }
   );
 
-const optionalUrl = z
-  .string()
-  .transform((value) => (blank(value) ? undefined : value.trim()))
-  .refine(
-    (value) => {
-      if (value === undefined) return true;
-      try {
-        new URL(value);
-        return true;
-      } catch {
-        return false;
-      }
-    },
-    { message: "Must be a full URL, including https://" }
-  );
-
 /** Phase 1 of the create flow: a name alone is enough to get an id. */
 export const recipeNameSchema = z.object({
   name: z.string().trim().min(1, "Give the recipe a name"),
@@ -90,7 +74,6 @@ export const recipeFormSchema = z
     servings: optionalInt("Must be a whole number above zero", 1),
     prepTime: optionalInt("Must be a whole number of minutes", 0),
     cookingTime: optionalInt("Must be a whole number of minutes", 0),
-    sourceUrl: optionalUrl,
     ingredients: z.array(ingredientRowSchema),
     steps: z.array(stepRowSchema),
     tagIds: z.array(z.string()),
@@ -134,7 +117,6 @@ function toRecipeFields(values: RecipeFormValues) {
     servings: values.servings,
     prepTime: values.prepTime,
     cookingTime: values.cookingTime,
-    sourceUrl: values.sourceUrl,
     instructions: values.steps.map((step, index) => ({
       step: index + 1,
       text: step.text,
@@ -167,7 +149,6 @@ export const emptyRecipeForm: RecipeFormInput = {
   servings: "",
   prepTime: "",
   cookingTime: "",
-  sourceUrl: "",
   ingredients: [],
   steps: [],
   tagIds: [],
@@ -186,7 +167,6 @@ export function fromRecipeDetail(
     servings: number | null;
     prepTime: number | null;
     cookingTime: number | null;
-    sourceUrl: string | null;
     ingredients: {
       ingredientId: string;
       unitId: string | null;
@@ -207,7 +187,6 @@ export function fromRecipeDetail(
     servings: text(recipe.servings),
     prepTime: text(recipe.prepTime),
     cookingTime: text(recipe.cookingTime),
-    sourceUrl: text(recipe.sourceUrl),
     ingredients: recipe.ingredients.map((row) => ({
       ingredientId: row.ingredientId,
       ingredientName: row.ingredient.name,
