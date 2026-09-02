@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CHSelect } from "../CHSelect";
+import { CHSelect } from "../CHSelect/CHSelect";
 
 type Unit = { id: string; name: string; abbreviation: string | null };
 

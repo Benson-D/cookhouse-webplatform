@@ -239,25 +239,34 @@ value or a stock Tailwind color in a component — if it isn't one of the
 mockup's tokens, it doesn't have a home yet, and that's worth resolving rather
 than working around.
 
-**Storybook renders presentational components in isolation** — this is the
-concrete payoff of the props-in/JSX-out rule above, not a separate initiative.
-Because these components own no data fetching, a story needs no `tRPC`
-mock, no `QueryClientProvider`, no Clerk provider — just the props. Every
-component in a `components/` folder (both `common/` and a
-module's own) gets a co-located `Component.stories.tsx`; Screens don't, since
-they need real providers and live data to mean anything and mocking that is
-not worth it here.
+**Storybook is set up, and scoped to `common/` only — deliberately, not every
+`components/` folder.** The original plan here was every presentational
+component across the app, both `common/` and each module's own; narrowed on
+the day it was actually installed to just the components used most often
+across modules (`CHButton`, `CHLink`, `CHSelect`, `CHTextInput`, `CHFormField`,
+`CHSectionLabel`, `TagBadge`, `TagChip`, `ExpandRow`, `SubpageHeader`,
+`EmptyState`, `ErrorState`, `LoadingState`) — the concrete payoff of the
+props-in/JSX-out rule above, not a separate initiative, since these need no
+`tRPC` mock, no `QueryClientProvider`, no Clerk provider to render, just the
+props. `.storybook/main.ts`'s `stories` glob is scoped to `src/common/**` for
+the same reason — a module-local component wanting a story isn't a signal to
+widen the glob on its own; that's the same rule-of-three logic this project
+already applies to promoting a component to `common/` in the first place.
 
-Set up a theme-switching toolbar in `.storybook/preview.ts` (a decorator that
-toggles the same theme attribute `app/globals.css` reads) so every story
-previews in both light and dark for free — this is where the "flip one
-attribute" payoff from the theming rule above becomes something you can
-actually look at per-component, not just trust in the abstract.
+`npx storybook@latest init` also installs `@storybook/addon-vitest` (plus
+Vitest, Playwright browser binaries, and `@chromatic-com/storybook`) by
+default — none of that was wanted here (browser-based interaction testing is
+a bigger, separate initiative from "render our components in isolation"), so
+those were stripped back out of `package.json` and `.storybook/main.ts`
+right after init, keeping just `@storybook/addon-a11y` and
+`@storybook/addon-docs`, which predate this and are genuinely used.
 
-Not installed yet — `npx storybook@latest init` in `cookhouse-webplatform`
-detects Next.js + Tailwind automatically. Do this as part of scaffolding the
-first module, not as a later add-on, so `RecipeCard.stories.tsx` exists
-alongside `RecipeCard.tsx` from the start rather than being backfilled.
+`.storybook/preview.tsx` has the theme-switching toolbar: a decorator that
+toggles the same `data-app-theme` attribute `ThemeToggle` and `globals.css`
+read, so every story previews in both light and dark for free — this is
+where the "flip one attribute" payoff from the theming rule above becomes
+something you can actually look at per-component, not just trust in the
+abstract.
 
 **Styles separate from components:** prefer Tailwind utility classes for
 layout and spacing, but pull a genuinely complex or highly conditional

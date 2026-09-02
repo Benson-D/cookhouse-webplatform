@@ -1,4 +1,4 @@
-import { CHButton } from "./CHButton/CHButton";
+import { CHButton } from "../CHButton/CHButton";
 
 /** Not an approved design — extrapolated so a failure reads as part of the page, not a foreign alert box. Worth a real design pass. */
 export function ErrorState({

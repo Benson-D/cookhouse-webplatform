@@ -1,9 +1,11 @@
 import type { StorybookConfig } from '@storybook/nextjs-vite';
 
 const config: StorybookConfig = {
+  // Scoped to src/common/ only, deliberately — module-local components
+  // (modules/<domain>/components/) don't get stories here.
   "stories": [
-    "../src/**/*.mdx",
-    "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"
+    "../src/common/**/*.mdx",
+    "../src/common/**/*.stories.@(js|jsx|mjs|ts|tsx)"
   ],
   "addons": [
     "@storybook/addon-a11y",
