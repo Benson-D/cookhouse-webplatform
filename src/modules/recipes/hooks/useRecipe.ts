@@ -38,14 +38,14 @@ export function useRecipe(recipeId: string | null, { poll = false }: { poll?: bo
 
   // `instructions` is a `Json` column typed `unknown` at the wire boundary,
   // so it needs parsing before use rather than being trusted as-is.
-  const steps = useMemo(
+  const parsedInstructions = useMemo(
     () => parseSteps(recipe?.instructions),
     [recipe?.instructions]
   );
 
   return {
     recipe,
-    steps,
+    parsedInstructions,
     images,
 
     // A disabled query stays `isPending` forever, so gate on having an id.

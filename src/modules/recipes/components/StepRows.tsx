@@ -13,12 +13,12 @@ import { AddLineButton, RemoveRowButton } from "./FormControls";
  */
 export function StepRows({ control }: { control: Control<RecipeFormInput, unknown, RecipeFormValues> }) {
   const { register, formState } = useFormContext<RecipeFormInput, unknown, RecipeFormValues>();
-  const { fields, append, remove } = useFieldArray({ control, name: "steps" });
+  const { fields, append, remove } = useFieldArray({ control, name: "instructions" });
 
   return (
     <div className="flex flex-col gap-2">
       {fields.map((field, index) => {
-        const rowErrors = formState.errors.steps?.[index];
+        const rowErrors = formState.errors.instructions?.[index];
         return (
           <div key={field.id} className="flex flex-col gap-1">
             <div className="flex items-start gap-2.5">
@@ -27,7 +27,7 @@ export function StepRows({ control }: { control: Control<RecipeFormInput, unknow
               </span>
 
               <CHTextArea
-                {...register(`steps.${index}.text`)}
+                {...register(`instructions.${index}.text`)}
                 rows={2}
                 placeholder="Describe the next step…"
                 aria-label={`Step ${index + 1}`}
@@ -36,7 +36,7 @@ export function StepRows({ control }: { control: Control<RecipeFormInput, unknow
               />
 
               <CHTextInput
-                {...register(`steps.${index}.timerSeconds`)}
+                {...register(`instructions.${index}.timerSeconds`)}
                 placeholder="secs"
                 inputMode="numeric"
                 aria-label={`Timer for step ${index + 1}, in seconds`}

@@ -31,7 +31,7 @@ export function RecipeFormScreen({ recipeId }: { recipeId?: string }) {
   const id = recipeId ?? null;
   const isEditing = id !== null;
 
-  const { recipe, steps, isLoading, isError, error, refetch } = useRecipe(id);
+  const { recipe, parsedInstructions, isLoading, isError, error, refetch } = useRecipe(id);
   const { create, update, isSaving, saveError } = useSaveRecipe();
   const { tags } = useTags();
   const { units } = useUnits();
@@ -46,7 +46,7 @@ export function RecipeFormScreen({ recipeId }: { recipeId?: string }) {
     defaultValues: emptyRecipeForm,
     // An existing recipe arrives asynchronously, so `values` re-seeds the form
     // when it lands rather than being captured once at mount.
-    values: recipe ? fromRecipeDetail(recipe, steps) : undefined,
+    values: recipe ? fromRecipeDetail(recipe, parsedInstructions) : undefined,
   });
 
   // `useWatch`, not `form.watch()` — watch() returns a fresh function each

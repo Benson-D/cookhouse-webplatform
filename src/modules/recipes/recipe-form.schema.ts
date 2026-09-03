@@ -75,7 +75,7 @@ export const recipeFormSchema = z
     prepTime: optionalInt("Must be a whole number of minutes", 0),
     cookingTime: optionalInt("Must be a whole number of minutes", 0),
     ingredients: z.array(ingredientRowSchema),
-    steps: z.array(stepRowSchema),
+    instructions: z.array(stepRowSchema),
     tagIds: z.array(z.string()),
   })
   .superRefine((values, ctx) => {
@@ -117,7 +117,7 @@ function toRecipeFields(values: RecipeFormValues) {
     servings: values.servings,
     prepTime: values.prepTime,
     cookingTime: values.cookingTime,
-    instructions: values.steps.map((step, index) => ({
+    instructions: values.instructions.map((step, index) => ({
       step: index + 1,
       text: step.text,
       ...(step.timerSeconds !== undefined && {
@@ -150,7 +150,7 @@ export const emptyRecipeForm: RecipeFormInput = {
   prepTime: "",
   cookingTime: "",
   ingredients: [],
-  steps: [],
+  instructions: [],
   tagIds: [],
 };
 
@@ -176,7 +176,7 @@ export function fromRecipeDetail(
     }[];
     tags: { tag: { id: string } }[];
   },
-  steps: { text: string; timerSeconds?: number }[]
+  instructions: { text: string; timerSeconds?: number }[]
 ): RecipeFormInput {
   const text = (value: string | number | null | undefined) =>
     value === null || value === undefined ? "" : String(value);
@@ -194,7 +194,7 @@ export function fromRecipeDetail(
       amount: text(row.amount),
       notes: text(row.notes),
     })),
-    steps: steps.map((step) => ({
+    instructions: instructions.map((step) => ({
       text: step.text,
       timerSeconds: text(step.timerSeconds),
     })),

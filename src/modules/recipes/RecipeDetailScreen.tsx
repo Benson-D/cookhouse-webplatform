@@ -23,9 +23,10 @@ import { DeleteRecipeLink } from "./components/DeleteRecipeLink";
 /** Logical component: composes `useRecipe` with the module's presentational pieces. */
 export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
   const router = useRouter();
-  const { recipe, steps, images, isLoading, isError, error, refetch } = useRecipe(recipeId, {
-    poll: true,
-  });
+  const { recipe, parsedInstructions, images, isLoading, isError, error, refetch } = useRecipe(
+    recipeId,
+    { poll: true }
+  );
   const { setFavorite, pendingRecipeId } = useFavoriteRecipe();
   const { handleAddToList, isAdding, justAdded, error: addError } = useAddToList(recipeId);
   const { deleteRecipe, isDeleting } = useDeleteRecipe();
@@ -76,7 +77,7 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
           <RecipeMeta recipe={recipe} />
 
           <CHSectionLabel>Method</CHSectionLabel>
-          <MethodSteps steps={steps} />
+          <MethodSteps steps={parsedInstructions} />
 
           <div className="mt-5 flex items-center gap-[9px]">
             <CHButton
