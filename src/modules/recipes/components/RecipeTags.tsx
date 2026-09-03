@@ -21,7 +21,12 @@ function RemovableChip({ label, onRemove }: { label: string; onRemove: () => voi
   );
 }
 
-export function ActiveFiltersRow({
+/**
+ * The always-visible meal-time chip row, plus the active-filter summary
+ * below it. Whether to render this at all is `RecipeToolPanel`'s call, not
+ * this component's own — it always renders something once it's mounted.
+ */
+export function RecipeTags({
   mealTimeTags,
   panelTags,
   selectedTagIds,
@@ -39,11 +44,7 @@ export function ActiveFiltersRow({
   onClearAll: () => void;
 }) {
   const activePanelTags = panelTags.filter((tag) => selectedTagIds.includes(tag.id));
-  const hasSummary = activePanelTags.length > 0 || maxCookingTime !== null;
-
-  if (mealTimeTags.length === 0 && !hasSummary) {
-    return null;
-  }
+  const hasActiveTags = activePanelTags.length > 0 || maxCookingTime !== null;
 
   return (
     <div className="flex flex-wrap items-center gap-[7px] px-[22px] pb-4">
@@ -56,7 +57,7 @@ export function ActiveFiltersRow({
         />
       ))}
 
-      {hasSummary && (
+      {hasActiveTags && (
         <>
           {mealTimeTags.length > 0 && <span aria-hidden className="mx-1 h-[18px] w-px bg-line" />}
 

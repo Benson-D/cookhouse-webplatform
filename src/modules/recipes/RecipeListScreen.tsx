@@ -1,58 +1,34 @@
 "use client";
 
-import { CardGridLoadingState, CHButton, EmptyState, ErrorState } from "@/common";
+import { CardGridLoadingState, EmptyState, ErrorState } from "@/common";
+import { usePagination } from "./hooks/usePagination";
+import { useRecipeFilters } from "./hooks/useRecipeFilters";
 import { useRecipeList } from "./hooks/useRecipeList";
-import { useTags } from "./hooks/useTags";
+import { useRecipeTagGroups } from "./hooks/useRecipeTagGroups";
 import { useFavoriteRecipe } from "./hooks/useFavoriteRecipe";
-import { Pager } from "./components/Pager";
+import { PaginationFooter } from "./components/PaginationFooter";
 import { RecipeCard } from "./components/RecipeCard";
-import { RecipeToolbar } from "./components/RecipeToolbar";
-import { ActiveFiltersRow } from "./components/ActiveFiltersRow";
-import { splitMealTimeTags } from "./utils";
+import { RecipeToolPanel } from "./components/RecipeToolPanel";
 
 /**
- * Logical component: composes the list hook with presentational pieces and
- * holds no query of its own.
+ * Composes pagination, filters, the list query and the tag groups, and
+ * holds no query of its own. Changing any filter resets pagination back to
+ * the first page, via `useRecipeFilters`' `onChange` wired to
+ * `pagination.reset`.
  */
 export function RecipeListScreen() {
-  const list = useRecipeList({ poll: true });
-  const { tags } = useTags();
+  const pagination = usePagination();
+  const filters = useRecipeFilters({ onChange: pagination.reset });
+  const list = useRecipeList({ filters, pagination, poll: true });
+  const tagGroups = useRecipeTagGroups({
+    selectedTagIds: filters.selectedTagIds,
+    maxCookingTime: filters.maxCookingTime,
+  });
   const { setFavorite, pendingRecipeId } = useFavoriteRecipe();
-
-  const { mealTimeTags, panelTags } = splitMealTimeTags(tags);
-  const activeFilterCount =
-    panelTags.filter((tag) => list.selectedTagIds.includes(tag.id)).length +
-    (list.maxCookingTime !== null ? 1 : 0);
-
-  function clearAllFilters() {
-    list.clearTags();
-    list.setMaxCookingTime(null);
-  }
 
   return (
     <div className="flex flex-1 flex-col">
-      <RecipeToolbar
-        search={list.search}
-        onSearchChange={list.setSearch}
-        favoritesOnly={list.favoritesOnly}
-        onFavoritesOnlyChange={list.setFavoritesOnly}
-        panelTags={panelTags}
-        selectedTagIds={list.selectedTagIds}
-        onToggleTag={list.toggleTag}
-        maxCookingTime={list.maxCookingTime}
-        onSetMaxCookingTime={list.setMaxCookingTime}
-        activeFilterCount={activeFilterCount}
-      />
-
-      <ActiveFiltersRow
-        mealTimeTags={mealTimeTags}
-        panelTags={panelTags}
-        selectedTagIds={list.selectedTagIds}
-        onToggleTag={list.toggleTag}
-        maxCookingTime={list.maxCookingTime}
-        onSetMaxCookingTime={list.setMaxCookingTime}
-        onClearAll={clearAllFilters}
-      />
+      <RecipeToolPanel filters={filters} tagGroups={tagGroups} />
 
       {list.isLoading && <CardGridLoadingState />}
 
@@ -66,28 +42,11 @@ export function RecipeListScreen() {
 
       {!list.isLoading && !list.isError && list.recipes.length === 0 && (
         <EmptyState
-          title={
-            list.hasActiveFilters ? "No recipes match those filters" : "No recipes yet"
-          }
+          title="No recipes found"
           message={
-            list.hasActiveFilters
-              ? "Try clearing a tag or two, or searching for something else."
+            filters.hasActiveFilters
+              ? "Try adjusting your search or filters above."
               : "This household hasn't added any recipes. The first one you save shows up here."
-          }
-          action={
-            list.hasActiveFilters && (
-              <CHButton
-                variant="ghost"
-                onClick={() => {
-                  list.clearTags();
-                  list.setSearch("");
-                  list.setFavoritesOnly(false);
-                  list.setMaxCookingTime(null);
-                }}
-              >
-                Clear filters
-              </CHButton>
-            )
           }
         />
       )}
@@ -107,14 +66,14 @@ export function RecipeListScreen() {
             ))}
           </div>
 
-          <Pager
+          <PaginationFooter
             rangeStart={list.rangeStart}
             rangeEnd={list.rangeEnd}
             total={list.total}
             hasPrevious={list.hasPrevious}
             hasNext={list.hasNext}
-            onPrevious={list.goToPrevious}
-            onNext={list.goToNext}
+            onPrevious={pagination.goToPrevious}
+            onNext={pagination.goToNext}
           />
         </>
       )}

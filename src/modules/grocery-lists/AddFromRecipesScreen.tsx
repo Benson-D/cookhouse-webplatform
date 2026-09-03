@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CardGridLoadingState, ErrorState, EmptyState, SubpageHeader } from "@/common";
+import { usePagination } from "@/modules/recipes/hooks/usePagination";
+import { useRecipeFilters } from "@/modules/recipes/hooks/useRecipeFilters";
 import { useRecipeList } from "@/modules/recipes/hooks/useRecipeList";
 import { useTags } from "@/modules/recipes/hooks/useTags";
 import { TagFilterBar } from "@/modules/recipes/components/TagFilterBar";
 import { RecipePickCard } from "@/modules/recipes/components/RecipePickCard";
-import { Pager } from "@/modules/recipes/components/Pager";
+import { PaginationFooter } from "@/modules/recipes/components/PaginationFooter";
 import { useAddFromRecipes } from "./hooks/useAddFromRecipes";
 import { PickerFooter } from "./components/PickerFooter";
 
@@ -15,15 +17,18 @@ import { PickerFooter } from "./components/PickerFooter";
  * The "Add from recipes" picker — its own route, not a modal.
  *
  * Reuses the recipe list's own search, tag filters and pagination almost
- * unchanged via `useRecipeList`; the only things that differ from the recipe
- * list screen are the card (pick mode, not favorite/link mode) and the bars
- * above and below it. No search bar of its own beyond what `useRecipeList`
- * already drives — deliberately not reusing `RecipeToolbar`, which also
- * renders "New recipe", not appropriate on a screen for picking existing ones.
+ * unchanged via `usePagination`/`useRecipeFilters`/`useRecipeList`; the only
+ * things that differ from the recipe list screen are the card (pick mode,
+ * not favorite/link mode) and the bars above and below it. No search bar of
+ * its own beyond what `useRecipeFilters` already drives — deliberately not
+ * reusing `RecipeToolbar`, which also renders "New recipe", not appropriate
+ * on a screen for picking existing ones.
  */
 export function AddFromRecipesScreen() {
   const router = useRouter();
-  const list = useRecipeList();
+  const pagination = usePagination();
+  const filters = useRecipeFilters({ onChange: pagination.reset });
+  const list = useRecipeList({ filters, pagination });
   const { tags } = useTags();
   const { addFromRecipes, isAdding } = useAddFromRecipes();
 
@@ -64,8 +69,8 @@ export function AddFromRecipesScreen() {
           </span>
           <input
             type="search"
-            value={list.search}
-            onChange={(event) => list.setSearch(event.target.value)}
+            value={filters.search}
+            onChange={(event) => filters.handleSearch(event.target.value)}
             placeholder="Search your recipes"
             aria-label="Search your recipes"
             className="w-full bg-transparent text-[13.5px] text-ink placeholder:text-ink-faint focus:outline-none"
@@ -75,9 +80,9 @@ export function AddFromRecipesScreen() {
 
       <TagFilterBar
         tags={tags}
-        selectedTagIds={list.selectedTagIds}
-        onToggleTag={list.toggleTag}
-        onClear={list.clearTags}
+        selectedTagIds={filters.selectedTagIds}
+        onToggleTag={filters.handleToggleTag}
+        onClear={filters.handleClearTags}
       />
 
       {list.isLoading && <CardGridLoadingState />}
@@ -92,9 +97,9 @@ export function AddFromRecipesScreen() {
 
       {!list.isLoading && !list.isError && list.recipes.length === 0 && (
         <EmptyState
-          title={list.hasActiveFilters ? "No recipes match those filters" : "No recipes yet"}
+          title={filters.hasActiveFilters ? "No recipes match those filters" : "No recipes yet"}
           message={
-            list.hasActiveFilters
+            filters.hasActiveFilters
               ? "Try clearing a tag or two, or searching for something else."
               : "This household hasn't added any recipes yet."
           }
@@ -114,14 +119,14 @@ export function AddFromRecipesScreen() {
             ))}
           </div>
 
-          <Pager
+          <PaginationFooter
             rangeStart={list.rangeStart}
             rangeEnd={list.rangeEnd}
             total={list.total}
             hasPrevious={list.hasPrevious}
             hasNext={list.hasNext}
-            onPrevious={list.goToPrevious}
-            onNext={list.goToNext}
+            onPrevious={pagination.goToPrevious}
+            onNext={pagination.goToNext}
           />
         </>
       )}

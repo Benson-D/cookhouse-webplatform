@@ -1,5 +1,5 @@
 /** Paging is offset-based and capped server-side, so the footer can state a real total rather than an endless scroll. */
-export function Pager({
+export function PaginationFooter({
   rangeStart,
   rangeEnd,
   total,
