@@ -6,7 +6,7 @@ import { cn } from "@/lib/cn";
 import { FilterPanel } from "./FilterPanel";
 import type { Tag } from "../types";
 
-export function FilterButton({
+export function FilterDropdown({
   tags,
   selectedTagIds,
   onToggleTag,
@@ -22,9 +22,9 @@ export function FilterButton({
   maxCookingTime: number | null;
   onSetMaxCookingTime: (value: number | null) => void;
   activeCount: number;
-  /** Sizing for the `relative` wrapper — e.g. RecipeToolbar's mobile-stacked row. */
+  /** Classes for the `relative` wrapper. */
   className?: string;
-  /** Sizing for the trigger button itself, separate from the wrapper it anchors the panel to. */
+  /** Classes for the trigger button itself. */
   triggerClassName?: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);

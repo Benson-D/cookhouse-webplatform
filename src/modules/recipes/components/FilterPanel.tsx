@@ -46,7 +46,7 @@ function CuisineGroup({
 /**
  * Grouped by `Tag.type`, floating over the grid on desktop and stacking
  * inline on mobile via one responsive class difference (see the wrapper in
- * `FilterButton`, which owns the open/close state this panel doesn't).
+ * `FilterDropdown`, which owns the open/close state this panel doesn't).
  */
 export function FilterPanel({
   tags,
