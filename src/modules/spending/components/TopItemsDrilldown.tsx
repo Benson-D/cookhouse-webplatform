@@ -12,7 +12,9 @@ export function TopItemsDrilldown({
 }) {
   return (
     <div className="flex flex-col gap-1 border-l-2 border-accent py-px pl-4">
-      <h4 className="m-0 text-[12.5px] font-bold text-ink">Top items — {formatMonthLong(monthKey)}</h4>
+      <h4 className="m-0 text-[12.5px] font-bold text-ink">
+        Top items — {formatMonthLong(monthKey)}
+      </h4>
 
       {isLoading ? (
         <p className="m-0 text-[12.5px] text-ink-faint">Loading…</p>
@@ -29,7 +31,9 @@ export function TopItemsDrilldown({
                 {item.name}
                 <span className="ml-1.5 text-[12.5px] text-ink-faint">×{item.purchaseCount}</span>
               </span>
-              <span className="tabular flex-none font-mono text-ink">{formatCurrency(item.total)}</span>
+              <span className="tabular flex-none font-mono text-ink">
+                {formatCurrency(item.total)}
+              </span>
             </div>
           ))}
         </div>

@@ -1,11 +1,7 @@
 "use client";
 
 import { trpc } from "@/lib/trpc";
-import {
-  toCreateInput,
-  toUpdateInput,
-  type RecipeFormValues,
-} from "../recipe-form.schema";
+import { toCreateInput, toUpdateInput, type RecipeFormValues } from "../recipe-form.schema";
 
 /**
  * The two writes behind the recipe form — one submit each, not one flow split
@@ -40,8 +36,7 @@ export function useSaveRecipe() {
     create: (values: RecipeFormValues) =>
       create.mutateAsync(toCreateInput(values)).then((recipe) => recipe.id),
     /** Updates an existing recipe in full. */
-    update: (id: string, values: RecipeFormValues) =>
-      update.mutateAsync(toUpdateInput(id, values)),
+    update: (id: string, values: RecipeFormValues) => update.mutateAsync(toUpdateInput(id, values)),
 
     isSaving: create.isPending || update.isPending,
     saveError: create.error ?? update.error,

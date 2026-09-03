@@ -18,8 +18,7 @@ export function useAddFromRecipes() {
   });
 
   return {
-    addFromRecipes: (recipeIds: string[]) =>
-      addFromRecipes.mutateAsync({ recipeIds }),
+    addFromRecipes: (recipeIds: string[]) => addFromRecipes.mutateAsync({ recipeIds }),
     isAdding: addFromRecipes.isPending,
     error: addFromRecipes.error,
   };

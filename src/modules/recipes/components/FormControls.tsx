@@ -1,11 +1,5 @@
 /** A quiet accent-coloured "add another" action. */
-export function AddLineButton({
-  onClick,
-  children,
-}: {
-  onClick: () => void;
-  children: string;
-}) {
+export function AddLineButton({ onClick, children }: { onClick: () => void; children: string }) {
   return (
     <button
       type="button"
@@ -18,13 +12,7 @@ export function AddLineButton({
 }
 
 /** Removes a repeater row. */
-export function RemoveRowButton({
-  onClick,
-  label,
-}: {
-  onClick: () => void;
-  label: string;
-}) {
+export function RemoveRowButton({ onClick, label }: { onClick: () => void; label: string }) {
   return (
     <button
       type="button"

@@ -1,6 +1,14 @@
 "use client";
 
-import { Bar, BarChart, CartesianGrid, Rectangle, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Rectangle,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+} from "recharts";
 import type { BarRectangleItem, BarShapeProps, LabelProps } from "recharts";
 import { formatCurrency, formatMonthShort } from "../utils";
 import type { TrendMonth } from "../types";
@@ -35,12 +43,31 @@ function MonthTick({
 }
 
 /** The dollar figure that floats above only the selected bar. */
-function SelectedBarLabel({ x, y, width, value, selectedIndex, index }: LabelProps & { selectedIndex: number }) {
-  if (index !== selectedIndex || typeof x !== "number" || typeof y !== "number" || typeof width !== "number") {
+function SelectedBarLabel({
+  x,
+  y,
+  width,
+  value,
+  selectedIndex,
+  index,
+}: LabelProps & { selectedIndex: number }) {
+  if (
+    index !== selectedIndex ||
+    typeof x !== "number" ||
+    typeof y !== "number" ||
+    typeof width !== "number"
+  ) {
     return null;
   }
   return (
-    <text x={x + width / 2} y={y - 8} textAnchor="middle" fontSize={12} fontWeight={600} fill="var(--ink)">
+    <text
+      x={x + width / 2}
+      y={y - 8}
+      textAnchor="middle"
+      fontSize={12}
+      fontWeight={600}
+      fill="var(--ink)"
+    >
       {formatCurrency(Number(value))}
     </text>
   );

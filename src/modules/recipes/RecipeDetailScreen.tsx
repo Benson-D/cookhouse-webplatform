@@ -62,11 +62,7 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
       <div className="grid gap-[26px] px-[22px] pb-6 pt-5 md:grid-cols-[1.05fr_1fr]">
         {/* Left column: photo gallery + ingredients */}
         <div>
-          <RecipeGallery
-            images={images}
-            fallbackSeed={recipe.id}
-            recipeName={recipe.name}
-          />
+          <RecipeGallery images={images} fallbackSeed={recipe.id} recipeName={recipe.name} />
 
           <CHSectionLabel>Ingredients</CHSectionLabel>
           <IngredientList ingredients={recipe.ingredients} />

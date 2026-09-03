@@ -65,7 +65,11 @@ export function TrendSection({
       </div>
 
       {selectedMonth && (
-        <TopItemsDrilldown monthKey={selectedMonth} items={topItems} isLoading={isTopItemsLoading} />
+        <TopItemsDrilldown
+          monthKey={selectedMonth}
+          items={topItems}
+          isLoading={isTopItemsLoading}
+        />
       )}
     </div>
   );

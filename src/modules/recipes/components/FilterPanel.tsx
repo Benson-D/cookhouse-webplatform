@@ -87,7 +87,11 @@ export function FilterPanel({
           <div key={type ?? "other"}>
             <CHSectionLabel className="first:mt-0">{labelForTagGroup(type)}</CHSectionLabel>
             {isCuisine ? (
-              <CuisineGroup tags={group} selectedTagIds={selectedTagIds} onToggleTag={onToggleTag} />
+              <CuisineGroup
+                tags={group}
+                selectedTagIds={selectedTagIds}
+                onToggleTag={onToggleTag}
+              />
             ) : (
               <div className="flex flex-wrap gap-[7px] pb-2">
                 {group.map((tag) => (

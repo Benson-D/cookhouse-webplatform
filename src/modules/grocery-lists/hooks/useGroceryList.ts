@@ -38,8 +38,7 @@ export function useGroceryList() {
     error: query.error,
     refetch: () => void query.refetch(),
 
-    setChecked: (itemId: string, checked: boolean) =>
-      setChecked.mutate({ itemId, checked }),
+    setChecked: (itemId: string, checked: boolean) => setChecked.mutate({ itemId, checked }),
 
     removeItem: (itemId: string) => removeItem.mutate({ itemId }),
 

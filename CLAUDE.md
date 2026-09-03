@@ -35,7 +35,7 @@ Clerk is set up via the Clerk CLI and linked to a real app; dev keys live in
 
 **Households are Clerk Organizations, and this is the biggest frontend
 consequence in the project.** Every recipe and grocery-list procedure requires
-an *active organization* on the session, not just a signed-in user. Without one
+an _active organization_ on the session, not just a signed-in user. Without one
 the API returns `FORBIDDEN: Select a household to continue`.
 
 So the app needs an organization gate before any household feature: surface
@@ -109,7 +109,7 @@ here.
 **The household gate lives in a route layout, not in each Screen.**
 `app/recipes/layout.tsx` wraps everything in `<HouseholdGate />` so no
 household-scoped query can run without an active organization — the gate has to
-sit *above* the hooks, or every screen fires a FORBIDDEN before it renders.
+sit _above_ the hooks, or every screen fires a FORBIDDEN before it renders.
 Grocery list and spending will want the same wrapper; promote it to a shared
 route group when the second one lands rather than copying the layout.
 
@@ -180,7 +180,7 @@ again, a second module needs the same thing.
 **Promote to `common/` on the rule of three, not on sight** —
 the same principle as the backend's "add a service file when the logic
 earns it." A `Pill` used only by recipes stays in
-`modules/recipes/components/` until a *second* module genuinely needs the
+`modules/recipes/components/` until a _second_ module genuinely needs the
 same thing. Premature promotion is exactly the kind of abstraction this
 project avoids elsewhere; a component only "becomes common" once something
 else actually needs it, not because it looks reusable.
@@ -195,7 +195,7 @@ Tailwind utility names there too.
 `<body>`.** In the mockup, `--ground` belongs to `.page`, the design
 artifact's own background behind each mocked-up browser frame; `.frame`
 (the actual app content, one browser window) sits on `--surface`. This app
-has no outer page — it *is* the frame — so `body` uses `bg-surface`, matching
+has no outer page — it _is_ the frame — so `body` uses `bg-surface`, matching
 `.frame`, not `bg-ground`. Got this backwards once already: `body` shipped on
 `--ground`, which is a shade darker/more tan than intended and made
 `AppNav` (which sets no background of its own, inheriting `body`'s) read as
@@ -328,7 +328,7 @@ lost and nobody re-derives or reflexively re-proposes it without this context.
 
 The idea: instead of hand-composing each form, the backend emits a UI
 descriptor per field (`{ type: "textfield", maxLength: 34, required: true }`),
-*generated from* the existing zod schema for generic fields — so there's no
+_generated from_ the existing zod schema for generic fields — so there's no
 second hand-maintained source of truth to drift from the validator — with an
 explicit escape hatch for anything bespoke (`{ type: "custom", component:
 "IngredientRepeater" }`). A generic frontend renderer walks the descriptor,
@@ -360,7 +360,7 @@ These look like bugs if you don't know them. Full reasoning is in the root
 `CLAUDE.md`.
 
 - **A grocery row can legitimately have no quantity.** When recipes measured an
-  ingredient in incompatible units (cups vs grams), *or* when nobody ever gave
+  ingredient in incompatible units (cups vs grams), _or_ when nobody ever gave
   it a quantity at all, the API returns `quantity: null` either way — that is
   the correct answer, not missing data. Render it as plain "flour" via
   `formatAmount`. Do **not** hide the row, show `0`, or treat it as an error.
@@ -430,7 +430,7 @@ These look like bugs if you don't know them. Full reasoning is in the root
   `useGroceryList` polls unconditionally (its query has exactly one
   consumer), but `useRecipeList` and `useRecipe` are each shared by a second
   screen the polling decision doesn't cover, so both take a `{ poll?:
-  boolean }` option defaulting to `false`: `RecipeListScreen` and
+boolean }` option defaulting to `false`: `RecipeListScreen` and
   `RecipeDetailScreen` pass `poll: true`; `AddFromRecipesScreen` (also built
   on `useRecipeList`) and `RecipeFormScreen`'s edit mode (also built on
   `useRecipe`) don't. The edit-mode case is the one that actually matters —
@@ -495,7 +495,7 @@ same `md:` breakpoint the grid already does (`RecipeListScreen`'s
   check rather than a second copy) hide via `hidden md:flex`;
   `OrganizationSwitcher` and `ThemeToggle` hide via `hidden md:block`.
 - **`MobileTabBar`** renders those same three links as a `position: sticky;
-  bottom: 0` bar, `md:hidden`, mounted once in `app/(app)/layout.tsx` after
+bottom: 0` bar, `md:hidden`, mounted once in `app/(app)/layout.tsx` after
   `HouseholdGate` — exactly three destinations is the textbook case for this
   pattern, and it keeps navigation in thumb reach the whole time the grocery
   list scrolls underneath it, worth more here than usual given that screen's

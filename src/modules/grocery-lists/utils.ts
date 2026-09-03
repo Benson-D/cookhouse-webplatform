@@ -46,8 +46,6 @@ export function formatSource(source: string): string {
 }
 
 /** A-Z by ingredient name — the merged list otherwise renders in whatever order the backend produced it, which gets hard to scan once a list has many items. Returns a new array; doesn't mutate. */
-export function sortByIngredientName<T extends { ingredient: { name: string } }>(
-  items: T[]
-): T[] {
+export function sortByIngredientName<T extends { ingredient: { name: string } }>(items: T[]): T[] {
   return [...items].sort((a, b) => a.ingredient.name.localeCompare(b.ingredient.name));
 }

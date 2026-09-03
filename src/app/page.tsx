@@ -16,8 +16,7 @@ export default function Home() {
       </div>
 
       <p className="m-0 max-w-[46ch] text-ink-soft">
-        Shared recipes, one grocery list, and what your household actually spends
-        on food.
+        Shared recipes, one grocery list, and what your household actually spends on food.
       </p>
 
       <SignedOut>

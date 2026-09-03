@@ -66,7 +66,9 @@ export function SpendingScreen() {
 
   return (
     <div className="flex flex-col">
-      <SpendingHeader subtitle={`${formatRangeLabel(range.from, range.to)} · ${summary.purchaseCount} purchases`} />
+      <SpendingHeader
+        subtitle={`${formatRangeLabel(range.from, range.to)} · ${summary.purchaseCount} purchases`}
+      />
 
       <DateRangeChips preset={preset} onChange={setPreset} />
 

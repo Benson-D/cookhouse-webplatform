@@ -20,9 +20,7 @@ export function TagPicker({
 }) {
   if (tags.length === 0) {
     return (
-      <p className="m-0 text-[11.5px] text-ink-faint">
-        No tags exist yet. An admin creates them.
-      </p>
+      <p className="m-0 text-[11.5px] text-ink-faint">No tags exist yet. An admin creates them.</p>
     );
   }
 

@@ -31,9 +31,7 @@ export function useRecipeFilters({ onChange }: { onChange?: () => void } = {}) {
   const handleToggleTag = useCallback(
     (tagId: string) => {
       setSelectedTagIds((current) =>
-        current.includes(tagId)
-          ? current.filter((id) => id !== tagId)
-          : [...current, tagId]
+        current.includes(tagId) ? current.filter((id) => id !== tagId) : [...current, tagId]
       );
       onChange?.();
     },

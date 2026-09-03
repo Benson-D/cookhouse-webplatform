@@ -32,9 +32,7 @@ export function SubpageHeader({
           </span>
           {backLabel}
         </Link>
-        {title && (
-          <span className="font-display text-[17px] font-semibold text-ink">{title}</span>
-        )}
+        {title && <span className="font-display text-[17px] font-semibold text-ink">{title}</span>}
       </div>
 
       {right}

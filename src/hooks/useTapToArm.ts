@@ -16,9 +16,12 @@ export function useTapToArm(onConfirm: () => void, timeoutMs = DEFAULT_TIMEOUT_M
 
   // Only fires on unmount — tap() clears it on every real transition
   // (arming, firing), so this is just the "navigated away mid-arm" case.
-  useEffect(() => () => {
-    if (resetTimer.current) clearTimeout(resetTimer.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (resetTimer.current) clearTimeout(resetTimer.current);
+    },
+    []
+  );
 
   function tap() {
     if (!armed) {

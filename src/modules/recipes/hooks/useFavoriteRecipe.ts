@@ -18,16 +18,12 @@ export function useFavoriteRecipe() {
 
   const mutation = trpc.recipes.setFavorite.useMutation({
     onSuccess: async () => {
-      await Promise.all([
-        utils.recipes.list.invalidate(),
-        utils.recipes.getById.invalidate(),
-      ]);
+      await Promise.all([utils.recipes.list.invalidate(), utils.recipes.getById.invalidate()]);
     },
   });
 
   return {
-    setFavorite: (id: string, favorited: boolean) =>
-      mutation.mutate({ id, favorited }),
+    setFavorite: (id: string, favorited: boolean) => mutation.mutate({ id, favorited }),
     /** The recipe currently being toggled, so a card can show its own pending state. */
     pendingRecipeId: mutation.isPending ? mutation.variables?.id : undefined,
     isError: mutation.isError,

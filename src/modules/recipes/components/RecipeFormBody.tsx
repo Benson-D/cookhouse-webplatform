@@ -49,8 +49,11 @@ export function RecipeFormBody({
   onAddImage: (file: File) => void;
   onRemoveImage: (key: string) => void;
 }) {
-  const { register, control, formState } =
-    useFormContext<RecipeFormInput, unknown, RecipeFormValues>();
+  const { register, control, formState } = useFormContext<
+    RecipeFormInput,
+    unknown,
+    RecipeFormValues
+  >();
 
   return (
     <div className="flex flex-col gap-[18px]">
@@ -132,11 +135,7 @@ export function RecipeFormBody({
       </CHFormField>
 
       <CHFormField label="Tags">
-        <TagPicker
-          tags={tags}
-          selectedTagIds={selectedTagIds}
-          onToggle={onToggleTag}
-        />
+        <TagPicker tags={tags} selectedTagIds={selectedTagIds} onToggle={onToggleTag} />
       </CHFormField>
     </div>
   );

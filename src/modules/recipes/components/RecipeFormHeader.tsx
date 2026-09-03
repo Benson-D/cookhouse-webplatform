@@ -6,8 +6,7 @@ import { CHFormField, CHTextInput } from "@/common";
 
 /** Title and the one field that exists from the very first render: the name. */
 export function RecipeFormHeader({ isEditing }: { isEditing: boolean }) {
-  const { register, formState } =
-    useFormContext<RecipeFormInput, unknown, RecipeFormValues>();
+  const { register, formState } = useFormContext<RecipeFormInput, unknown, RecipeFormValues>();
 
   return (
     <div className="flex flex-col gap-[18px]">
@@ -15,11 +14,7 @@ export function RecipeFormHeader({ isEditing }: { isEditing: boolean }) {
         {isEditing ? "Edit recipe" : "New recipe"}
       </h1>
 
-      <CHFormField
-        label="Recipe name"
-        htmlFor="recipe-name"
-        error={formState.errors.name?.message}
-      >
+      <CHFormField label="Recipe name" htmlFor="recipe-name" error={formState.errors.name?.message}>
         <CHTextInput
           id="recipe-name"
           autoFocus={!isEditing}

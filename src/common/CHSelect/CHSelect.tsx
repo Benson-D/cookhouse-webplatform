@@ -23,19 +23,13 @@ function SelectChevron({ open }: { open: boolean }) {
       strokeLinejoin="round"
       aria-hidden="true"
     >
-      {open ? (
-        <polyline points="5 12 10 7 15 12" />
-      ) : (
-        <polyline points="5 8 10 13 15 8" />
-      )}
+      {open ? <polyline points="5 12 10 7 15 12" /> : <polyline points="5 8 10 13 15 8" />}
     </svg>
   );
 }
 
 /** What picking a row means: an existing item, or (if `onCreate` is given) a new one. */
-type ChosenItem<T> =
-  | { kind: "existing"; item: T }
-  | { kind: "create"; name: string };
+type ChosenItem<T> = { kind: "existing"; item: T } | { kind: "create"; name: string };
 
 function normalize(value: string) {
   return value.trim().toLowerCase();
@@ -93,9 +87,7 @@ export function CHSelect<T>({
   );
   const canCreate = Boolean(onCreate) && normalizedQuery.length > 0 && !exactMatch;
 
-  const selected: ChosenItem<T> | null = value
-    ? { kind: "existing", item: value }
-    : null;
+  const selected: ChosenItem<T> | null = value ? { kind: "existing", item: value } : null;
 
   async function handleChange(chosen: ChosenItem<T> | null) {
     if (!chosen) return;
@@ -169,11 +161,7 @@ export function CHSelect<T>({
               value={{ kind: "create", name: query.trim() } satisfies ChosenItem<T>}
               disabled={isCreating}
               className={({ focus }) =>
-                cn(
-                  optionBaseClasses,
-                  "font-semibold",
-                  focus ? optionFocusClasses : "text-accent"
-                )
+                cn(optionBaseClasses, "font-semibold", focus ? optionFocusClasses : "text-accent")
               }
             >
               {isCreating ? "Adding…" : `Add “${query.trim()}”`}

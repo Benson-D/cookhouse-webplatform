@@ -21,27 +21,22 @@ import { z } from "zod";
 const blank = (value: string) => value.trim() === "";
 
 /** "" means "not given" — absent, not invalid. */
-const optionalText = z
-  .string()
-  .transform((value) => (blank(value) ? undefined : value.trim()));
+const optionalText = z.string().transform((value) => (blank(value) ? undefined : value.trim()));
 
 const optionalInt = (message: string, min: number) =>
   z
     .string()
     .transform((value) => (blank(value) ? undefined : Number(value)))
-    .refine(
-      (value) =>
-        value === undefined || (Number.isInteger(value) && value >= min),
-      { message }
-    );
+    .refine((value) => value === undefined || (Number.isInteger(value) && value >= min), {
+      message,
+    });
 
 const optionalPositiveNumber = z
   .string()
   .transform((value) => (blank(value) ? undefined : Number(value)))
-  .refine(
-    (value) => value === undefined || (Number.isFinite(value) && value > 0),
-    { message: "Must be more than zero" }
-  );
+  .refine((value) => value === undefined || (Number.isFinite(value) && value > 0), {
+    message: "Must be more than zero",
+  });
 
 /** Phase 1 of the create flow: a name alone is enough to get an id. */
 export const recipeNameSchema = z.object({

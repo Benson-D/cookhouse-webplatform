@@ -38,9 +38,12 @@ export function ReceiptScanScreen() {
   useEffect(() => {
     previewUrlRef.current = previewUrl;
   }, [previewUrl]);
-  useEffect(() => () => {
-    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    },
+    []
+  );
 
   async function handlePick(file: File) {
     // Local preview while scanning is in flight — but this is the *original*

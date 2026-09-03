@@ -10,16 +10,10 @@ import type { RecipeDetail } from "../types";
  * the join row, not the ingredient, which is what keeps "onion" one canonical
  * thing across every recipe.
  */
-export function IngredientList({
-  ingredients,
-}: {
-  ingredients: RecipeDetail["ingredients"];
-}) {
+export function IngredientList({ ingredients }: { ingredients: RecipeDetail["ingredients"] }) {
   if (ingredients.length === 0) {
     return (
-      <p className="m-0 text-[13.5px] text-ink-faint">
-        No ingredients recorded for this recipe.
-      </p>
+      <p className="m-0 text-[13.5px] text-ink-faint">No ingredients recorded for this recipe.</p>
     );
   }
 

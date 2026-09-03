@@ -59,9 +59,7 @@ export function RecipeListScreen() {
                 key={recipe.id}
                 recipe={recipe}
                 isFavoritePending={pendingRecipeId === recipe.id}
-                onToggleFavorite={() =>
-                  setFavorite(recipe.id, !recipe.isFavorited)
-                }
+                onToggleFavorite={() => setFavorite(recipe.id, !recipe.isFavorited)}
               />
             ))}
           </div>

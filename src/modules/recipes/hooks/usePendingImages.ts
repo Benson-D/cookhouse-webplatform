@@ -27,10 +27,7 @@ export function usePendingImages() {
 
   const add = (file: File) => {
     const previewUrl = URL.createObjectURL(file);
-    setPending((current) => [
-      ...current,
-      { key: `${file.name}-${Date.now()}`, file, previewUrl },
-    ]);
+    setPending((current) => [...current, { key: `${file.name}-${Date.now()}`, file, previewUrl }]);
   };
 
   const remove = (key: string) => {

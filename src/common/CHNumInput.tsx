@@ -34,13 +34,7 @@ function sanitize(value: string, min: number): string {
  * sanitizing the event's value first, then forwarding the same event, so it
  * drops in wherever `CHTextInput` does.
  */
-export function CHNumInput({
-  invalid,
-  className,
-  min = 0,
-  onChange,
-  ...props
-}: CHNumInputProps) {
+export function CHNumInput({ invalid, className, min = 0, onChange, ...props }: CHNumInputProps) {
   const minValue = Number(min);
 
   return (

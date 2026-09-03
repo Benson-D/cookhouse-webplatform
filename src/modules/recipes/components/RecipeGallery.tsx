@@ -63,11 +63,7 @@ export function RecipeGallery({
               )}
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- as above */}
-              <img
-                src={image.url}
-                alt=""
-                className="h-full w-full object-cover"
-              />
+              <img src={image.url} alt="" className="h-full w-full object-cover" />
             </button>
           ))}
         </div>

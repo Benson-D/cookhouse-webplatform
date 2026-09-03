@@ -12,9 +12,7 @@ export function RecipeMeta({ recipe }: { recipe: RecipeDetail }) {
         {recipe.name}
       </h1>
 
-      {recipe.description && (
-        <p className="m-0 text-sm text-ink-soft">{recipe.description}</p>
-      )}
+      {recipe.description && <p className="m-0 text-sm text-ink-soft">{recipe.description}</p>}
 
       <div className="tabular flex flex-wrap gap-4 font-mono text-[11.5px] text-ink-faint">
         {recipe.servings ? (
@@ -24,19 +22,15 @@ export function RecipeMeta({ recipe }: { recipe: RecipeDetail }) {
         ) : null}
         {recipe.prepTime ? (
           <span>
-            prep{" "}
-            <b className="font-semibold text-ink-soft">{recipe.prepTime} min</b>
+            prep <b className="font-semibold text-ink-soft">{recipe.prepTime} min</b>
           </span>
         ) : null}
         {recipe.cookingTime ? (
           <span>
-            cook{" "}
-            <b className="font-semibold text-ink-soft">{recipe.cookingTime} min</b>
+            cook <b className="font-semibold text-ink-soft">{recipe.cookingTime} min</b>
           </span>
         ) : null}
-        {totalTime && !recipe.prepTime && !recipe.cookingTime && (
-          <span>{totalTime}</span>
-        )}
+        {totalTime && !recipe.prepTime && !recipe.cookingTime && <span>{totalTime}</span>}
       </div>
 
       {recipe.tags.length > 0 && (

@@ -29,12 +29,7 @@ const variantClasses: Record<Variant, string> = {
  * common component is meant to be manageable on its own. No `pressed` state:
  * nothing that navigates is also a toggle today: add it if that changes.
  */
-export function CHLink({
-  variant = "ghost",
-  className,
-  children,
-  ...props
-}: CHLinkProps) {
+export function CHLink({ variant = "ghost", className, children, ...props }: CHLinkProps) {
   const classes = cn(base, variantClasses[variant], "no-underline", className);
 
   return (

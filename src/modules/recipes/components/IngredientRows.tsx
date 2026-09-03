@@ -31,8 +31,11 @@ export function IngredientRows({
   onSearchIngredients: (query: string) => void;
   onResolveIngredient: (name: string) => Promise<Ingredient>;
 }) {
-  const { register, setValue, watch, formState } =
-    useFormContext<RecipeFormInput, unknown, RecipeFormValues>();
+  const { register, setValue, watch, formState } = useFormContext<
+    RecipeFormInput,
+    unknown,
+    RecipeFormValues
+  >();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "ingredients",
@@ -61,9 +64,7 @@ export function IngredientRows({
                 label={`Unit for ingredient ${index + 1}`}
                 unitId={unitId}
                 units={units}
-                onSelect={(unit) =>
-                  setValue(`ingredients.${index}.unitId`, unit.id)
-                }
+                onSelect={(unit) => setValue(`ingredients.${index}.unitId`, unit.id)}
               />
 
               <CHSelect<Ingredient>

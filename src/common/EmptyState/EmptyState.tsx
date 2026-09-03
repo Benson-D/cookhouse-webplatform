@@ -16,9 +16,7 @@ export function EmptyState({
 }) {
   return (
     <div className="flex flex-col items-center gap-3 px-[22px] py-14 text-center">
-      <h2 className="m-0 font-display text-[19px] font-semibold text-ink">
-        {title}
-      </h2>
+      <h2 className="m-0 font-display text-[19px] font-semibold text-ink">{title}</h2>
       {message && <p className="m-0 max-w-[48ch] text-sm text-ink-soft">{message}</p>}
       {action && <div className="mt-2">{action}</div>}
     </div>

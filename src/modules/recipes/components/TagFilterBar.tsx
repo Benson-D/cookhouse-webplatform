@@ -30,18 +30,11 @@ export function TagFilterBar({
 
   return (
     <div className="flex flex-wrap items-center gap-[7px] px-[22px] pb-4">
-      <TagChip
-        label="All"
-        selected={selectedTagIds.length === 0}
-        onToggle={onClear}
-      />
+      <TagChip label="All" selected={selectedTagIds.length === 0} onToggle={onClear} />
 
       {groups.map((group, index) => (
         <Fragment key={group[0].id}>
-          <span
-            aria-hidden
-            className={cn("mx-1 h-[18px] w-px bg-line", index === 0 && "hidden")}
-          />
+          <span aria-hidden className={cn("mx-1 h-[18px] w-px bg-line", index === 0 && "hidden")} />
           {group.map((tag) => (
             <TagChip
               key={tag.id}

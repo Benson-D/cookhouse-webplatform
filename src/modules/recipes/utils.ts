@@ -100,8 +100,7 @@ export function parseSteps(instructions: unknown): RecipeStep[] {
     .map((entry, index) => ({
       step: typeof entry.step === "number" ? entry.step : index + 1,
       text: entry.text,
-      timerSeconds:
-        typeof entry.timerSeconds === "number" ? entry.timerSeconds : undefined,
+      timerSeconds: typeof entry.timerSeconds === "number" ? entry.timerSeconds : undefined,
     }))
     .sort((a, b) => a.step - b.step);
 }
@@ -122,14 +121,11 @@ export function formatTimer(seconds: number): string {
  */
 const TAG_TYPE_ORDER = ["meal_type", "cuisine", "diet"];
 
-export function groupTagsByType<T extends { type?: string | null }>(
-  tags: T[]
-): T[][] {
+export function groupTagsByType<T extends { type?: string | null }>(tags: T[]): T[][] {
   const groups = new Map<string, T[]>();
 
   for (const tag of tags) {
-    const key =
-      tag.type && TAG_TYPE_ORDER.includes(tag.type) ? tag.type : "__other";
+    const key = tag.type && TAG_TYPE_ORDER.includes(tag.type) ? tag.type : "__other";
     const existing = groups.get(key);
     if (existing) {
       existing.push(tag);
@@ -164,9 +160,7 @@ export function splitMealTimeTags<T extends { type?: string | null; name: string
     }
   }
 
-  mealTimeTags.sort(
-    (a, b) => MEAL_TIME_NAMES.indexOf(a.name) - MEAL_TIME_NAMES.indexOf(b.name)
-  );
+  mealTimeTags.sort((a, b) => MEAL_TIME_NAMES.indexOf(a.name) - MEAL_TIME_NAMES.indexOf(b.name));
   return { mealTimeTags, panelTags };
 }
 

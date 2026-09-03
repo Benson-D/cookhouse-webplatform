@@ -38,7 +38,12 @@ export function ReceiptPickerPrompt({
   if (isScanning && previewUrl) {
     const showPlaceholder = failedUrl === previewUrl;
     return (
-      <div className={cn("flex flex-col items-center gap-3 px-[22px] py-16 text-center", styles.scanEnter)}>
+      <div
+        className={cn(
+          "flex flex-col items-center gap-3 px-[22px] py-16 text-center",
+          styles.scanEnter
+        )}
+      >
         <div
           className="relative aspect-[3/4] w-[220px] overflow-hidden rounded-[9px] border border-line-soft"
           style={

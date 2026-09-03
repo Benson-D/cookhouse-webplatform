@@ -20,7 +20,11 @@ export function SpendingLoadingState() {
         <div key={rows} className="animate-pulse space-y-2 pt-6">
           <div className="h-3 w-24 rounded bg-surface-2" />
           {Array.from({ length: rows }, (_, index) => (
-            <div key={index} className="h-4 rounded bg-surface-2" style={{ width: `${80 - index * 8}%` }} />
+            <div
+              key={index}
+              className="h-4 rounded bg-surface-2"
+              style={{ width: `${80 - index * 8}%` }}
+            />
           ))}
         </div>
       ))}

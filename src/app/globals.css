@@ -26,12 +26,10 @@
   --elevation-sm: 0 1px 2px rgba(43, 35, 24, 0.06);
   --elevation-lg: 0 1px 2px rgba(43, 35, 24, 0.05), 0 10px 30px rgba(43, 35, 24, 0.09);
 
-  --font-display-stack: "Iowan Old Style", "Palatino Linotype", Palatino,
-    "Book Antiqua", Georgia, serif;
-  --font-sans-stack: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    sans-serif;
-  --font-mono-stack: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas,
-    monospace;
+  --font-display-stack:
+    "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --font-sans-stack: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono-stack: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
 
   color-scheme: light;
 }

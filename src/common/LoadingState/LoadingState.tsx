@@ -1,11 +1,5 @@
 /** Not an approved design — muted `surface-2` blocks standing in until this gets a real design pass. */
-export function LoadingState({
-  label = "Loading…",
-  rows = 3,
-}: {
-  label?: string;
-  rows?: number;
-}) {
+export function LoadingState({ label = "Loading…", rows = 3 }: { label?: string; rows?: number }) {
   return (
     <div className="px-[22px] py-6" role="status" aria-live="polite">
       <span className="sr-only">{label}</span>

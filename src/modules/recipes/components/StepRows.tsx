@@ -11,7 +11,11 @@ import { AddLineButton, RemoveRowButton } from "./FormControls";
  * reorder. Timers are optional and stored in seconds, matching the JSON the
  * detail screen already reads.
  */
-export function StepRows({ control }: { control: Control<RecipeFormInput, unknown, RecipeFormValues> }) {
+export function StepRows({
+  control,
+}: {
+  control: Control<RecipeFormInput, unknown, RecipeFormValues>;
+}) {
   const { register, formState } = useFormContext<RecipeFormInput, unknown, RecipeFormValues>();
   const { fields, append, remove } = useFieldArray({ control, name: "instructions" });
 
@@ -45,10 +49,7 @@ export function StepRows({ control }: { control: Control<RecipeFormInput, unknow
               />
 
               <div className="mt-2">
-                <RemoveRowButton
-                  onClick={() => remove(index)}
-                  label={`Remove step ${index + 1}`}
-                />
+                <RemoveRowButton onClick={() => remove(index)} label={`Remove step ${index + 1}`} />
               </div>
             </div>
 
@@ -61,11 +62,7 @@ export function StepRows({ control }: { control: Control<RecipeFormInput, unknow
         );
       })}
 
-      <AddLineButton
-        onClick={() => append({ text: "", timerSeconds: "" })}
-      >
-        Add step
-      </AddLineButton>
+      <AddLineButton onClick={() => append({ text: "", timerSeconds: "" })}>Add step</AddLineButton>
     </div>
   );
 }

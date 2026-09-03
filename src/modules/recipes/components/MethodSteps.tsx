@@ -9,11 +9,7 @@ import { formatTimer, type RecipeStep } from "../utils";
  */
 export function MethodSteps({ steps }: { steps: RecipeStep[] }) {
   if (steps.length === 0) {
-    return (
-      <p className="m-0 text-[13.5px] text-ink-faint">
-        No method recorded for this recipe.
-      </p>
-    );
+    return <p className="m-0 text-[13.5px] text-ink-faint">No method recorded for this recipe.</p>;
   }
 
   return (

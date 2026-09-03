@@ -18,11 +18,7 @@ export function PickerFooter({
         </b>{" "}
         selected · merges into the current list
       </span>
-      <CHButton
-        variant="primary"
-        onClick={onSubmit}
-        disabled={selectedCount === 0 || isSubmitting}
-      >
+      <CHButton variant="primary" onClick={onSubmit} disabled={selectedCount === 0 || isSubmitting}>
         {isSubmitting ? "Adding…" : "Add to list"}
       </CHButton>
     </div>

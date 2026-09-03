@@ -14,13 +14,6 @@ export type SpendingByStore = RouterOutputs["spending"]["byStore"];
 /** This is the one shape `SpendBarList` renders — `byCategory`'s `category` and `byStore`'s `store` both map to `label`. */
 export type SpendBarRow = { label: string; total: number };
 
-export type RangePreset =
-  | "thisMonth"
-  | "lastMonth"
-  | "3mo"
-  | "6mo"
-  | "9mo"
-  | "12mo"
-  | "thisYear";
+export type RangePreset = "thisMonth" | "lastMonth" | "3mo" | "6mo" | "9mo" | "12mo" | "thisYear";
 
 export type DateRange = { from: Date; to: Date };

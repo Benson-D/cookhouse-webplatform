@@ -49,14 +49,20 @@ export function SpendBarList({
                 style={{ width: `${maxTotal > 0 ? (row.total / maxTotal) * 100 : 0}%` }}
               />
             </div>
-            <span className="tabular text-right font-mono text-ink">{formatCurrency(row.total)}</span>
+            <span className="tabular text-right font-mono text-ink">
+              {formatCurrency(row.total)}
+            </span>
           </div>
         ))}
       </div>
 
       {remaining > 0 && (
         <div className="mt-5">
-          <ExpandRow label={moreLabel(remaining)} actionLabel="view all" onClick={() => setExpanded(true)} />
+          <ExpandRow
+            label={moreLabel(remaining)}
+            actionLabel="view all"
+            onClick={() => setExpanded(true)}
+          />
         </div>
       )}
     </div>

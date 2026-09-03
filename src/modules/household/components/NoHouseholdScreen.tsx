@@ -21,9 +21,8 @@ export function NoHouseholdScreen() {
           Recipes and lists belong to a household
         </h1>
         <p className="m-0 text-base text-ink-soft">
-          Everything in Cookhouse — recipes, the shared grocery list, spending —
-          is scoped to one household. Pick one to continue, or start a new one
-          and invite the people you cook with.
+          Everything in Cookhouse — recipes, the shared grocery list, spending — is scoped to one
+          household. Pick one to continue, or start a new one and invite the people you cook with.
         </p>
       </div>
 

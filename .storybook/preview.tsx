@@ -1,5 +1,5 @@
-import type { Preview } from '@storybook/nextjs-vite'
-import '../src/app/globals.css'
+import type { Preview } from "@storybook/nextjs-vite";
+import "../src/app/globals.css";
 
 /**
  * Toggles the same `data-app-theme` attribute `ThemeToggle` and `globals.css`
@@ -7,10 +7,10 @@ import '../src/app/globals.css'
  * This is the whole mechanism; no React state, just the DOM attribute.
  */
 function applyTheme(theme: string) {
-  if (theme === 'system') {
-    document.documentElement.removeAttribute('data-app-theme')
+  if (theme === "system") {
+    document.documentElement.removeAttribute("data-app-theme");
   } else {
-    document.documentElement.setAttribute('data-app-theme', theme)
+    document.documentElement.setAttribute("data-app-theme", theme);
   }
 }
 
@@ -18,8 +18,8 @@ const preview: Preview = {
   parameters: {
     controls: {
       matchers: {
-       color: /(background|color)$/i,
-       date: /Date$/i,
+        color: /(background|color)$/i,
+        date: /Date$/i,
       },
     },
 
@@ -27,20 +27,20 @@ const preview: Preview = {
       // 'todo' - show a11y violations in the test UI only
       // 'error' - fail CI on a11y violations
       // 'off' - skip a11y checks entirely
-      test: 'todo'
-    }
+      test: "todo",
+    },
   },
 
   globalTypes: {
     theme: {
-      description: 'Theme',
+      description: "Theme",
       toolbar: {
-        title: 'Theme',
-        icon: 'circlehollow',
+        title: "Theme",
+        icon: "circlehollow",
         items: [
-          { value: 'system', title: 'System' },
-          { value: 'light', title: 'Light' },
-          { value: 'dark', title: 'Dark' },
+          { value: "system", title: "System" },
+          { value: "light", title: "Light" },
+          { value: "dark", title: "Dark" },
         ],
         dynamicTitle: true,
       },
@@ -48,13 +48,13 @@ const preview: Preview = {
   },
 
   initialGlobals: {
-    theme: 'system',
+    theme: "system",
   },
 
   decorators: [
     (Story, context) => {
-      applyTheme(context.globals.theme)
-      return <Story />
+      applyTheme(context.globals.theme);
+      return <Story />;
     },
   ],
 };
