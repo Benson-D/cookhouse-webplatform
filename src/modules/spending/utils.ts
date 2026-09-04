@@ -11,7 +11,7 @@ export const RANGE_PRESETS: { id: RangePreset; label: string }[] = [
   { id: "thisYear", label: "This year" },
 ];
 
-const TRAILING_MONTHS: Partial<Record<RangePreset, number>> = {
+const TRAILING_MONTHS: Record<"3mo" | "6mo" | "9mo" | "12mo", number> = {
   "3mo": 3,
   "6mo": 6,
   "9mo": 9,
@@ -23,26 +23,28 @@ const TRAILING_MONTHS: Partial<Record<RangePreset, number>> = {
  * backend has no preset concept of its own (see root CLAUDE.md's domain
  * rules). Changing the preset re-runs every report against the same range,
  * so the hero number, chart, and both bar-lists never disagree.
+ *
+ * A switch with no default: TypeScript refuses to compile if a RangePreset
+ * value is ever added without a case here.
  */
 export function resolveRangePreset(preset: RangePreset): DateRange {
   const now = new Date();
 
-  if (preset === "lastMonth") {
-    const lastMonth = subMonths(now, 1);
-    return { from: startOfMonth(lastMonth), to: endOfMonth(lastMonth) };
+  switch (preset) {
+    case "thisMonth":
+      return { from: startOfMonth(now), to: now };
+    case "lastMonth": {
+      const lastMonth = subMonths(now, 1);
+      return { from: startOfMonth(lastMonth), to: endOfMonth(lastMonth) };
+    }
+    case "thisYear":
+      return { from: startOfYear(now), to: now };
+    case "3mo":
+    case "6mo":
+    case "9mo":
+    case "12mo":
+      return { from: startOfMonth(subMonths(now, TRAILING_MONTHS[preset] - 1)), to: now };
   }
-
-  if (preset === "thisYear") {
-    return { from: startOfYear(now), to: now };
-  }
-
-  const trailing = TRAILING_MONTHS[preset];
-  if (trailing) {
-    return { from: startOfMonth(subMonths(now, trailing - 1)), to: now };
-  }
-
-  // "thisMonth"
-  return { from: startOfMonth(now), to: now };
 }
 
 /** `trend`'s `month` field is `"YYYY-MM"` — the first-of-month through the last instant of that month. */

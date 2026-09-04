@@ -26,18 +26,20 @@ export function useSpendingTrend(range: DateRange) {
   const effectiveMonth = selectedMonth ?? months.at(-1)?.month ?? null;
   const monthRange = effectiveMonth ? monthKeyToRange(effectiveMonth) : null;
 
+  // Falls back to the overall range when disabled — never sent, since the
+  // query only fires once monthRange is set, but trpc still needs a valid shape.
   const topItemsQuery = trpc.spending.topItems.useQuery(
     { from: monthRange?.from ?? range.from, to: monthRange?.to ?? range.to },
     { enabled: monthRange !== null, placeholderData: keepPreviousData }
   );
 
-  function selectMonth(monthKey: string) {
+  const selectMonth = (monthKey: string) => {
     setSelectedMonth((current) => (current === monthKey ? null : monthKey));
-  }
+  };
 
   return {
     months,
-    isLoading: trendQuery.isPending,
+    isTrendLoading: trendQuery.isPending,
     selectedMonth: effectiveMonth,
     selectMonth,
     topItems: topItemsQuery.data?.items ?? [],

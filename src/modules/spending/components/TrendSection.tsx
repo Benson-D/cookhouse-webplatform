@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { CHSectionLabel, ExpandRow } from "@/common";
 import { TrendChart } from "./TrendChart";
-import { TopItemsDrilldown } from "./TopItemsDrilldown";
+import { TopItemsList } from "./TopItemsList";
 import { formatCurrency, formatMonthLong } from "../utils";
 import type { TopItem, TrendMonth } from "../types";
 
@@ -65,11 +65,7 @@ export function TrendSection({
       </div>
 
       {selectedMonth && (
-        <TopItemsDrilldown
-          monthKey={selectedMonth}
-          items={topItems}
-          isLoading={isTopItemsLoading}
-        />
+        <TopItemsList monthKey={selectedMonth} items={topItems} isLoading={isTopItemsLoading} />
       )}
     </div>
   );

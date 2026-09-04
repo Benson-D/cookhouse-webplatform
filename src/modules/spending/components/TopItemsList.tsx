@@ -1,7 +1,7 @@
 import { formatCurrency, formatMonthLong } from "../utils";
 import type { TopItem } from "../types";
 
-export function TopItemsDrilldown({
+export function TopItemsList({
   monthKey,
   items,
   isLoading,

@@ -1,11 +1,12 @@
 import { formatCurrency, formatRangeLabel } from "../utils";
 
 /**
- * The headline number. Sans, not the serif every other heading in this app
- * uses — a hero figure reads as data, not a section title, and the display
- * face here would read as decoration instead of the number that matters most.
+ * Renders `useSpendingSummary`'s `summary` — the headline total, purchase
+ * count, and range. Sans, not the serif every other heading in this app
+ * uses: this reads as data, not a section title, and the display face here
+ * would read as decoration instead of the number that matters most.
  */
-export function SpendingHero({
+export function SpendingSummary({
   total,
   purchaseCount,
   from,

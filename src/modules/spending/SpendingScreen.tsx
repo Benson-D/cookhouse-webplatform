@@ -8,7 +8,7 @@ import { useSpendingByCategory } from "./hooks/useSpendingByCategory";
 import { useSpendingByStore } from "./hooks/useSpendingByStore";
 import { SpendingHeader } from "./components/SpendingHeader";
 import { DateRangeChips } from "./components/DateRangeChips";
-import { SpendingHero } from "./components/SpendingHero";
+import { SpendingSummary } from "./components/SpendingSummary";
 import { SpendingLoadingState } from "./components/SpendingLoadingState";
 import { TrendSection } from "./components/TrendSection";
 import { SpendBarList } from "./components/SpendBarList";
@@ -41,11 +41,6 @@ export function SpendingScreen() {
     );
   }
 
-  // Zero purchases in range means all five queries came back empty at once,
-  // not one query failing — a `$0.00` hero next to a flat chart and two
-  // blank bar-lists is four ways of saying nothing. The chips stay, since
-  // they're the filter, not the report; everything below them swaps for one
-  // `EmptyState` instead.
   if (summary.purchaseCount === 0) {
     return (
       <div className="flex flex-col">
@@ -72,7 +67,7 @@ export function SpendingScreen() {
 
       <DateRangeChips preset={preset} onChange={setPreset} />
 
-      <SpendingHero
+      <SpendingSummary
         total={summary.total}
         purchaseCount={summary.purchaseCount}
         from={range.from}
