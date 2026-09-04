@@ -8,6 +8,8 @@ import { useRecipe } from "./hooks/useRecipe";
 import { useSaveRecipe } from "./hooks/useSaveRecipe";
 import { useIngredientSearchPicker, useUnits } from "@/hooks/useIngredientSearchPicker";
 import { useRecipeImages } from "./hooks/useRecipeImages";
+import { usePendingImages } from "./hooks/usePendingImages";
+import { useUploadRecipeImage } from "./hooks/useUploadRecipeImage";
 import { useTags } from "./hooks/useTags";
 import { RecipeFormHeader } from "./components/RecipeFormHeader";
 import { RecipeFormBody } from "./components/RecipeFormBody";
@@ -36,7 +38,9 @@ export function RecipeFormScreen({ recipeId }: { recipeId?: string }) {
   const { tags } = useTags();
   const { units } = useUnits();
   const picker = useIngredientSearchPicker();
-  const images = useRecipeImages(id);
+  const pendingImages = usePendingImages();
+  const { uploadOne } = useUploadRecipeImage();
+  const images = useRecipeImages(id, pendingImages, uploadOne);
 
   // Three type params: fields hold strings (RecipeFormInput), the submit
   // handler receives them parsed (RecipeFormValues). Collapsing the two is
