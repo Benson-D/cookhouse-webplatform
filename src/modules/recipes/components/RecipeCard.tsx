@@ -1,15 +1,12 @@
 import Link from "next/link";
 import { TagBadge } from "@/common";
 import type { RecipeSummary } from "../types";
-import { formatRecipeMeta, placeholderGradient } from "../utils";
+import { formatRecipeMeta } from "../utils/recipeMeta";
+import { placeholderGradient } from "../utils/placeholder";
 import { FavoriteButton } from "./FavoriteButton";
 
 /**
  * One card in the recipe grid.
- *
- * The thumbnail is a generated colour field, not a photo — `recipes.list`
- * returns tags but no images. Real thumbnails need the list query to include
- * the first `RecipeImage`.
  *
  * **The whole card is one link, stretched from the title** via `after:inset-0`
  * — not a second hidden anchor around the image, since focus inside an
@@ -31,11 +28,15 @@ export function RecipeCard({
       <div className="relative aspect-[4/3]">
         {/* Shadow lives on a separate `::after` (opacity only) so box-shadow's repaint cost stays off the transform-animating element. */}
         <div
-          className="relative h-full w-full rounded-lg border border-line-soft transition-transform duration-260 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1.5 after:absolute after:inset-0 after:rounded-lg after:opacity-0 after:shadow-frame after:content-[''] after:transition-opacity after:duration-260 after:ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:after:opacity-100"
-          style={{ background: placeholderGradient(recipe.id) }}
-        />
+          className="relative h-full w-full overflow-hidden rounded-lg border border-line-soft transition-transform duration-260 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1.5 after:absolute after:inset-0 after:rounded-lg after:opacity-0 after:shadow-frame after:content-[''] after:transition-opacity after:duration-260 after:ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:after:opacity-100"
+          style={recipe.coverImageUrl ? undefined : { background: placeholderGradient(recipe.id) }}
+        >
+          {recipe.coverImageUrl && (
+            // eslint-disable-next-line @next/next/no-img-element -- presigned bucket URL, host not yet fixed
+            <img src={recipe.coverImageUrl} alt="" className="h-full w-full object-cover" />
+          )}
+        </div>
 
-        {/* Lifted above the stretched link so the heart stays clickable, not a navigate. */}
         <div className="absolute right-2 top-2 z-10">
           <FavoriteButton
             isFavorited={recipe.isFavorited}

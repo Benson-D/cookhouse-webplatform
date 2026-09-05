@@ -396,12 +396,13 @@ These look like bugs if you don't know them. Full reasoning is in the root
   picker must be a closed list from `tags.list`.
 - **`recipes.list` is paginated** and returns `{ recipes, total, skip, take }`,
   with `take` capped at 100 server-side.
-- **`recipes.list` returns tags but no images**, so recipe cards have no
-  thumbnail to render. `RecipeCard` draws a colour field keyed to the recipe id
-  instead — the same stand-in treatment the mockup uses. Real thumbnails need
-  the list query to include the first `RecipeImage` and mint a URL for it;
-  that's a backend change, not something to paper over with a per-card
-  `recipes.images` call (that's an N+1 across the page).
+- **`recipes.list` returns `coverImageUrl`** — the recipe's first `RecipeImage`
+  (by `sortOrder`), already turned into a presigned read URL server-side, or
+  `null` if the recipe has no photos yet. `RecipeCard`/`RecipePickCard` render
+  it when present; `placeholderGradient`'s generated colour field, keyed to
+  the recipe id, is the fallback otherwise — the same stand-in treatment the
+  mockup uses. Resolved server-side rather than a per-card `recipes.images`
+  call, which would be an N+1 across the page.
 - **`Recipe.instructions` is typed `unknown` at the API boundary**, not as a
   step array. It's a Prisma `Json` column, and `JsonValue` is recursive — tRPC
   walks output types to infer what serializes, and that recursion makes the web
