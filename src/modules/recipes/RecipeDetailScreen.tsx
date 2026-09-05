@@ -1,24 +1,17 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import {
-  CHButton,
-  CHLink,
-  CHSectionLabel,
-  ErrorState,
-  LoadingState,
-  SubpageHeader,
-} from "@/common";
+import { CHSectionLabel, ErrorState, LoadingState, SubpageHeader } from "@/common";
 import { useTapToArm } from "@/hooks/useTapToArm";
 import { useRecipe } from "./hooks/useRecipe";
 import { useFavoriteRecipe } from "./hooks/useFavoriteRecipe";
 import { useDeleteRecipe } from "./hooks/useDeleteRecipe";
 import { useAddToList } from "./hooks/useAddToList";
 import { IngredientList } from "./components/IngredientList";
-import { MethodSteps } from "./components/MethodSteps";
+import { MethodInstructions } from "./components/MethodInstructions";
 import { RecipeGallery } from "./components/RecipeGallery";
 import { RecipeMeta } from "./components/RecipeMeta";
-import { DeleteRecipeLink } from "./components/DeleteRecipeLink";
+import { RecipeDetailActions } from "./components/RecipeDetailActions";
 
 /** Logical component: composes `useRecipe` with the module's presentational pieces. */
 export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
@@ -73,37 +66,21 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
           <RecipeMeta recipe={recipe} />
 
           <CHSectionLabel>Method</CHSectionLabel>
-          <MethodSteps steps={parsedInstructions} />
+          <MethodInstructions instructions={parsedInstructions} />
 
-          <div className="mt-5 flex items-center gap-[9px]">
-            <CHButton
-              variant="primary"
-              onClick={() => void handleAddToList()}
-              disabled={isAdding || justAdded}
-            >
-              {isAdding ? "Adding…" : justAdded ? "Added ✓" : "Add to grocery list"}
-            </CHButton>
-
-            <CHButton
-              pressed={recipe.isFavorited}
-              onClick={() => setFavorite(recipe.id, !recipe.isFavorited)}
-              disabled={pendingRecipeId === recipe.id}
-            >
-              {recipe.isFavorited ? "♥ Saved" : "♡ Save"}
-            </CHButton>
-
-            <CHLink variant="ghost" href={`/recipes/${recipe.id}/edit`}>
-              Edit
-            </CHLink>
-
-            <DeleteRecipeLink armed={deleteArmed} onTap={tapDelete} isDeleting={isDeleting} />
-          </div>
-
-          {addError && (
-            <p className="mt-2 text-[13px] text-danger" role="alert">
-              {addError.message}
-            </p>
-          )}
+          <RecipeDetailActions
+            recipeId={recipe.id}
+            isFavorited={recipe.isFavorited}
+            isFavoritePending={pendingRecipeId === recipe.id}
+            onToggleFavorite={() => setFavorite(recipe.id, !recipe.isFavorited)}
+            isAdding={isAdding}
+            justAdded={justAdded}
+            onAddToList={() => void handleAddToList()}
+            addErrorMessage={addError?.message}
+            deleteArmed={deleteArmed}
+            onTapDelete={tapDelete}
+            isDeleting={isDeleting}
+          />
         </div>
       </div>
     </div>

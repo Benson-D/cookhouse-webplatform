@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { CHSectionLabel, ExpandRow, TagChip } from "@/common";
-import { COOK_TIME_OPTIONS, groupTagsByType, labelForTagGroup } from "../utils";
+import { COOK_TIME_OPTIONS } from "../utils/cookTime";
+import { groupTagsByType, labelForTagGroup } from "../utils/tags";
 import type { Tag } from "../types";
 
 const CUISINE_PREVIEW_COUNT = 6;

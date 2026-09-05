@@ -11,7 +11,7 @@ import { AddLineButton, RemoveRowButton } from "./FormControls";
  * reorder. Timers are optional and stored in seconds, matching the JSON the
  * detail screen already reads.
  */
-export function StepRows({
+export function InstructionsRows({
   control,
 }: {
   control: Control<RecipeFormInput, unknown, RecipeFormValues>;

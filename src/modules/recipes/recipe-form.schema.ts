@@ -57,7 +57,7 @@ const ingredientRowSchema = z.object({
   notes: optionalText,
 });
 
-const stepRowSchema = z.object({
+const instructionRowSchema = z.object({
   text: z.string().trim().min(1, "Describe this step"),
   timerSeconds: optionalInt("Must be a whole number of seconds", 0),
 });
@@ -70,7 +70,7 @@ export const recipeFormSchema = z
     prepTime: optionalInt("Must be a whole number of minutes", 0),
     cookingTime: optionalInt("Must be a whole number of minutes", 0),
     ingredients: z.array(ingredientRowSchema),
-    instructions: z.array(stepRowSchema),
+    instructions: z.array(instructionRowSchema),
     tagIds: z.array(z.string()),
   })
   .superRefine((values, ctx) => {
@@ -112,11 +112,11 @@ function toRecipeFields(values: RecipeFormValues) {
     servings: values.servings,
     prepTime: values.prepTime,
     cookingTime: values.cookingTime,
-    instructions: values.instructions.map((step, index) => ({
+    instructions: values.instructions.map((instruction, index) => ({
       step: index + 1,
-      text: step.text,
-      ...(step.timerSeconds !== undefined && {
-        timerSeconds: step.timerSeconds,
+      text: instruction.text,
+      ...(instruction.timerSeconds !== undefined && {
+        timerSeconds: instruction.timerSeconds,
       }),
     })),
     ingredients: values.ingredients.map((row) => ({
@@ -189,9 +189,9 @@ export function fromRecipeDetail(
       amount: text(row.amount),
       notes: text(row.notes),
     })),
-    instructions: instructions.map((step) => ({
-      text: step.text,
-      timerSeconds: text(step.timerSeconds),
+    instructions: instructions.map((instruction) => ({
+      text: instruction.text,
+      timerSeconds: text(instruction.timerSeconds),
     })),
     tagIds: recipe.tags.map(({ tag }) => tag.id),
   };

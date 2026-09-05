@@ -1,5 +1,5 @@
 import { TagBadge } from "@/common";
-import { formatTotalTime } from "../utils";
+import { formatTotalTime } from "../utils/recipeMeta";
 import type { RecipeDetail } from "../types";
 
 /** Title, description, servings/prep/cook stats, and tags — the recipe's own header info. Presentational: no hooks, no handlers. */

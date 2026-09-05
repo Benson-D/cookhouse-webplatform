@@ -1,6 +1,6 @@
 import { TagChip } from "@/common";
 import type { Tag } from "../types";
-import { groupTagsByType } from "../utils";
+import { groupTagsByType } from "../utils/tags";
 
 /**
  * Tag selection for the form — the same chip vocabulary as the list filter.

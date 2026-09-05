@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
-import { buildGalleryItems } from "../utils";
+import { buildGalleryItems } from "../utils/gallery";
 import type { GalleryItem } from "../types";
 import type { usePendingImages } from "./usePendingImages";
 

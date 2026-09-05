@@ -7,7 +7,7 @@ import type { RecipeFormInput, RecipeFormValues } from "../recipe-form.schema";
 import type { Tag } from "../types";
 import { ImageUploader } from "./ImageUploader";
 import { IngredientRows } from "./IngredientRows";
-import { StepRows } from "./StepRows";
+import { InstructionsRows } from "./InstructionsRows";
 import { TagPicker } from "./TagPicker";
 
 type Ingredient = { id: string; name: string };
@@ -17,7 +17,7 @@ type Unit = { id: string; name: string; abbreviation: string | null };
  * Everything between the name field and the save/cancel actions.
  *
  * Pulls `register`/`control`/`formState` from context rather than taking them
- * as props — same as `IngredientRows`/`StepRows`, which this composes — since
+ * as props — same as `IngredientRows`/`InstructionsRows`, which this composes — since
  * this only ever renders inside the form's own `FormProvider`.
  */
 export function RecipeFormBody({
@@ -131,7 +131,7 @@ export function RecipeFormBody({
       </CHFormField>
 
       <CHFormField label="Method">
-        <StepRows control={control} />
+        <InstructionsRows control={control} />
       </CHFormField>
 
       <CHFormField label="Tags">

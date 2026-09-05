@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { trpc } from "@/lib/trpc";
 import type { RecipeDetail, RecipeImageWithUrl } from "../types";
-import { parseSteps } from "../utils";
+import { parseInstructions } from "../utils/instructions";
 
 // 12s poll, per root CLAUDE.md's "Real-time layer" decision.
 const RECIPE_POLL_MS = 12_000;
@@ -39,7 +39,7 @@ export function useRecipe(recipeId: string | null, { poll = false }: { poll?: bo
   // `instructions` is a `Json` column typed `unknown` at the wire boundary,
   // so it needs parsing before use rather than being trusted as-is.
   const parsedInstructions = useMemo(
-    () => parseSteps(recipe?.instructions),
+    () => parseInstructions(recipe?.instructions),
     [recipe?.instructions]
   );
 

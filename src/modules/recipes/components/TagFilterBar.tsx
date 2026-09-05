@@ -2,7 +2,7 @@ import { Fragment } from "react";
 import { TagChip } from "@/common";
 import { cn } from "@/lib/cn";
 import type { Tag } from "../types";
-import { groupTagsByType } from "../utils";
+import { groupTagsByType } from "../utils/tags";
 
 /**
  * One run per tag type, split by a thin rule.
