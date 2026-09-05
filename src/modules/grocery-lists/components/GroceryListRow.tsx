@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/cn";
 import { formatAmount } from "@/lib/formatAmount";
+import { shouldHideAmount } from "../utils";
 import type { GroceryListItem } from "../types";
 import { SourceBadge } from "./SourceBadge";
 
@@ -9,7 +10,8 @@ import { SourceBadge } from "./SourceBadge";
  * One row, at its own mobile-width column set as the only layout — no
  * per-row "who" column, so there's no breakpoint fallback to make room for
  * one (see root CLAUDE.md). A null `quantity` renders as an em dash, never
- * `0` or hidden.
+ * `0` or hidden — and a volume-type unit's real quantity gets the same
+ * em-dash treatment via `shouldHideAmount`, since nobody shops by the cup.
  *
  * **The whole row toggles the checkbox, not just the box** — the same
  * `after:absolute after:inset-0` stretch `RecipeCard` uses. The remove
@@ -25,6 +27,8 @@ export function GroceryListRow({
   onToggle: (checked: boolean) => void;
   onRemove: () => void;
 }) {
+  const hideAmount = shouldHideAmount(item.unit);
+
   return (
     <li className="relative grid grid-cols-[20px_76px_1fr_auto] items-center gap-3 border-b border-line-soft px-3 py-2.5 text-sm hover:bg-surface-2">
       <button
@@ -46,11 +50,11 @@ export function GroceryListRow({
       <span
         className={cn(
           "tabular text-right font-mono text-[12.5px]",
-          item.quantity === null ? "text-ink-faint" : "text-ink",
+          item.quantity === null || hideAmount ? "text-ink-faint" : "text-ink",
           item.checked && "text-ink-faint line-through"
         )}
       >
-        {formatAmount(item.quantity, item.unit)}
+        {formatAmount(hideAmount ? null : item.quantity, item.unit)}
       </span>
 
       <span

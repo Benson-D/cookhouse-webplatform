@@ -1,7 +1,7 @@
 "use client";
 
 import { useFieldArray, useFormContext, type Control } from "react-hook-form";
-import { CHSelect, CHTextInput, UnitPicker } from "@/common";
+import { CHDecimalField, CHSelect, CHTextInput, UnitPicker } from "@/common";
 import type { RecipeFormInput, RecipeFormValues } from "../recipe-form.schema";
 import { AddLineButton, RemoveRowButton } from "./FormControls";
 
@@ -48,14 +48,15 @@ export function IngredientRows({
         const ingredientId = watch(`ingredients.${index}.ingredientId`);
         const ingredientName = watch(`ingredients.${index}.ingredientName`);
         const unitId = watch(`ingredients.${index}.unitId`) ?? "";
+        const amount = watch(`ingredients.${index}.amount`) ?? "";
 
         return (
           <div key={field.id} className="flex flex-col gap-1">
             <div className="grid grid-cols-2 items-center gap-2 sm:grid-cols-[68px_108px_1fr_1fr_28px]">
-              <CHTextInput
-                {...register(`ingredients.${index}.amount`)}
+              <CHDecimalField
+                value={amount}
+                onChange={(value) => setValue(`ingredients.${index}.amount`, value)}
                 placeholder="1"
-                inputMode="decimal"
                 aria-label={`Amount for ingredient ${index + 1}`}
                 invalid={Boolean(rowErrors?.amount)}
               />

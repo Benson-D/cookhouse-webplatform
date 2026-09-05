@@ -6,6 +6,7 @@
  */
 export { AppNav } from "./AppNav";
 export { CHButton } from "./CHButton/CHButton";
+export { CHDecimalField } from "./CHDecimalField/CHDecimalField";
 export { CHFormField } from "./CHFormField/CHFormField";
 export { CHLink } from "./CHLink/CHLink";
 export { CHNumInput } from "./CHNumInput";

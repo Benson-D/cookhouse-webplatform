@@ -34,6 +34,16 @@ export function formatRelativeTime(date: Date, now: Date = new Date()): string {
   return `${differenceInDays(now, date)} days ago`;
 }
 
+/**
+ * Volume amounts ("3/4 cup", "2 tbsp") don't correspond to anything sold at
+ * a store, unlike weight ("1 lb") or count ("3 oranges") — so the list drops
+ * the amount entirely for a volume-type unit rather than showing a
+ * measurement nobody's shopping for on a shelf.
+ */
+export function shouldHideAmount(unit: { type: string } | null | undefined): boolean {
+  return unit?.type === "volume";
+}
+
 const SOURCE_LABELS: Record<string, string> = {
   recipe: "recipe",
   staple: "staple",
