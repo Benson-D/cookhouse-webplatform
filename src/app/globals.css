@@ -108,6 +108,7 @@
   --font-mono: var(--font-mono-stack);
 
   --animate-check-pop: check-pop 160ms ease;
+  --animate-tab-icon-pop: tab-icon-pop 380ms ease-out;
 }
 
 @keyframes check-pop {
@@ -116,6 +117,21 @@
   }
   to {
     transform: scale(1);
+  }
+}
+
+@keyframes tab-icon-pop {
+  0% {
+    transform: scale(0.75) rotate(0deg);
+  }
+  40% {
+    transform: scale(1.05) rotate(-12deg);
+  }
+  70% {
+    transform: scale(1) rotate(8deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
   }
 }
 

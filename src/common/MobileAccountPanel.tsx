@@ -2,13 +2,9 @@ import { OrganizationSwitcher } from "@clerk/nextjs";
 import { ThemeToggle } from "./ThemeToggle";
 
 /**
- * Below the nav-collapse breakpoint, the household switcher and theme toggle
- * have no room left in the top bar (see `AppNav`) — Clerk's `UserButton` menu
- * can't embed arbitrary content, only `label`/`labelIcon`/action-or-link
- * items, so this is a real floating panel instead: the same
- * `position: absolute`, anchored-right, no-backdrop mechanism `FilterPanel`
- * already uses, opened from a custom action inside `UserButton`'s own menu
- * rather than a second avatar-like trigger.
+ * Floating panel for the household switcher + theme toggle, opened from a
+ * custom action in `UserButton`'s menu — Clerk's menu can't embed arbitrary
+ * content, only label/action/link items.
  */
 export function MobileAccountPanel({ onClose }: { onClose: () => void }) {
   return (

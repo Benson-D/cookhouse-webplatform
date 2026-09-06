@@ -18,10 +18,12 @@ const iconProps: SVGProps<SVGSVGElement> = {
   "aria-hidden": true,
 };
 
+type IconProps = { className?: string };
+
 /** Recipes — echoes the app's own favicon. */
-function PotIcon() {
+function PotIcon({ className }: IconProps) {
   return (
-    <svg {...iconProps}>
+    <svg {...iconProps} className={className}>
       <path d="M5 9v6a4 4 0 0 0 4 4h6a4 4 0 0 0 4-4V9" />
       <path d="M4 9h16" />
       <path d="M3 8h2M19 8h2" />
@@ -29,9 +31,9 @@ function PotIcon() {
   );
 }
 
-function CartIcon() {
+function CartIcon({ className }: IconProps) {
   return (
-    <svg {...iconProps}>
+    <svg {...iconProps} className={className}>
       <path d="M4 4h2l2.2 11.2a2 2 0 0 0 2 1.6h6.6a2 2 0 0 0 2-1.6L20 8H7" />
       <circle cx="10" cy="20" r="1.4" />
       <circle cx="17" cy="20" r="1.4" />
@@ -40,33 +42,33 @@ function CartIcon() {
 }
 
 /** Receipt — ties to receipt scanning, not a generic card icon. */
-function ReceiptIcon() {
+function ReceiptIcon({ className }: IconProps) {
   return (
-    <svg {...iconProps}>
+    <svg {...iconProps} className={className}>
       <path d="M6 3h12v17l-2-1.3-2 1.3-2-1.3-2 1.3-2-1.3-2 1.3V3Z" />
       <path d="M9 8h6M9 12h6M9 16h3" />
     </svg>
   );
 }
 
-const ICONS_BY_HREF: Record<string, () => React.JSX.Element> = {
+const ICONS_BY_HREF: Record<string, (props: IconProps) => React.JSX.Element> = {
   "/recipes": PotIcon,
   "/grocery-list": CartIcon,
   "/spending": ReceiptIcon,
 };
 
 /**
- * Bottom tab bar replacing `AppNav`'s inline links below the `md:` breakpoint
- * — exactly three destinations is the textbook case for this pattern, and it
- * keeps navigation in thumb reach, worth more here than usual given the
- * grocery list's own one-handed-in-a-shop design goal. `position: sticky`
- * keeps it reachable while the page scrolls underneath it.
+ * Bottom tab bar replacing `AppNav`'s inline links below `md:`, keeping
+ * navigation in thumb reach.
+ *
+ * `position: fixed`. The layout adds matching bottom padding so it never
+ * covers content.
  */
 export function MobileTabBar() {
   const pathname = usePathname();
 
   return (
-    <div className="sticky bottom-0 z-30 flex border-t border-line bg-surface md:hidden">
+    <div className="fixed bottom-0 left-0 right-0 z-30 flex border-t border-line bg-surface md:hidden">
       {NAV_LINKS.map(({ href, label }) => {
         const Icon = ICONS_BY_HREF[href];
         return (
@@ -79,7 +81,7 @@ export function MobileTabBar() {
                 : "flex flex-1 flex-col items-center gap-[3px] px-1 pb-[13px] pt-[11px] text-center text-xs text-ink-faint no-underline"
             }
           >
-            <Icon />
+            <Icon className={pathname.startsWith(href) ? "animate-tab-icon-pop" : undefined} />
             {label}
           </Link>
         );
