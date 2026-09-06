@@ -26,7 +26,7 @@ export function PaginationFooter({
           type="button"
           onClick={onPrevious}
           disabled={!hasPrevious}
-          className="rounded-md border border-line px-2.5 py-[3px] text-ink-soft disabled:opacity-40"
+          className="rounded-md border border-line px-2.5 py-[3px] text-ink-soft transition-colors duration-140 hover:border-ink-faint hover:bg-surface-2 hover:text-ink disabled:opacity-40"
         >
           ← Prev
         </button>
@@ -34,7 +34,7 @@ export function PaginationFooter({
           type="button"
           onClick={onNext}
           disabled={!hasNext}
-          className="rounded-md border border-line px-2.5 py-[3px] text-ink-soft disabled:opacity-40"
+          className="rounded-md border border-line px-2.5 py-[3px] text-ink-soft transition-colors duration-140 hover:border-ink-faint hover:bg-surface-2 hover:text-ink disabled:opacity-40"
         >
           Next →
         </button>

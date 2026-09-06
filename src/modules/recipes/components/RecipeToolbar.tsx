@@ -29,9 +29,21 @@ export function RecipeToolbar({
   return (
     <div className="flex flex-col gap-3 px-[22px] pb-3.5 pt-[18px] md:flex-row md:flex-wrap md:items-center">
       <div className="flex min-w-[180px] flex-1 items-center gap-[9px] rounded-lg border border-line bg-surface-2 px-3 py-2">
-        <span aria-hidden className="text-ink-faint">
-          🔍
-        </span>
+        <svg
+          viewBox="0 0 24 24"
+          width={16}
+          height={16}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={1.8}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden
+          className="text-ink-faint"
+        >
+          <circle cx="10" cy="10" r="6" />
+          <path d="M20 20l-5.5-5.5" />
+        </svg>
         <input
           type="search"
           value={search}
