@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormContext } from "react-hook-form";
-import { CHFormField, CHNumInput, CHTextArea, CHTextInput } from "@/common";
+import { CHNumInput, CHTextArea, CHTextInput } from "@/common";
 import type { GalleryItem } from "../types";
 import type { RecipeFormInput, RecipeFormValues } from "../recipe-form.schema";
 import type { Tag } from "../types";
@@ -57,86 +57,62 @@ export function RecipeFormBody({
 
   return (
     <div className="flex flex-col gap-[18px]">
-      <CHFormField label="Description" htmlFor="recipe-description">
-        <CHTextArea
-          id="recipe-description"
-          rows={2}
-          placeholder="One pot, pantry staples, done inside 35 minutes."
-          {...register("description")}
-        />
-      </CHFormField>
+      <CHTextArea
+        label="Description"
+        id="recipe-description"
+        rows={2}
+        placeholder="One pot, pantry staples, done inside 35 minutes."
+        {...register("description")}
+      />
 
       <div className="grid gap-3 sm:grid-cols-3">
-        <CHFormField
+        <CHTextInput
           label="Servings"
-          htmlFor="recipe-servings"
+          id="recipe-servings"
+          inputMode="numeric"
+          {...register("servings")}
           error={formState.errors.servings?.message}
-        >
-          <CHTextInput
-            id="recipe-servings"
-            inputMode="numeric"
-            {...register("servings")}
-            invalid={Boolean(formState.errors.servings)}
-          />
-        </CHFormField>
-        <CHFormField
+        />
+        <CHNumInput
           label="Prep (min)"
-          htmlFor="recipe-prep"
+          id="recipe-prep"
+          {...register("prepTime")}
           error={formState.errors.prepTime?.message}
-        >
-          <CHNumInput
-            id="recipe-prep"
-            {...register("prepTime")}
-            invalid={Boolean(formState.errors.prepTime)}
-          />
-        </CHFormField>
-        <CHFormField
+        />
+        <CHNumInput
           label="Cook (min)"
-          htmlFor="recipe-cook"
+          id="recipe-cook"
+          {...register("cookingTime")}
           error={formState.errors.cookingTime?.message}
-        >
-          <CHNumInput
-            id="recipe-cook"
-            {...register("cookingTime")}
-            invalid={Boolean(formState.errors.cookingTime)}
-          />
-        </CHFormField>
+        />
       </div>
 
-      <CHFormField
+      <ImageUploader
         label="Photos"
         hint={
           isEditing
             ? "The first photo is the cover."
             : "The first photo is the cover. These upload when you save."
         }
-      >
-        <ImageUploader
-          items={imageItems}
-          isUploading={isUploadingImages}
-          uploadError={uploadError}
-          onAdd={onAddImage}
-          onRemove={onRemoveImage}
-        />
-      </CHFormField>
+        items={imageItems}
+        isUploading={isUploadingImages}
+        uploadError={uploadError}
+        onAdd={onAddImage}
+        onRemove={onRemoveImage}
+      />
 
-      <CHFormField label="Ingredients">
-        <IngredientRows
-          control={control}
-          ingredientOptions={ingredientOptions}
-          units={units}
-          onSearchIngredients={onSearchIngredients}
-          onResolveIngredient={onResolveIngredient}
-        />
-      </CHFormField>
+      <IngredientRows
+        label="Ingredients"
+        control={control}
+        ingredientOptions={ingredientOptions}
+        units={units}
+        onSearchIngredients={onSearchIngredients}
+        onResolveIngredient={onResolveIngredient}
+      />
 
-      <CHFormField label="Method">
-        <InstructionsRows control={control} />
-      </CHFormField>
+      <InstructionsRows label="Method" control={control} />
 
-      <CHFormField label="Tags">
-        <TagPicker tags={tags} selectedTagIds={selectedTagIds} onToggle={onToggleTag} />
-      </CHFormField>
+      <TagPicker label="Tags" tags={tags} selectedTagIds={selectedTagIds} onToggle={onToggleTag} />
     </div>
   );
 }

@@ -19,12 +19,14 @@ type Unit = { id: string; name: string; abbreviation: string | null };
  * this holds no query of its own.
  */
 export function IngredientRows({
+  label,
   control,
   ingredientOptions,
   units,
   onSearchIngredients,
   onResolveIngredient,
 }: {
+  label: string;
   control: Control<RecipeFormInput, unknown, RecipeFormValues>;
   ingredientOptions: Ingredient[];
   units: Unit[];
@@ -42,89 +44,95 @@ export function IngredientRows({
   });
 
   return (
-    <div className="flex flex-col gap-2">
-      {fields.map((field, index) => {
-        const rowErrors = formState.errors.ingredients?.[index];
-        const ingredientId = watch(`ingredients.${index}.ingredientId`);
-        const ingredientName = watch(`ingredients.${index}.ingredientName`);
-        const unitId = watch(`ingredients.${index}.unitId`) ?? "";
-        const amount = watch(`ingredients.${index}.amount`) ?? "";
+    <div className="flex flex-col gap-[5px]">
+      <span className="text-[10.5px] font-bold uppercase tracking-[0.11em] text-ink-faint">
+        {label}
+      </span>
 
-        return (
-          <div key={field.id} className="flex flex-col gap-1">
-            <div className="grid grid-cols-2 items-center gap-2 sm:grid-cols-[68px_108px_1fr_1fr_28px]">
-              <CHDecimalField
-                value={amount}
-                onChange={(value) => setValue(`ingredients.${index}.amount`, value)}
-                placeholder="1"
-                aria-label={`Amount for ingredient ${index + 1}`}
-                invalid={Boolean(rowErrors?.amount)}
-              />
+      <div className="flex flex-col gap-2">
+        {fields.map((field, index) => {
+          const rowErrors = formState.errors.ingredients?.[index];
+          const ingredientId = watch(`ingredients.${index}.ingredientId`);
+          const ingredientName = watch(`ingredients.${index}.ingredientName`);
+          const unitId = watch(`ingredients.${index}.unitId`) ?? "";
+          const amount = watch(`ingredients.${index}.amount`) ?? "";
 
-              <UnitPicker
-                label={`Unit for ingredient ${index + 1}`}
-                unitId={unitId}
-                units={units}
-                onSelect={(unit) => setValue(`ingredients.${index}.unitId`, unit.id)}
-              />
+          return (
+            <div key={field.id} className="flex flex-col gap-1">
+              <div className="grid grid-cols-2 items-center gap-2 sm:grid-cols-[68px_108px_1fr_1fr_28px]">
+                <CHDecimalField
+                  value={amount}
+                  onChange={(value) => setValue(`ingredients.${index}.amount`, value)}
+                  placeholder="1"
+                  aria-label={`Amount for ingredient ${index + 1}`}
+                  invalid={Boolean(rowErrors?.amount)}
+                />
 
-              <CHSelect<Ingredient>
-                label={`Ingredient ${index + 1}`}
-                placeholder="ingredient"
-                invalid={Boolean(rowErrors?.ingredientId)}
-                value={ingredientId ? { id: ingredientId, name: ingredientName } : null}
-                options={ingredientOptions}
-                getOptionId={(ingredient) => ingredient.id}
-                getOptionLabel={(ingredient) => ingredient.name}
-                onSearch={onSearchIngredients}
-                onSelect={(ingredient) => {
-                  setValue(`ingredients.${index}.ingredientId`, ingredient.id, {
-                    shouldValidate: true,
-                  });
-                  setValue(`ingredients.${index}.ingredientName`, ingredient.name);
-                }}
-                onCreate={onResolveIngredient}
-              />
+                <UnitPicker
+                  label={`Unit for ingredient ${index + 1}`}
+                  unitId={unitId}
+                  units={units}
+                  onSelect={(unit) => setValue(`ingredients.${index}.unitId`, unit.id)}
+                />
 
-              <CHTextInput
-                {...register(`ingredients.${index}.notes`)}
-                placeholder="note"
-                aria-label={`Note for ingredient ${index + 1}`}
-              />
+                <CHSelect<Ingredient>
+                  label={`Ingredient ${index + 1}`}
+                  placeholder="ingredient"
+                  invalid={Boolean(rowErrors?.ingredientId)}
+                  value={ingredientId ? { id: ingredientId, name: ingredientName } : null}
+                  options={ingredientOptions}
+                  getOptionId={(ingredient) => ingredient.id}
+                  getOptionLabel={(ingredient) => ingredient.name}
+                  onSearch={onSearchIngredients}
+                  onSelect={(ingredient) => {
+                    setValue(`ingredients.${index}.ingredientId`, ingredient.id, {
+                      shouldValidate: true,
+                    });
+                    setValue(`ingredients.${index}.ingredientName`, ingredient.name);
+                  }}
+                  onCreate={onResolveIngredient}
+                />
 
-              <RemoveRowButton
-                onClick={() => remove(index)}
-                label={`Remove ingredient ${index + 1}`}
-              />
+                <CHTextInput
+                  {...register(`ingredients.${index}.notes`)}
+                  placeholder="note"
+                  aria-label={`Note for ingredient ${index + 1}`}
+                />
+
+                <RemoveRowButton
+                  onClick={() => remove(index)}
+                  label={`Remove ingredient ${index + 1}`}
+                />
+              </div>
+
+              {rowErrors?.ingredientId?.message && (
+                <p className="m-0 text-[11.5px] text-danger" role="alert">
+                  {rowErrors.ingredientId.message}
+                </p>
+              )}
+              {rowErrors?.amount?.message && (
+                <p className="m-0 text-[11.5px] text-danger" role="alert">
+                  {rowErrors.amount.message}
+                </p>
+              )}
             </div>
+          );
+        })}
 
-            {rowErrors?.ingredientId?.message && (
-              <p className="m-0 text-[11.5px] text-danger" role="alert">
-                {rowErrors.ingredientId.message}
-              </p>
-            )}
-            {rowErrors?.amount?.message && (
-              <p className="m-0 text-[11.5px] text-danger" role="alert">
-                {rowErrors.amount.message}
-              </p>
-            )}
-          </div>
-        );
-      })}
-
-      <AddLineButton
-        onClick={() =>
-          append({
-            ingredientId: "",
-            ingredientName: "",
-            unitId: "",
-            amount: "",
-            notes: "",
-          })
-        }
-      >
-        Add ingredient
-      </AddLineButton>
+        <AddLineButton
+          onClick={() =>
+            append({
+              ingredientId: "",
+              ingredientName: "",
+              unitId: "",
+              amount: "",
+              notes: "",
+            })
+          }
+        >
+          Add ingredient
+        </AddLineButton>
+      </div>
     </div>
   );
 }

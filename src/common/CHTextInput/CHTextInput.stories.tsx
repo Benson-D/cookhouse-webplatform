@@ -26,3 +26,15 @@ export const Invalid: Story = {
 export const Disabled: Story = {
   args: { disabled: true, defaultValue: "Weeknight Red Lentil Dal" },
 };
+
+export const WithLabel: Story = {
+  args: { label: "Recipe name", id: "recipe-name" },
+};
+
+export const WithHint: Story = {
+  args: { label: "Photos", hint: "The first photo is the cover.", placeholder: "Choose files…" },
+};
+
+export const WithError: Story = {
+  args: { label: "Recipe name", error: "Give the recipe a name" },
+};

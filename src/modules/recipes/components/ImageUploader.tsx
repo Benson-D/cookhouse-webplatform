@@ -15,12 +15,16 @@ import type { GalleryItem } from "../types";
  * needs a drag library, which is a bigger decision than this form.
  */
 export function ImageUploader({
+  label,
+  hint,
   items,
   isUploading,
   uploadError,
   onAdd,
   onRemove,
 }: {
+  label: string;
+  hint?: string;
   items: GalleryItem[];
   isUploading: boolean;
   uploadError: string | null;
@@ -30,7 +34,12 @@ export function ImageUploader({
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-[5px]">
+      <span className="text-[10.5px] font-bold uppercase tracking-[0.11em] text-ink-faint">
+        {label}
+      </span>
+      {hint && <p className="m-0 text-[11.5px] text-ink-faint">{hint}</p>}
+
       <div className="grid grid-cols-3 gap-[9px] sm:grid-cols-5">
         {items.map((item, index) => (
           <div

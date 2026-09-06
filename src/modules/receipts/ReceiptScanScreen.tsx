@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CHFormField, CHSectionLabel, CHTextInput, ErrorState, SubpageHeader } from "@/common";
+import { CHSectionLabel, CHTextInput, ErrorState, SubpageHeader } from "@/common";
 import { useIngredientSearchPicker } from "@/hooks/useIngredientSearchPicker";
 import { useReceiptScan } from "./hooks/useReceiptScan";
 import { useConfirmPurchases } from "./hooks/useConfirmPurchases";
@@ -137,13 +137,13 @@ export function ReceiptScanScreen() {
         </div>
 
         <div>
-          <CHFormField label="Store" className="mb-4">
-            <CHTextInput
-              value={storeName}
-              onChange={(event) => setStoreName(event.target.value)}
-              placeholder="Where was this bought?"
-            />
-          </CHFormField>
+          <CHTextInput
+            label="Store"
+            className="mb-4"
+            value={storeName}
+            onChange={(event) => setStoreName(event.target.value)}
+            placeholder="Where was this bought?"
+          />
 
           {needsLook.length > 0 && (
             <>

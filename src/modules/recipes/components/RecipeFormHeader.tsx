@@ -2,7 +2,7 @@
 
 import { useFormContext } from "react-hook-form";
 import type { RecipeFormInput, RecipeFormValues } from "../recipe-form.schema";
-import { CHFormField, CHTextInput } from "@/common";
+import { CHTextInput } from "@/common";
 
 /** Title and the one field that exists from the very first render: the name. */
 export function RecipeFormHeader({ isEditing }: { isEditing: boolean }) {
@@ -14,15 +14,14 @@ export function RecipeFormHeader({ isEditing }: { isEditing: boolean }) {
         {isEditing ? "Edit recipe" : "New recipe"}
       </h1>
 
-      <CHFormField label="Recipe name" htmlFor="recipe-name" error={formState.errors.name?.message}>
-        <CHTextInput
-          id="recipe-name"
-          autoFocus={!isEditing}
-          placeholder="Weeknight Red Lentil Dal"
-          {...register("name")}
-          invalid={Boolean(formState.errors.name)}
-        />
-      </CHFormField>
+      <CHTextInput
+        label="Recipe name"
+        id="recipe-name"
+        autoFocus={!isEditing}
+        placeholder="Weeknight Red Lentil Dal"
+        {...register("name")}
+        error={formState.errors.name?.message}
+      />
     </div>
   );
 }
