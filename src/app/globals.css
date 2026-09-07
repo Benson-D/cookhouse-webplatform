@@ -109,6 +109,7 @@
 
   --animate-check-pop: check-pop 160ms ease;
   --animate-tab-icon-pop: tab-icon-pop 380ms ease-out;
+  --animate-empty-fade-in: empty-fade-in 220ms ease;
 }
 
 @keyframes check-pop {
@@ -132,6 +133,15 @@
   }
   100% {
     transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes empty-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
