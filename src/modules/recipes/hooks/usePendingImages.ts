@@ -18,6 +18,8 @@ export function usePendingImages() {
     pendingRef.current = pending;
   }, [pending]);
 
+  // Only ever fires at unmount (empty deps) — revokes whatever's still
+  // pending so its object URLs don't leak past the form's lifetime.
   useEffect(
     () => () => {
       for (const item of pendingRef.current) URL.revokeObjectURL(item.previewUrl);
@@ -27,7 +29,8 @@ export function usePendingImages() {
 
   const add = (file: File) => {
     const previewUrl = URL.createObjectURL(file);
-    setPending((current) => [...current, { key: `${file.name}-${Date.now()}`, file, previewUrl }]);
+    const newImage: PendingImage = { key: `${file.name}-${Date.now()}`, file, previewUrl };
+    setPending((current) => [...current, newImage]);
   };
 
   const remove = (key: string) => {

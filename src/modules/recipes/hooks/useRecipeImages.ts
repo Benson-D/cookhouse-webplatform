@@ -11,20 +11,14 @@ function errorMessage(error: unknown): string | null {
 }
 
 /**
- * Recipe photos, in both the states the form can be in.
+ * Manages a recipe's photos: uploads a picked file right away once a
+ * `recipeId` exists, or buffers it (via `usePendingImages`) until one does.
+ * `flushTo` uploads whatever's buffered once the recipe is created.
  *
- * Uploading needs a `recipeId`, which doesn't exist while a new recipe is
- * being filled in. So with no id, picked files go to `buffered` (from
- * `usePendingImages`) and `flushTo` uploads them once the recipe has been
- * created. With an id, `uploadOne` (from `useUploadRecipeImage`) runs right
- * away. The form submits once either way; this hook decides which path a
- * given file takes. Both hooks are composed by the caller and passed in
- * rather than called here, so there's exactly one buffer/upload instance in
- * play, not a second one this hook could accidentally create on its own.
- *
- * A file uploaded but never attached leaves an orphan object in the bucket —
- * the server never learns the PUT happened, so a lifecycle rule on the
- * `recipes/` prefix is the intended cleanup, not anything here.
+ * `buffered`/`uploadOne` are composed by the caller, not created here, so
+ * there's only ever one buffer/upload instance in play. A file uploaded but
+ * never attached leaves an orphan object in the bucket — a lifecycle rule on
+ * the `recipes/` prefix is the intended cleanup.
  */
 export function useRecipeImages(
   recipeId: string | null,
