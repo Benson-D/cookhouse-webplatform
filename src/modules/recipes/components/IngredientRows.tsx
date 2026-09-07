@@ -125,7 +125,7 @@ export function IngredientRows({
               ingredientId: "",
               ingredientName: "",
               unitId: "",
-              amount: "",
+              amount: "1",
               notes: "",
             })
           }
