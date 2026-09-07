@@ -199,7 +199,15 @@ body {
  * `:focus-visible` case. Suppressed globally for the non-visible case, so
  * every button/chip/chart gets this once instead of patching each site;
  * a real keyboard tab still matches `:focus-visible` and keeps its ring.
+ *
+ * Wrapped in `@layer base`, same reasoning as the transition rule above:
+ * left unlayered, this always beat a deliberately-applied `outline-*`
+ * utility class regardless of specificity — e.g. RecipeGallery's selected
+ * thumbnail ring not showing until you clicked away and the button lost
+ * mouse focus.
  */
-:focus:not(:focus-visible) {
-  outline: none;
+@layer base {
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
 }

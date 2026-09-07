@@ -53,7 +53,7 @@ export function CHDecimalField({
       type="text"
       inputMode="decimal"
       aria-invalid={invalid || undefined}
-      className={cn(classes, invalid && "border-danger", className)}
+      className={cn(classes, invalid && "border-danger focus:outline-danger", className)}
       value={text}
       onFocus={() => {
         isFocused.current = true;

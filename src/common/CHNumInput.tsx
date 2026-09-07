@@ -69,7 +69,7 @@ export function CHNumInput({
         aria-invalid={isInvalid || undefined}
         className={cn(
           "rounded-[7px] border border-line bg-surface-2 px-[11px] py-2 text-[13.5px] text-ink placeholder:text-ink-faint focus:outline-2 focus:outline-offset-1 focus:outline-accent",
-          isInvalid && "border-danger",
+          isInvalid && "border-danger focus:outline-danger",
           !label && className
         )}
         onChange={(event) => {
