@@ -76,7 +76,7 @@ export function IngredientRows({
                 />
 
                 <CHSelect<Ingredient>
-                  label={`Ingredient ${index + 1}`}
+                  ariaLabel={`Ingredient ${index + 1}`}
                   placeholder="ingredient"
                   invalid={Boolean(rowErrors?.ingredientId)}
                   value={ingredientId ? { id: ingredientId, name: ingredientName } : null}

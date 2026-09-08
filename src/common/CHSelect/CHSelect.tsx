@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import {
   Combobox,
   ComboboxButton,
@@ -54,13 +54,19 @@ type CHSelectProps<T> = {
   onSelect: (item: T) => void;
   onCreate?: (name: string) => Promise<T>;
   placeholder?: string;
-  label: string;
+  /** Accessible name for the many callers with no visible `label`. Ignored once `label` is given — that becomes the accessible name instead. */
+  ariaLabel?: string;
   invalid?: boolean;
+  label?: string;
+  hint?: string;
+  error?: string;
+  className?: string;
 };
 
 /**
  * Searchable select built on Headless UI's `Combobox`, generic over any item
- * type `T` via `getOptionId`/`getOptionLabel`.
+ * type `T` via `getOptionId`/`getOptionLabel`. Grows its own optional
+ * label/hint/error chrome, same as `CHTextInput`.
  *
  * Pass `onCreate` to let typing something with no match offer to create it
  * (e.g. ingredients); omit it for a closed, pick-only list (e.g. units).
@@ -75,11 +81,17 @@ export function CHSelect<T>({
   onSelect,
   onCreate,
   placeholder,
-  label,
+  ariaLabel,
   invalid,
+  label,
+  hint,
+  error,
+  className,
 }: CHSelectProps<T>) {
+  const id = useId();
   const [query, setQuery] = useState("");
   const [isCreating, setIsCreating] = useState(false);
+  const isInvalid = invalid ?? Boolean(error);
 
   const normalizedQuery = normalize(query);
   const exactMatch = options.some(
@@ -109,66 +121,92 @@ export function CHSelect<T>({
   }
 
   return (
-    <Combobox as="div" className="relative" immediate value={selected} onChange={handleChange}>
-      <ComboboxInput
-        aria-label={label}
-        aria-invalid={invalid || undefined}
-        autoComplete="off"
-        placeholder={placeholder}
-        displayValue={(chosen: ChosenItem<T> | null) =>
-          chosen?.kind === "existing" ? getOptionLabel(chosen.item) : ""
-        }
-        onChange={(event) => {
-          setQuery(event.target.value);
-          onSearch?.(event.target.value);
-        }}
-        className={cn(inputClasses, invalid ? "border-danger focus:outline-danger" : "border-line")}
-      />
+    // `contents` when unlabeled: this div never lays out — its child acts as
+    // the direct grid/flex item, matching the many per-row fields with no
+    // visible label that rely on being their own grid cell.
+    <div className={cn(label ? "flex flex-col gap-[5px]" : "contents", label && className)}>
+      {label && (
+        <label
+          htmlFor={id}
+          className="text-[10.5px] font-bold uppercase tracking-[0.11em] text-ink-faint"
+        >
+          {label}
+        </label>
+      )}
 
-      {/* A click target separate from typing — opens the panel without a keystroke. */}
-      <ComboboxButton className={buttonClasses}>
-        {({ open }) => <SelectChevron open={open} />}
-      </ComboboxButton>
+      <Combobox as="div" className="relative" immediate value={selected} onChange={handleChange}>
+        <ComboboxInput
+          id={label ? id : undefined}
+          aria-label={label ? undefined : ariaLabel}
+          aria-invalid={isInvalid || undefined}
+          autoComplete="off"
+          placeholder={placeholder}
+          displayValue={(chosen: ChosenItem<T> | null) =>
+            chosen?.kind === "existing" ? getOptionLabel(chosen.item) : ""
+          }
+          onChange={(event) => {
+            setQuery(event.target.value);
+            onSearch?.(event.target.value);
+          }}
+          className={cn(
+            inputClasses,
+            isInvalid ? "border-danger focus:outline-danger" : "border-line",
+            !label && className
+          )}
+        />
 
-      {(options.length > 0 || canCreate) && (
-        <ComboboxOptions anchor={false} className={panelClasses}>
-          {options.map((option) => {
-            const disabled = getOptionDisabled?.(option) ?? false;
-            return (
+        {/* A click target separate from typing — opens the panel without a keystroke. */}
+        <ComboboxButton className={buttonClasses}>
+          {({ open }) => <SelectChevron open={open} />}
+        </ComboboxButton>
+
+        {(options.length > 0 || canCreate) && (
+          <ComboboxOptions anchor={false} className={panelClasses}>
+            {options.map((option) => {
+              const disabled = getOptionDisabled?.(option) ?? false;
+              return (
+                <ComboboxOption
+                  key={getOptionId(option)}
+                  value={{ kind: "existing", item: option } satisfies ChosenItem<T>}
+                  disabled={disabled}
+                  className={({ focus }) =>
+                    cn(
+                      optionBaseClasses,
+                      disabled
+                        ? "cursor-not-allowed text-ink-faint"
+                        : focus
+                          ? optionFocusClasses
+                          : "text-ink"
+                    )
+                  }
+                >
+                  {getOptionLabel(option)}
+                </ComboboxOption>
+              );
+            })}
+
+            {canCreate && (
               <ComboboxOption
-                key={getOptionId(option)}
-                value={{ kind: "existing", item: option } satisfies ChosenItem<T>}
-                disabled={disabled}
+                // .trim(), not normalize() — preserves the user's capitalization.
+                value={{ kind: "create", name: query.trim() } satisfies ChosenItem<T>}
+                disabled={isCreating}
                 className={({ focus }) =>
-                  cn(
-                    optionBaseClasses,
-                    disabled
-                      ? "cursor-not-allowed text-ink-faint"
-                      : focus
-                        ? optionFocusClasses
-                        : "text-ink"
-                  )
+                  cn(optionBaseClasses, "font-semibold", focus ? optionFocusClasses : "text-accent")
                 }
               >
-                {getOptionLabel(option)}
+                {isCreating ? "Adding…" : `Add “${query.trim()}”`}
               </ComboboxOption>
-            );
-          })}
+            )}
+          </ComboboxOptions>
+        )}
+      </Combobox>
 
-          {canCreate && (
-            <ComboboxOption
-              // .trim(), not normalize() — preserves the user's capitalization.
-              value={{ kind: "create", name: query.trim() } satisfies ChosenItem<T>}
-              disabled={isCreating}
-              className={({ focus }) =>
-                cn(optionBaseClasses, "font-semibold", focus ? optionFocusClasses : "text-accent")
-              }
-            >
-              {isCreating ? "Adding…" : `Add “${query.trim()}”`}
-            </ComboboxOption>
-          )}
-        </ComboboxOptions>
+      {label && hint && !error && <p className="m-0 text-[11.5px] text-ink-faint">{hint}</p>}
+      {label && error && (
+        <p className="m-0 text-[11.5px] text-danger" role="alert">
+          {error}
+        </p>
       )}
-    </Combobox>
+    </div>
   );
 }

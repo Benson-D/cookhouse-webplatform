@@ -38,7 +38,7 @@ export function UnitPicker({
 
   return (
     <CHSelect<Unit>
-      label={label}
+      ariaLabel={label}
       placeholder="unit"
       value={selected}
       options={options}

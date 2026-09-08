@@ -42,7 +42,7 @@ export function StapleFooter({
   return (
     <div className="grid grid-cols-[1fr_160px_76px] items-center gap-2.5 pt-3.5">
       <CHSelect<Ingredient>
-        label="Ingredient"
+        ariaLabel="Ingredient"
         placeholder="search or add an ingredient"
         value={ingredient}
         options={ingredientOptions}
@@ -55,7 +55,7 @@ export function StapleFooter({
       />
 
       <CHSelect<(typeof FREQUENCY_OPTIONS)[number]>
-        label="Frequency"
+        ariaLabel="Frequency"
         value={FREQUENCY_OPTIONS.find((option) => option.days === frequencyDays) ?? null}
         options={[...FREQUENCY_OPTIONS]}
         getOptionId={(option) => String(option.days)}

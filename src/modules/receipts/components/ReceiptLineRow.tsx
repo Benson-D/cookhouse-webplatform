@@ -51,7 +51,7 @@ export function ReceiptLineRow({
           aria-label={`Quantity for ${item.description}`}
         />
         <CHSelect<Ingredient>
-          label={`Ingredient for ${item.description}`}
+          ariaLabel={`Ingredient for ${item.description}`}
           placeholder="search or add an ingredient"
           value={selectedIngredient}
           options={ingredientOptions}
