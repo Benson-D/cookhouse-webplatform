@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/cn";
 import { formatAmount } from "@/lib/formatAmount";
-import { shouldHideAmount } from "../utils";
+import { shouldHideAmount, shouldHideUnitWord } from "../utils";
 import type { GroceryListItem } from "../types";
 import { SourceBadge } from "./SourceBadge";
 
@@ -10,8 +10,11 @@ import { SourceBadge } from "./SourceBadge";
  * One row, at its own mobile-width column set as the only layout — no
  * per-row "who" column, so there's no breakpoint fallback to make room for
  * one (see root CLAUDE.md). A null `quantity` renders as an em dash, never
- * `0` or hidden — and a volume-type unit's real quantity gets the same
- * em-dash treatment via `shouldHideAmount`, since nobody shops by the cup.
+ * `0` or hidden — and a volume- or weight-type unit's real quantity gets the
+ * same em-dash treatment via `shouldHideAmount`, since neither corresponds
+ * to something sold at a store. `shouldHideUnitWord` is narrower: it keeps a
+ * count-type number but drops the generic "piece" word, since that unit
+ * isn't a real word anyone says.
  *
  * **The whole row toggles the checkbox, not just the box** — the same
  * `after:absolute after:inset-0` stretch `RecipeCard` uses. The remove
@@ -28,6 +31,7 @@ export function GroceryListRow({
   onRemove: () => void;
 }) {
   const hideAmount = shouldHideAmount(item.unit);
+  const hideUnitWord = shouldHideUnitWord(item.unit);
 
   return (
     <li className="relative grid grid-cols-[20px_76px_1fr_auto] items-center gap-3 border-b border-line-soft px-3 py-2.5 text-sm hover:bg-surface-2">
@@ -54,7 +58,7 @@ export function GroceryListRow({
           item.checked && "text-ink-faint line-through"
         )}
       >
-        {formatAmount(hideAmount ? null : item.quantity, item.unit)}
+        {formatAmount(hideAmount ? null : item.quantity, hideUnitWord ? null : item.unit)}
       </span>
 
       <span

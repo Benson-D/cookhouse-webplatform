@@ -3,7 +3,7 @@
 import { useFieldArray, useFormContext, type Control } from "react-hook-form";
 import { CHDecimalField, CHSelect, CHTextInput, UnitPicker } from "@/common";
 import type { RecipeFormInput, RecipeFormValues } from "../recipe-form.schema";
-import { AddLineButton, RemoveRowButton } from "./FormControls";
+import { AddLineButton, RemoveRowButton } from "./RepeaterControls";
 
 type Ingredient = { id: string; name: string };
 type Unit = { id: string; name: string; abbreviation: string | null };

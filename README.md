@@ -30,6 +30,7 @@ import is the only feature with a backend and no frontend consumer yet.
   everything else chart-shaped is a plain styled bar-list, not a library
 - **date-fns** for date arithmetic
 - **Storybook** for presentational components in isolation
+- **Jest** + Testing Library — pure utils and pure-state hooks
 
 ## Architecture
 
@@ -63,6 +64,7 @@ Other commands:
 pnpm build        # production build
 pnpm lint
 npx tsc --noEmit
+pnpm test          # jest
 pnpm storybook     # component stories, http://localhost:6006
 ```
 

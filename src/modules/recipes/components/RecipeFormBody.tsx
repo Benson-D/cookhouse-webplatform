@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormContext } from "react-hook-form";
-import { CHNumInput, CHTextArea, CHTextInput } from "@/common";
+import { CHNumInput, CHTextArea } from "@/common";
 import type { GalleryItem } from "../types";
 import type { RecipeFormInput, RecipeFormValues } from "../recipe-form.schema";
 import type { Tag } from "../types";
@@ -66,10 +66,10 @@ export function RecipeFormBody({
       />
 
       <div className="grid gap-3 sm:grid-cols-3">
-        <CHTextInput
+        <CHNumInput
           label="Servings"
           id="recipe-servings"
-          inputMode="numeric"
+          min={1}
           {...register("servings")}
           error={formState.errors.servings?.message}
         />

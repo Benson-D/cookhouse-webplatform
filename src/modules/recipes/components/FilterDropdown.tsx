@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { CHButton } from "@/common";
-import { cn } from "@/lib/cn";
 import { FilterPanel } from "./FilterPanel";
 import type { Tag } from "../types";
 
@@ -13,8 +12,6 @@ export function FilterDropdown({
   maxCookingTime,
   onSetMaxCookingTime,
   activeCount,
-  className,
-  triggerClassName,
 }: {
   tags: Tag[];
   selectedTagIds: string[];
@@ -22,19 +19,15 @@ export function FilterDropdown({
   maxCookingTime: number | null;
   onSetMaxCookingTime: (value: number | null) => void;
   activeCount: number;
-  /** Classes for the `relative` wrapper. */
-  className?: string;
-  /** Classes for the trigger button itself. */
-  triggerClassName?: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className={cn("relative", className)}>
+    <div className="relative">
       <CHButton
         variant="ghost"
         onClick={() => setIsOpen((current) => !current)}
-        className={triggerClassName}
+        className="w-full text-center md:w-auto"
       >
         Filters
         {activeCount > 0 && (

@@ -28,12 +28,8 @@ const pressedClasses = "border border-transparent bg-accent-soft text-accent";
 
 /**
  * The app's button — `primary` (filled) or `ghost` (outlined), plus a
- * `pressed` state for the handful that double as a toggle (favoriting).
- * For navigation, use `CHLink` instead — same look, real `<a>` under it.
- *
- * Owns its own styling constants rather than sharing them with `CHLink` —
- * each common component is meant to be manageable on its own, not paired
- * through a shared internal file the other doesn't obviously depend on.
+ * `pressed` toggle state (favoriting, filtering). Use `CHLink` for
+ * navigation instead — same look, real `<a>` under it.
  */
 export function CHButton({
   variant = "ghost",

@@ -1,9 +1,9 @@
 "use client";
 
 import { useFieldArray, useFormContext, type Control } from "react-hook-form";
-import { CHTextArea, CHTextInput } from "@/common";
+import { CHNumInput, CHTextArea } from "@/common";
 import type { RecipeFormInput, RecipeFormValues } from "../recipe-form.schema";
-import { AddLineButton, RemoveRowButton } from "./FormControls";
+import { AddLineButton, RemoveRowButton } from "./RepeaterControls";
 
 /** Repeating step-text + optional-timer rows for the recipe form's method field. The number badge reflects position, not a stored field. */
 export function InstructionsRows({
@@ -41,10 +41,9 @@ export function InstructionsRows({
                   className="flex-1"
                 />
 
-                <CHTextInput
+                <CHNumInput
                   {...register(`instructions.${index}.timerSeconds`)}
                   placeholder="secs"
-                  inputMode="numeric"
                   aria-label={`Timer for step ${index + 1}, in seconds`}
                   invalid={Boolean(rowErrors?.timerSeconds)}
                   className="mt-0 w-[76px]"

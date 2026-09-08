@@ -40,9 +40,9 @@ export function SpendBarList({
         {visible.map((row) => (
           <div
             key={row.label}
-            className="grid grid-cols-[128px_1fr_68px] items-center gap-3 py-[6px] text-[13.5px]"
+            className="grid grid-cols-[128px_1fr_68px] items-start gap-3 py-[6px] text-[13.5px]"
           >
-            <span className="truncate text-ink">{row.label}</span>
+            <span className="text-ink">{row.label}</span>
             <div className="h-2 overflow-hidden rounded-full bg-surface-2">
               <div
                 className="h-full rounded-full bg-accent"

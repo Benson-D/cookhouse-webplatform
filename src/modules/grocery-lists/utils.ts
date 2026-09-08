@@ -35,13 +35,28 @@ export function formatRelativeTime(date: Date, now: Date = new Date()): string {
 }
 
 /**
- * Volume amounts ("3/4 cup", "2 tbsp") don't correspond to anything sold at
- * a store, unlike weight ("1 lb") or count ("3 oranges") — so the list drops
- * the amount entirely for a volume-type unit rather than showing a
- * measurement nobody's shopping for on a shelf.
+ * Volume ("3/4 cup") and weight ("640 g", "1.5 kg") amounts are recipe
+ * measurements, not shopping ones — nobody's buying exactly 640g of butter
+ * off a shelf. Only count ("3 oranges") maps to something you'd actually
+ * grab, so the list drops the amount for anything else rather than showing
+ * a number nobody's shopping against.
  */
 export function shouldHideAmount(unit: { type: string } | null | undefined): boolean {
-  return unit?.type === "volume";
+  return unit?.type === "volume" || unit?.type === "weight";
+}
+
+/**
+ * "Piece" is count's generic base unit — every count amount is stored
+ * against it, but nobody says "4 piece apples." A real derived count unit
+ * like "dozen" reads fine and keeps its word. Checks `baseUnitId === null`
+ * (this unit derives from nothing) rather than the literal name "piece", so
+ * a seed-data rename can't silently break it. Count-specific: volume's base
+ * (cup) and weight's base (gram) are real words people expect to see.
+ */
+export function shouldHideUnitWord(
+  unit: { type: string; baseUnitId: string | null } | null | undefined
+): boolean {
+  return unit?.type === "count" && unit.baseUnitId === null;
 }
 
 const SOURCE_LABELS: Record<string, string> = {

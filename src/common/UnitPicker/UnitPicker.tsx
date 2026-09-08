@@ -13,17 +13,9 @@ function matches(text: string, query: string) {
 }
 
 /**
- * A `CHSelect` wired specifically to `MeasurementUnit` — units are seeded
- * reference data (~16 rows, all loaded up front), so unlike an ingredient
- * field there's no server round trip to wire through `onSearch`; filtering is
- * local. Owns its own query text, so several of these on one screen (a
- * recipe's ingredient rows, a grocery item form) can't filter each other.
- *
- * Pick-only: no `onCreate`, so `CHSelect` never renders a "create" row —
- * units are seeded, not user-created.
- *
- * Promoted here once the grocery-list module needed the same thing the
- * recipe form's ingredient rows already had.
+ * A `CHSelect` wired to `MeasurementUnit`. Units are seeded reference data,
+ * all loaded up front, so filtering is local rather than wired through
+ * `onSearch`. No `onCreate` — units are seeded, not user-created.
  */
 export function UnitPicker({
   unitId,

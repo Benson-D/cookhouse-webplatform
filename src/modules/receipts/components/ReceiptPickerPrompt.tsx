@@ -6,15 +6,10 @@ import { cn } from "@/lib/cn";
 import styles from "./ReceiptScanning.module.css";
 
 /**
- * `capture="environment"` is what makes this a one-tap scan on a phone —
- * mobile browsers open the camera directly instead of a "Photo Library /
- * Take Photo" chooser when it's set. Desktop ignores it and falls back to a
- * normal file picker.
- *
- * While scanning, the prompt's button/copy is replaced by the picked photo
- * itself with a sweeping line playing over it — a spinner says "wait," this
- * says "reading this," and it doubles as confirmation the right photo was
- * captured.
+ * `capture="environment"` opens the camera directly on mobile instead of a
+ * photo-library chooser; desktop ignores it and falls back to a normal file
+ * picker. While scanning, the picked photo replaces the prompt with a
+ * sweeping line playing over it.
  */
 export function ReceiptPickerPrompt({
   onPick,

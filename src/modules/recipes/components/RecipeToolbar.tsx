@@ -69,8 +69,6 @@ export function RecipeToolbar({
         maxCookingTime={maxCookingTime}
         onSetMaxCookingTime={onSetMaxCookingTime}
         activeCount={activeFilterCount}
-        className="w-full md:w-auto"
-        triggerClassName="w-full text-center md:w-auto"
       />
 
       <CHLink variant="primary" href="/recipes/new" className="w-full text-center md:w-auto">

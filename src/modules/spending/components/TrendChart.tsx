@@ -51,14 +51,13 @@ function SelectedBarLabel({
   selectedIndex,
   index,
 }: LabelProps & { selectedIndex: number }) {
-  if (
-    index !== selectedIndex ||
-    typeof x !== "number" ||
-    typeof y !== "number" ||
-    typeof width !== "number"
-  ) {
-    return null;
-  }
+  const shouldRenderLabel =
+    index === selectedIndex &&
+    typeof x === "number" &&
+    typeof y === "number" &&
+    typeof width === "number";
+
+  if (!shouldRenderLabel) return null;
   return (
     <text
       x={x + width / 2}
@@ -125,9 +124,6 @@ export function TrendChart({
             dataKey="total"
             barSize={22}
             radius={[4, 4, 0, 0]}
-            // A $0 month renders a zero-height bar with no clickable area at
-            // all — this floors it to a thin sliver so every month stays a
-            // real tap target, not just the ones with purchases.
             minPointSize={3}
             onClick={(data: BarRectangleItem) => onSelectMonth((data.payload as TrendMonth).month)}
             label={<SelectedBarLabel selectedIndex={selectedIndex} />}
