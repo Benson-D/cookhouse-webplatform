@@ -1,6 +1,7 @@
 "use client";
 
 import { trpc } from "@/lib/trpc";
+import { uploadToPresignedUrl } from "@/lib/uploadToPresignedUrl";
 
 /**
  * Uploads one recipe photo: gets a presigned URL from the backend, PUTs the
@@ -20,16 +21,7 @@ export function useUploadRecipeImage() {
       contentLength: file.size,
     });
 
-    // The bucket's own response to the direct PUT — the backend never sees
-    // this request, so this is the only place a failed upload can be caught.
-    const response = await fetch(uploadUrl, {
-      method: "PUT",
-      body: file,
-      headers: { "Content-Type": file.type },
-    });
-    if (!response.ok) {
-      throw new Error(`Upload failed (${response.status})`);
-    }
+    await uploadToPresignedUrl(uploadUrl, file);
 
     // The upload succeeded, but the backend still has no idea — this is what
     // actually records the RecipeImage row for it.

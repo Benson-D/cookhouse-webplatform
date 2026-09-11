@@ -7,24 +7,13 @@ import { useDebounce } from "@/hooks/useDebounce";
 const MIN_SEARCH_LENGTH = 3;
 
 /**
- * Autocomplete over the shared ingredient list, with create-on-demand.
+ * Autocomplete over the shared ingredient list, with create-on-demand —
+ * unlike the tag picker, ingredients can be typed and created by anyone.
+ * `resolve` goes through `ingredients.create` (find-or-create, aliases
+ * checked first), so picking an existing name never makes a near-duplicate.
  *
- * Ingredients are a single global list across every household — fragmenting
- * "onion" into per-household rows would silently break grocery-list merging and
- * spend-by-item reports. `resolve` goes through `ingredients.create`, which is
- * find-or-create and checks aliases first, so picking an existing name never
- * makes a near-duplicate.
- *
- * This is the opposite of the tag picker on purpose: ingredients *can* be
- * typed and created by anyone, tags cannot.
- *
- * An empty search queries too — `ingredients.list` already returns a
- * bounded, alphabetical default page when `search` is omitted, so opening
- * the picker (or clearing it back to empty) shows that general list rather
- * than nothing. What's still gated is a *partial* search: 1-2 typed
- * characters don't query, since that's a noisy, wasteful search term, not
- * "no search" — the query only fires once the trimmed search is empty or
- * reaches `MIN_SEARCH_LENGTH`.
+ * Queries on an empty search too (`ingredients.list`'s own bounded default
+ * page), but not on a 1-2 character partial one — too noisy to be useful.
  */
 export function useIngredientSearchPicker() {
   const [search, setSearch] = useState("");

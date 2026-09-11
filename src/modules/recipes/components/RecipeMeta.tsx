@@ -1,5 +1,5 @@
 import { TagBadge } from "@/common";
-import { formatTotalTime } from "../utils/recipeMeta";
+import { formatDuration, formatTotalTime } from "../utils/recipeMeta";
 import type { RecipeDetail } from "../types";
 
 /** Title, description, servings/prep/cook stats, and tags — the recipe's own header info. Presentational: no hooks, no handlers. */
@@ -22,12 +22,12 @@ export function RecipeMeta({ recipe }: { recipe: RecipeDetail }) {
         ) : null}
         {recipe.prepTime ? (
           <span>
-            prep <b className="font-semibold text-ink-soft">{recipe.prepTime} min</b>
+            prep <b className="font-semibold text-ink-soft">{formatDuration(recipe.prepTime)}</b>
           </span>
         ) : null}
         {recipe.cookingTime ? (
           <span>
-            cook <b className="font-semibold text-ink-soft">{recipe.cookingTime} min</b>
+            cook <b className="font-semibold text-ink-soft">{formatDuration(recipe.cookingTime)}</b>
           </span>
         ) : null}
         {totalTime && !recipe.prepTime && !recipe.cookingTime && <span>{totalTime}</span>}

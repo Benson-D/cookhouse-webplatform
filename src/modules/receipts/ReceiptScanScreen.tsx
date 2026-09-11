@@ -38,6 +38,8 @@ export function ReceiptScanScreen() {
   useEffect(() => {
     previewUrlRef.current = previewUrl;
   }, [previewUrl]);
+
+  // Revoke the last picked file's blob url on unmount, so it doesn't leak memory.
   useEffect(
     () => () => {
       if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
@@ -46,12 +48,9 @@ export function ReceiptScanScreen() {
   );
 
   async function handlePick(file: File) {
-    // Local preview while scanning is in flight — but this is the *original*
-    // picked file, so it's still raw HEIC if that's what was chosen, and no
-    // browser but Safari renders that. Swapped below for the real, converted
-    // image the moment scan() resolves. Only revoked on success: on failure,
-    // previewUrl still points at it, so revoking unconditionally here would
-    // leave a broken image behind for whatever error state renders next.
+    // Preview of the original file while scanning — swapped for the real,
+    // converted image once scan() resolves. Only revoked on success, since
+    // previewUrl still needs it on failure.
     const localPreview = URL.createObjectURL(file);
     setPreviewUrl(localPreview);
     const result = await scan(file);

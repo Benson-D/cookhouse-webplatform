@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
+import { uploadToPresignedUrl } from "@/lib/uploadToPresignedUrl";
 import type { ScanResult } from "../types";
 
 function errorMessage(error: unknown): string | null {
@@ -27,15 +28,10 @@ export function useReceiptScan() {
         contentLength: file.size,
       });
 
-      const response = await fetch(uploadUrl, {
-        method: "PUT",
-        body: file,
-        headers: { "Content-Type": file.type },
-      });
-      if (!response.ok) {
-        throw new Error(`Upload failed (${response.status})`);
-      }
+      await uploadToPresignedUrl(uploadUrl, file);
 
+      // The upload succeeded, but nothing has been read yet — this is what
+      // actually runs OCR and returns the parsed result.
       return await scanMutation.mutateAsync({ storageKey });
     } catch (error) {
       setScanError(errorMessage(error) ?? "Couldn't scan that receipt");

@@ -23,11 +23,8 @@ export function ReceiptPickerPrompt({
   isScanning: boolean;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
-  // The scanning preview is the *raw* picked file, still HEIC if that's what
-  // the camera captured — no browser but Safari renders that in an <img>
-  // (see handlePick's own comment in ReceiptScanScreen). Tracks which url
-  // failed rather than a plain boolean, so a new pick (a new blob url)
-  // clears it for free instead of needing an effect to reset it.
+  // Preview may still be raw HEIC, which only Safari renders. Tracked by
+  // url rather than a boolean, so a new pick clears the failure for free.
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
 
   if (isScanning && previewUrl) {

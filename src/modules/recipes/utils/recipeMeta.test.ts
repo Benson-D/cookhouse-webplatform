@@ -1,8 +1,28 @@
-import { formatTotalTime, formatRecipeMeta } from "./recipeMeta";
+import { formatDuration, formatTotalTime, formatRecipeMeta } from "./recipeMeta";
+
+describe("formatDuration", () => {
+  it("shows raw minutes under an hour", () => {
+    expect(formatDuration(45)).toBe("45 min");
+  });
+
+  it("shows hours and minutes at or above an hour", () => {
+    expect(formatDuration(75)).toBe("1hr 15min");
+    expect(formatDuration(195)).toBe("3hr 15min");
+  });
+
+  it("drops the minutes half on an even hour", () => {
+    expect(formatDuration(60)).toBe("1hr");
+    expect(formatDuration(120)).toBe("2hr");
+  });
+});
 
 describe("formatTotalTime", () => {
   it("adds prep and cooking time", () => {
     expect(formatTotalTime(10, 25)).toBe("35 min");
+  });
+
+  it("formats an hour or more as hr/min", () => {
+    expect(formatTotalTime(30, 45)).toBe("1hr 15min");
   });
 
   it("treats a missing half as zero", () => {
