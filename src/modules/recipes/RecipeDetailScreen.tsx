@@ -20,7 +20,7 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
     recipeId,
     { poll: true }
   );
-  const { setFavorite, pendingRecipeId } = useFavoriteRecipe();
+  const { toggleFavorite, pendingFavoriteId } = useFavoriteRecipe();
   const { handleAddToList, isAdding, justAdded, error: addError } = useAddToList(recipeId);
   const { deleteRecipe, isDeleting } = useDeleteRecipe();
 
@@ -71,8 +71,8 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
           <RecipeDetailActions
             recipeId={recipe.id}
             isFavorited={recipe.isFavorited}
-            isFavoritePending={pendingRecipeId === recipe.id}
-            onToggleFavorite={() => setFavorite(recipe.id, !recipe.isFavorited)}
+            isFavoritePending={pendingFavoriteId === recipe.id}
+            onToggleFavorite={() => toggleFavorite(recipe.id, recipe.isFavorited)}
             isAdding={isAdding}
             justAdded={justAdded}
             onAddToList={() => void handleAddToList()}

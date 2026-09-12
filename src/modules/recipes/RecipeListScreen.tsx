@@ -21,7 +21,7 @@ export function RecipeListScreen() {
   const filters = useRecipeFilters({ onChange: pagination.reset });
   const list = useRecipeList({ filters, pagination, poll: true });
   const tagGroups = useRecipeTagGroups();
-  const { setFavorite, pendingRecipeId } = useFavoriteRecipe();
+  const { toggleFavorite, pendingFavoriteId } = useFavoriteRecipe();
 
   return (
     <div className="flex flex-1 flex-col">
@@ -55,8 +55,8 @@ export function RecipeListScreen() {
               <RecipeCard
                 key={recipe.id}
                 recipe={recipe}
-                isFavoritePending={pendingRecipeId === recipe.id}
-                onToggleFavorite={() => setFavorite(recipe.id, !recipe.isFavorited)}
+                isFavoritePending={pendingFavoriteId === recipe.id}
+                onToggleFavorite={() => toggleFavorite(recipe.id, recipe.isFavorited)}
               />
             ))}
           </div>

@@ -22,10 +22,13 @@ export function useFavoriteRecipe() {
     },
   });
 
+  const toggleFavorite = (id: string, currentlyFavorited: boolean) =>
+    mutation.mutate({ id, favorited: !currentlyFavorited });
+
   return {
-    setFavorite: (id: string, favorited: boolean) => mutation.mutate({ id, favorited }),
+    toggleFavorite,
     /** The recipe currently being toggled, so a card can show its own pending state. */
-    pendingRecipeId: mutation.isPending ? mutation.variables?.id : undefined,
+    pendingFavoriteId: mutation.isPending ? mutation.variables?.id : undefined,
     isError: mutation.isError,
   };
 }
