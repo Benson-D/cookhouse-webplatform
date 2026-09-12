@@ -65,6 +65,9 @@ export function useRecipeFilters({ onChange }: { onChange?: () => void } = {}) {
     favoritesOnly ||
     maxCookingTime !== null;
 
+  /** Tags + cook time only — the Filters button's own badge, not search or Favorites, which have their own separate controls. */
+  const activeFilterCount = selectedTagIds.length + (maxCookingTime !== null ? 1 : 0);
+
   return {
     search,
     handleSearch,
@@ -77,5 +80,6 @@ export function useRecipeFilters({ onChange }: { onChange?: () => void } = {}) {
     maxCookingTime,
     handleMaxCookingTimeChange,
     hasActiveFilters,
+    activeFilterCount,
   };
 }

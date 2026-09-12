@@ -8,6 +8,30 @@ import type { Tag } from "../types";
 
 const CUISINE_PREVIEW_COUNT = 6;
 
+/** A flat run of tag chips — the shared rendering both `CuisineGroup` and a plain (non-cuisine) group use. */
+function TagList({
+  tags,
+  selectedTagIds,
+  onToggleTag,
+}: {
+  tags: Tag[];
+  selectedTagIds: string[];
+  onToggleTag: (tagId: string) => void;
+}) {
+  return (
+    <div className="flex flex-wrap gap-[7px] pb-2">
+      {tags.map((tag) => (
+        <TagChip
+          key={tag.id}
+          label={tag.name}
+          selected={selectedTagIds.includes(tag.id)}
+          onToggle={() => onToggleTag(tag.id)}
+        />
+      ))}
+    </div>
+  );
+}
+
 function CuisineGroup({
   tags,
   selectedTagIds,
@@ -23,16 +47,7 @@ function CuisineGroup({
 
   return (
     <>
-      <div className="flex flex-wrap gap-[7px] pb-2">
-        {visible.map((tag) => (
-          <TagChip
-            key={tag.id}
-            label={tag.name}
-            selected={selectedTagIds.includes(tag.id)}
-            onToggle={() => onToggleTag(tag.id)}
-          />
-        ))}
-      </div>
+      <TagList tags={visible} selectedTagIds={selectedTagIds} onToggleTag={onToggleTag} />
       {remaining > 0 && (
         <ExpandRow
           label={`${remaining} more cuisine${remaining === 1 ? "" : "s"}`}
@@ -82,28 +97,17 @@ export function FilterPanel({
 
       {groups.map((group) => {
         const type = group[0]?.type ?? null;
-        const isCuisine = type === "cuisine";
-
         return (
           <div key={type ?? "other"}>
             <CHSectionLabel className="first:mt-0">{labelForTagGroup(type)}</CHSectionLabel>
-            {isCuisine ? (
+            {type === "cuisine" ? (
               <CuisineGroup
                 tags={group}
                 selectedTagIds={selectedTagIds}
                 onToggleTag={onToggleTag}
               />
             ) : (
-              <div className="flex flex-wrap gap-[7px] pb-2">
-                {group.map((tag) => (
-                  <TagChip
-                    key={tag.id}
-                    label={tag.name}
-                    selected={selectedTagIds.includes(tag.id)}
-                    onToggle={() => onToggleTag(tag.id)}
-                  />
-                ))}
-              </div>
+              <TagList tags={group} selectedTagIds={selectedTagIds} onToggleTag={onToggleTag} />
             )}
           </div>
         );

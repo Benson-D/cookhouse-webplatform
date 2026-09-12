@@ -43,7 +43,10 @@ export function RecipeTags({
   onSetMaxCookingTime: (value: number | null) => void;
   onClearAll: () => void;
 }) {
-  const activePanelTags = panelTags.filter((tag) => selectedTagIds.includes(tag.id));
+  const mealTimeTagIds = new Set(mealTimeTags.map((tag) => tag.id));
+  const activePanelTags = panelTags.filter(
+    (tag) => selectedTagIds.includes(tag.id) && !mealTimeTagIds.has(tag.id)
+  );
   const hasActiveTags = activePanelTags.length > 0 || maxCookingTime !== null;
 
   return (

@@ -20,10 +20,7 @@ export function RecipeListScreen() {
   const pagination = usePagination();
   const filters = useRecipeFilters({ onChange: pagination.reset });
   const list = useRecipeList({ filters, pagination, poll: true });
-  const tagGroups = useRecipeTagGroups({
-    selectedTagIds: filters.selectedTagIds,
-    maxCookingTime: filters.maxCookingTime,
-  });
+  const tagGroups = useRecipeTagGroups();
   const { setFavorite, pendingRecipeId } = useFavoriteRecipe();
 
   return (

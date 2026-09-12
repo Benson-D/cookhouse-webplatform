@@ -31,8 +31,9 @@ export function RecipeToolPanel({
     maxCookingTime,
     handleMaxCookingTimeChange,
     handleClearTags,
+    activeFilterCount,
   } = filters;
-  const { mealTimeTags, panelTags, activeFilterCount } = tagGroups;
+  const { mealTimeTags, panelTags } = tagGroups;
 
   const showRecipeTags = mealTimeTags.length > 0 || activeFilterCount > 0;
 

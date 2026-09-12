@@ -115,4 +115,21 @@ describe("useRecipeFilters", () => {
       expect(result.current.hasActiveFilters).toBe(false);
     });
   });
+
+  describe("activeFilterCount", () => {
+    it("counts selected tags plus a set max cooking time", () => {
+      const { result } = renderHook(() => useRecipeFilters());
+      act(() => result.current.handleToggleTag("tag-1"));
+      act(() => result.current.handleToggleTag("tag-2"));
+      act(() => result.current.handleMaxCookingTimeChange(30));
+      expect(result.current.activeFilterCount).toBe(3);
+    });
+
+    it("ignores search and favoritesOnly, which have their own controls", () => {
+      const { result } = renderHook(() => useRecipeFilters());
+      act(() => result.current.handleSearch("pasta"));
+      act(() => result.current.handleFavoritesOnlyChange(true));
+      expect(result.current.activeFilterCount).toBe(0);
+    });
+  });
 });

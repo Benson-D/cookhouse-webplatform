@@ -30,7 +30,7 @@ describe("groupTagsByType", () => {
 });
 
 describe("splitMealTimeTags", () => {
-  it("pulls out only breakfast/lunch/dinner meal_type tags", () => {
+  it("pulls out only breakfast/lunch/dinner meal_type tags for the quick row, without removing them from panelTags", () => {
     const tags: TestTag[] = [
       { id: "1", name: "breakfast", type: "meal_type" },
       { id: "2", name: "brunch", type: "meal_type" },
@@ -38,7 +38,7 @@ describe("splitMealTimeTags", () => {
     ];
     const { mealTimeTags, panelTags } = splitMealTimeTags(tags);
     expect(mealTimeTags.map((tag) => tag.name)).toEqual(["breakfast"]);
-    expect(panelTags.map((tag) => tag.name)).toEqual(["brunch", "Italian"]);
+    expect(panelTags.map((tag) => tag.name)).toEqual(["breakfast", "brunch", "Italian"]);
   });
 
   it("orders meal-time tags as breakfast, lunch, dinner regardless of input order", () => {

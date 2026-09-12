@@ -28,26 +28,18 @@ export function groupTagsByType<T extends { type?: string | null }>(tags: T[]): 
 const MEAL_TIME_NAMES = ["breakfast", "lunch", "dinner"];
 
 /**
- * Breakfast/lunch/dinner are fixed at exactly three and won't grow like the
- * rest of the (admin-curated) meal_type group, so they get pulled out into
- * their own always-visible row instead of living in the filter panel.
+ * Breakfast/lunch/dinner are fixed at exactly three and are the single most
+ * common way someone filters a recipe, so they also get an always-visible
+ * quick-access row — a view into the same tags, not a removal from the panel.
  */
 export function splitMealTimeTags<T extends { type?: string | null; name: string }>(
   tags: T[]
 ): { mealTimeTags: T[]; panelTags: T[] } {
-  const mealTimeTags: T[] = [];
-  const panelTags: T[] = [];
+  const mealTimeTags = tags
+    .filter((tag) => tag.type === "meal_type" && MEAL_TIME_NAMES.includes(tag.name))
+    .sort((a, b) => MEAL_TIME_NAMES.indexOf(a.name) - MEAL_TIME_NAMES.indexOf(b.name));
 
-  for (const tag of tags) {
-    if (tag.type === "meal_type" && MEAL_TIME_NAMES.includes(tag.name)) {
-      mealTimeTags.push(tag);
-    } else {
-      panelTags.push(tag);
-    }
-  }
-
-  mealTimeTags.sort((a, b) => MEAL_TIME_NAMES.indexOf(a.name) - MEAL_TIME_NAMES.indexOf(b.name));
-  return { mealTimeTags, panelTags };
+  return { mealTimeTags, panelTags: tags };
 }
 
 const GROUP_LABELS: Record<string, string> = {
