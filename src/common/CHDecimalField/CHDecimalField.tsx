@@ -5,7 +5,7 @@ import { cn } from "@/lib/cn";
 import { toFractionLabel } from "@/lib/fraction";
 
 const classes =
-  "rounded-[7px] border border-line bg-surface-2 px-[11px] py-2 text-[13.5px] text-ink placeholder:text-ink-faint focus:outline-2 focus:outline-offset-1 focus:outline-accent";
+  "rounded-[7px] border border-line bg-surface-2 px-[11px] py-2 text-[13.5px] text-ink placeholder:text-ink-faint focus:outline-2 focus:outline-offset-1 focus:outline-accent disabled:text-ink-faint disabled:cursor-not-allowed";
 
 function formatForDisplay(raw: string): string {
   const parsed = Number(raw);

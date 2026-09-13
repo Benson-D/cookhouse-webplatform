@@ -15,7 +15,7 @@ const base =
   "whitespace-nowrap rounded-lg px-[15px] py-2 text-[13.5px] font-semibold " +
   "transition duration-140 ease-out active:scale-[0.97] " +
   "focus-visible:outline-2 focus-visible:outline-offset-1 " +
-  "focus-visible:outline-accent disabled:opacity-50";
+  "focus-visible:outline-accent disabled:opacity-50 disabled:pointer-events-none";
 
 const variantClasses: Record<Variant, string> = {
   primary: "border border-accent bg-accent text-accent-ink hover:opacity-90",
