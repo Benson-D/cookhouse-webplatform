@@ -1,13 +1,13 @@
 "use client";
 
 import { cn } from "@/lib/cn";
-import { useTapToArm } from "@/hooks/useTapToArm";
+import { useTapToConfirm } from "@/hooks/useTapToConfirm";
 import { formatRelativeTime, getInitials } from "../utils";
 import type { GroceryList } from "../types";
 
 /**
  * Remove all lives here, not as a header button, since it's destructive and
- * rarely used. Tap-to-arm replaces `window.confirm()` so the prompt matches
+ * rarely used. Tap-to-confirm replaces `window.confirm()` so the prompt matches
  * the app's theme instead of blocking with a native popup.
  */
 export function GroceryListFooter({
@@ -23,7 +23,7 @@ export function GroceryListFooter({
   onRemoveAll: () => void;
   isRemovingAll: boolean;
 }) {
-  const { armed, tap } = useTapToArm(onRemoveAll);
+  const { awaitingConfirmation, handleTap } = useTapToConfirm(onRemoveAll);
 
   return (
     <div className="flex items-center justify-between border-t border-line-soft px-[22px] py-3 font-mono text-xs text-ink-faint">
@@ -45,14 +45,18 @@ export function GroceryListFooter({
         {totalCount > 0 && (
           <button
             type="button"
-            onClick={tap}
+            onClick={handleTap}
             disabled={isRemovingAll}
             className={cn(
               "cursor-pointer underline decoration-1 underline-offset-2 disabled:cursor-not-allowed disabled:opacity-60",
-              armed ? "font-semibold text-danger" : "hover:text-ink-soft"
+              awaitingConfirmation ? "font-semibold text-danger" : "hover:text-ink-soft"
             )}
           >
-            {isRemovingAll ? "Removing…" : armed ? "Tap again to remove all →" : "Remove all"}
+            {isRemovingAll
+              ? "Removing…"
+              : awaitingConfirmation
+                ? "Tap again to remove all →"
+                : "Remove all"}
           </button>
         )}
       </div>

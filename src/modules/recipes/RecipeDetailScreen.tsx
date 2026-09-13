@@ -2,11 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { CHSectionLabel, ErrorState, LoadingState, SubpageHeader } from "@/common";
-import { useTapToArm } from "@/hooks/useTapToArm";
+import { useTapToConfirm } from "@/hooks/useTapToConfirm";
 import { useRecipe } from "./hooks/useRecipe";
 import { useFavoriteRecipe } from "./hooks/useFavoriteRecipe";
 import { useDeleteRecipe } from "./hooks/useDeleteRecipe";
-import { useAddToList } from "./hooks/useAddToList";
+import { useAddRecipeToGroceryList } from "./hooks/useAddRecipeToGroceryList";
 import { IngredientList } from "./components/IngredientList";
 import { MethodInstructions } from "./components/MethodInstructions";
 import { RecipeGallery } from "./components/RecipeGallery";
@@ -21,13 +21,21 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
     { poll: true }
   );
   const { toggleFavorite, pendingFavoriteId } = useFavoriteRecipe();
-  const { handleAddToList, isAdding, justAdded, error: addError } = useAddToList(recipeId);
+  const {
+    handleAddToList,
+    isAdding,
+    justAdded,
+    error: addError,
+  } = useAddRecipeToGroceryList(recipeId);
   const { deleteRecipe, isDeleting } = useDeleteRecipe();
 
-  const { armed: deleteArmed, tap: tapDelete } = useTapToArm(async () => {
+  const confirmDelete = async () => {
     await deleteRecipe(recipeId);
     router.push("/recipes");
-  });
+  };
+
+  const { awaitingConfirmation: deleteAwaitingConfirmation, handleTap: handleDeleteTap } =
+    useTapToConfirm(confirmDelete);
 
   if (isLoading) {
     return <LoadingState label="Loading recipe…" rows={5} />;
@@ -77,8 +85,8 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
             justAdded={justAdded}
             onAddToList={() => void handleAddToList()}
             addErrorMessage={addError?.message}
-            deleteArmed={deleteArmed}
-            onTapDelete={tapDelete}
+            deleteAwaitingConfirmation={deleteAwaitingConfirmation}
+            onDeleteTap={handleDeleteTap}
             isDeleting={isDeleting}
           />
         </div>

@@ -11,8 +11,8 @@ export function RecipeDetailActions({
   justAdded,
   onAddToList,
   addErrorMessage,
-  deleteArmed,
-  onTapDelete,
+  deleteAwaitingConfirmation,
+  onDeleteTap,
   isDeleting,
 }: {
   recipeId: string;
@@ -23,8 +23,8 @@ export function RecipeDetailActions({
   justAdded: boolean;
   onAddToList: () => void;
   addErrorMessage?: string;
-  deleteArmed: boolean;
-  onTapDelete: () => void;
+  deleteAwaitingConfirmation: boolean;
+  onDeleteTap: () => void;
   isDeleting: boolean;
 }) {
   return (
@@ -42,7 +42,11 @@ export function RecipeDetailActions({
           Edit
         </CHLink>
 
-        <DeleteRecipeLink armed={deleteArmed} onTap={onTapDelete} isDeleting={isDeleting} />
+        <DeleteRecipeLink
+          armed={deleteAwaitingConfirmation}
+          onTap={onDeleteTap}
+          isDeleting={isDeleting}
+        />
       </div>
 
       {addErrorMessage && (

@@ -11,7 +11,7 @@ const ADDED_CONFIRMATION_MS = 2500;
  * brief "Added ✓" confirmation before reverting — owns the timer and its
  * cleanup so `RecipeDetailScreen` doesn't have to hold this state itself.
  */
-export function useAddToList(recipeId: string) {
+export function useAddRecipeToGroceryList(recipeId: string) {
   const { addFromRecipes, isAdding, error } = useAddFromRecipes();
   const [justAdded, setJustAdded] = useState(false);
   const confirmationTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
