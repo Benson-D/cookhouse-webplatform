@@ -3,7 +3,6 @@ import {
   formatStartedDay,
   formatRelativeTime,
   shouldHideAmount,
-  shouldHideUnitWord,
   formatSource,
   sortByIngredientName,
 } from "./utils";
@@ -63,26 +62,6 @@ describe("shouldHideAmount", () => {
   it("shows an item with no unit at all", () => {
     expect(shouldHideAmount(null)).toBe(false);
     expect(shouldHideAmount(undefined)).toBe(false);
-  });
-});
-
-describe("shouldHideUnitWord", () => {
-  it("hides count's generic base unit", () => {
-    expect(shouldHideUnitWord({ type: "count", baseUnitId: null })).toBe(true);
-  });
-
-  it("shows a real derived count unit like dozen", () => {
-    expect(shouldHideUnitWord({ type: "count", baseUnitId: "unit_piece" })).toBe(false);
-  });
-
-  it("shows volume and weight units regardless of baseUnitId", () => {
-    expect(shouldHideUnitWord({ type: "volume", baseUnitId: null })).toBe(false);
-    expect(shouldHideUnitWord({ type: "weight", baseUnitId: null })).toBe(false);
-  });
-
-  it("shows an item with no unit at all", () => {
-    expect(shouldHideUnitWord(null)).toBe(false);
-    expect(shouldHideUnitWord(undefined)).toBe(false);
   });
 });
 

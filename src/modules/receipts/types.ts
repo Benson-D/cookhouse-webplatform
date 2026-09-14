@@ -1,5 +1,5 @@
 import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
-import type { AppRouter } from "@cookhouse/api-contract";
+import type { AppRouter } from "@benson-d/api-contract";
 
 type RouterOutputs = inferRouterOutputs<AppRouter>;
 type RouterInputs = inferRouterInputs<AppRouter>;

@@ -62,9 +62,9 @@ importers:
         specifier: ^4.5.5
         version: 4.5.7(@types/react@19.2.18)(immer@11.1.18)(react@19.2.8)
     devDependencies:
-      '@cookhouse/api-contract':
-        specifier: file:../cookhouse-api/contract
-        version: file:../cookhouse-api/contract
+      '@benson-d/api-contract':
+        specifier: ^0.1.0
+        version: 0.1.6
       '@storybook/addon-a11y':
         specifier: ^10.5.10
         version: 10.5.10(storybook@10.5.10(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8))
@@ -316,6 +316,9 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
+  '@benson-d/api-contract@0.1.6':
+    resolution: {integrity: sha512-LPK2t2/T4o4RYJBjCnuUSPiF6s1fqfGfnsQ6y+kmGcMXyqFza/eUUmuNTdS66pAcE+xN+V888Y2ewayUrhlecA==, tarball: https://npm.pkg.github.com/download/@benson-d/api-contract/0.1.6/939b32258ee4fb5d97710dca330a496c7598f8f7}
+
   '@clerk/backend@2.33.6':
     resolution: {integrity: sha512-5foMmTHEQFt4mDv7AN0RDwUHZhGcg/JYe5hnl9SU/LFS8ZHY29Z2HDtIBmzKgjRfOJTMKj1AM81LgK2UFsGm9Q==}
     engines: {node: '>=18.17.0'}
@@ -350,9 +353,6 @@ packages:
   '@clerk/types@4.101.26':
     resolution: {integrity: sha512-tUeiElAZoXu9Dxom9t6IjkEfsfP7aWSVf5x5mCoHnSr2w+wV4EtEwoLl9vexT5LL0di4qidROSfcrOnorzczIQ==}
     engines: {node: '>=18.17.0'}
-
-  '@cookhouse/api-contract@file:../cookhouse-api/contract':
-    resolution: {directory: ../cookhouse-api/contract, type: directory}
 
   '@csstools/color-helpers@5.1.0':
     resolution: {integrity: sha512-S11EXWJyy0Mz5SYvRmY8nJYTFFd1LCNV+7cXyAgQtOOuzb4EsgfqDufL+9esx72/eLhsRdGZwaldu/h+E4t4BA==}
@@ -4846,6 +4846,8 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
+  '@benson-d/api-contract@0.1.6': {}
+
   '@clerk/backend@2.33.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@clerk/shared': 3.47.8(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -4893,8 +4895,6 @@ snapshots:
     transitivePeerDependencies:
       - react
       - react-dom
-
-  '@cookhouse/api-contract@file:../cookhouse-api/contract': {}
 
   '@csstools/color-helpers@5.1.0': {}
 

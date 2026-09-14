@@ -35,7 +35,7 @@
     "zustand": "^4.5.5"
   },
   "devDependencies": {
-    "@cookhouse/api-contract": "file:../cookhouse-api/contract",
+    "@benson-d/api-contract": "^0.1.0",
     "@storybook/addon-a11y": "^10.5.10",
     "@storybook/addon-docs": "^10.5.10",
     "@storybook/nextjs-vite": "^10.5.10",

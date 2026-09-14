@@ -1,5 +1,5 @@
 import type { inferRouterOutputs } from "@trpc/server";
-import type { AppRouter } from "@cookhouse/api-contract";
+import type { AppRouter } from "@benson-d/api-contract";
 
 /**
  * Prop types for the grocery-lists module, inferred from the router rather

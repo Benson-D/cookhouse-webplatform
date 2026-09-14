@@ -45,20 +45,6 @@ export function shouldHideAmount(unit: { type: string } | null | undefined): boo
   return unit?.type === "volume" || unit?.type === "weight";
 }
 
-/**
- * "Piece" is count's generic base unit — every count amount is stored
- * against it, but nobody says "4 piece apples." A real derived count unit
- * like "dozen" reads fine and keeps its word. Checks `baseUnitId === null`
- * (this unit derives from nothing) rather than the literal name "piece", so
- * a seed-data rename can't silently break it. Count-specific: volume's base
- * (cup) and weight's base (gram) are real words people expect to see.
- */
-export function shouldHideUnitWord(
-  unit: { type: string; baseUnitId: string | null } | null | undefined
-): boolean {
-  return unit?.type === "count" && unit.baseUnitId === null;
-}
-
 const SOURCE_LABELS: Record<string, string> = {
   recipe: "recipe",
   staple: "staple",

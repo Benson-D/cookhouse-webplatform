@@ -6,7 +6,7 @@ import { COOK_TIME_OPTIONS } from "../utils/cookTime";
 import { groupTagsByType, labelForTagGroup } from "../utils/tags";
 import type { Tag } from "../types";
 
-const CUISINE_PREVIEW_COUNT = 6;
+const GROUP_PREVIEW_COUNT = 6;
 
 /** A flat run of tag chips — the shared rendering both `CuisineGroup` and a plain (non-cuisine) group use. */
 function TagList({
@@ -32,17 +32,20 @@ function TagList({
   );
 }
 
-function CuisineGroup({
+/** Previews `GROUP_PREVIEW_COUNT` tags with a `TagList`, no-op once a group is small enough that nothing's cut off. */
+function TruncatedTagGroup({
   tags,
+  groupLabel,
   selectedTagIds,
   onToggleTag,
 }: {
   tags: Tag[];
+  groupLabel: string;
   selectedTagIds: string[];
   onToggleTag: (tagId: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
-  const visible = expanded ? tags : tags.slice(0, CUISINE_PREVIEW_COUNT);
+  const visible = expanded ? tags : tags.slice(0, GROUP_PREVIEW_COUNT);
   const remaining = tags.length - visible.length;
 
   return (
@@ -50,7 +53,7 @@ function CuisineGroup({
       <TagList tags={visible} selectedTagIds={selectedTagIds} onToggleTag={onToggleTag} />
       {remaining > 0 && (
         <ExpandRow
-          label={`${remaining} more cuisine${remaining === 1 ? "" : "s"}`}
+          label={`${remaining} more ${groupLabel}${remaining === 1 ? "" : "s"}`}
           actionLabel="view all"
           onClick={() => setExpanded(true)}
         />
@@ -100,15 +103,12 @@ export function FilterPanel({
         return (
           <div key={type ?? "other"}>
             <CHSectionLabel className="first:mt-0">{labelForTagGroup(type)}</CHSectionLabel>
-            {type === "cuisine" ? (
-              <CuisineGroup
-                tags={group}
-                selectedTagIds={selectedTagIds}
-                onToggleTag={onToggleTag}
-              />
-            ) : (
-              <TagList tags={group} selectedTagIds={selectedTagIds} onToggleTag={onToggleTag} />
-            )}
+            <TruncatedTagGroup
+              tags={group}
+              groupLabel={labelForTagGroup(type).toLowerCase()}
+              selectedTagIds={selectedTagIds}
+              onToggleTag={onToggleTag}
+            />
           </div>
         );
       })}
