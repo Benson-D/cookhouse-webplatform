@@ -43,7 +43,9 @@ export function useRecipeList({
       // Keeps the previous page on screen while the next one loads, so
       // paging doesn't blank the grid on every click.
       placeholderData: (previous) => previous,
-      ...(poll && { refetchInterval: RECIPE_POLL_MS }),
+      // Polling is already a retry, so a failed poll shouldn't also stack
+      // TanStack Query's own backoff-retry on top of it.
+      ...(poll && { refetchInterval: RECIPE_POLL_MS, retry: false }),
     }
   );
 

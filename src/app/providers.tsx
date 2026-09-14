@@ -6,7 +6,12 @@ import { httpBatchLink } from "@trpc/client";
 import { useAuth } from "@clerk/nextjs";
 import { trpc } from "@/lib/trpc";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:4000";
+// Trimmed so a trailing slash in the env var (an easy mistake in a Vercel
+// dashboard field) can't produce a double slash once "/trpc" is appended.
+const BACKEND_URL = (process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:4000").replace(
+  /\/+$/,
+  ""
+);
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const { getToken } = useAuth();

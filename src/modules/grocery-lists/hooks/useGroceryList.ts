@@ -25,6 +25,10 @@ export function useGroceryList() {
 
   const query = trpc.groceryLists.getActive.useQuery(undefined, {
     refetchInterval: GROCERY_LIST_POLL_MS,
+    // The poll interval is already a retry — stacking TanStack Query's own
+    // backoff-retry on top of a failed poll just hammers a struggling
+    // endpoint with extra attempts the next poll would've covered anyway.
+    retry: false,
   });
   const setChecked = trpc.groceryLists.setChecked.useMutation({ onSuccess: invalidate });
   const removeItem = trpc.groceryLists.removeItem.useMutation({ onSuccess: invalidate });

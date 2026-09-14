@@ -20,6 +20,7 @@ export { CardGridLoadingState, LoadingState } from "./LoadingState/LoadingState"
 export { MobileAccountPanel } from "./MobileAccountPanel";
 export { MobileTabBar } from "./MobileTabBar";
 export { SubpageHeader } from "./SubpageHeader/SubpageHeader";
+export { CartIcon, PotIcon, ReceiptIcon } from "./TabBarIcons";
 export { TagBadge } from "./TagBadge/TagBadge";
 export { TagChip } from "./TagChip/TagChip";
 export { ThemeToggle } from "./ThemeToggle";

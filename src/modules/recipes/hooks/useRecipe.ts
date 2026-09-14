@@ -23,7 +23,9 @@ export function useRecipe(recipeId: string | null, { poll = false }: { poll?: bo
     { id: recipeId ?? "" },
     {
       enabled: recipeId !== null,
-      ...(poll && { refetchInterval: RECIPE_POLL_MS }),
+      // Polling is already a retry, so a failed poll shouldn't also stack
+      // TanStack Query's own backoff-retry on top of it.
+      ...(poll && { refetchInterval: RECIPE_POLL_MS, retry: false }),
     }
   );
   const imagesQuery = trpc.recipes.images.useQuery(
