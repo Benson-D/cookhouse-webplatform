@@ -146,22 +146,13 @@
 }
 
 /*
- * Every element cross-fades background/border/text color rather than
- * snapping — the payoff of theming being one attribute flip (see the
- * component architecture doc): this rule, not per-component work, is what
- * makes toggling dark mode fade instead of flash. Interactive elements that
- * also animate transform (buttons, checkboxes) opt into Tailwind's `transition`
- * utility instead of relying on this one — a class selector's transition-property
- * replaces this universal rule's for that element rather than merging with it.
- *
- * Wrapped in `@layer base` deliberately: Tailwind's own utilities compile
- * into `@layer utilities`, and per CSS Cascade Layers, unlayered CSS beats
- * layered CSS outright regardless of specificity. Left unlayered, this rule
- * silently won over every utility class trying to override it, no matter
- * how specific the transition/duration/ease combination on an element was.
- * Placing it in `base` (which sits below `utilities` in Tailwind's own
- * layer order) is what actually makes the "class selector overrides this"
- * comment above true.
+ * Cross-fades background/border/text color on every element, so toggling
+ * dark mode fades instead of snaps. Elements that also animate transform
+ * (buttons, checkboxes) use Tailwind's `transition` utility instead — a
+ * class selector's transition-property replaces this rule for that element
+ * rather than merging with it. Wrapped in `@layer base`: unlayered CSS
+ * beats layered Tailwind utilities regardless of specificity, so this would
+ * otherwise always win over a utility trying to override it.
  */
 @layer base {
   * {
@@ -202,22 +193,67 @@ body {
 }
 
 /*
- * Some browsers (Safari especially, and Recharts' own tabIndex-driven chart
- * wrapper) still match plain `:focus` on a mouse click even though it isn't
- * `:focus-visible` — the native default outline then shows regardless of
- * this app's own `focus-visible:` styling, since that only ever targets the
- * `:focus-visible` case. Suppressed globally for the non-visible case, so
- * every button/chip/chart gets this once instead of patching each site;
- * a real keyboard tab still matches `:focus-visible` and keeps its ring.
- *
- * Wrapped in `@layer base`, same reasoning as the transition rule above:
- * left unlayered, this always beat a deliberately-applied `outline-*`
- * utility class regardless of specificity — e.g. RecipeGallery's selected
- * thumbnail ring not showing until you clicked away and the button lost
- * mouse focus.
+ * Safari (and Recharts' chart wrapper) matches plain `:focus` on a mouse
+ * click even when it isn't `:focus-visible`, showing the native outline
+ * despite this app's own `focus-visible:` styling — suppressed globally so
+ * a real keyboard tab still keeps its ring. Wrapped in `@layer base`: left
+ * unlayered, this always beat a deliberately-applied `outline-*` utility
+ * regardless of specificity.
  */
 @layer base {
   :focus:not(:focus-visible) {
     outline: none;
   }
+}
+
+/*
+ * Clerk's own rule makes a local `--accent: var(--accent)` copy on these
+ * buttons. Custom properties resolve independently of !important on the
+ * properties that consume them, so overriding background/color alone still
+ * reads Clerk's local copy — the local --accent/--accent-ink need forcing
+ * too, which also fixes Clerk's own derived values (border, hover-mix).
+ */
+.cl-formButtonPrimary,
+.cl-membersPageInviteButton {
+  --accent: #4a6b47 !important;
+  --accent-ink: #ffffff !important;
+  background: var(--accent) !important;
+  color: var(--accent-ink) !important;
+}
+
+.cl-formButtonPrimary::after,
+.cl-membersPageInviteButton::after {
+  background: var(--accent) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-app-theme="light"]) .cl-formButtonPrimary,
+  :root:not([data-app-theme="light"]) .cl-membersPageInviteButton {
+    --accent: #93b389 !important;
+    --accent-ink: #17150f !important;
+  }
+}
+
+:root[data-app-theme="dark"] .cl-formButtonPrimary,
+:root[data-app-theme="dark"] .cl-membersPageInviteButton {
+  --accent: #93b389 !important;
+  --accent-ink: #17150f !important;
+}
+
+/* Matches CHButton's ghost variant exactly (border-line, bg-transparent, text-ink, hover:bg-surface-2). */
+.cl-organizationSwitcherPopoverActionButton,
+.cl-userButtonPopoverActionButton,
+.cl-userButtonPopoverCustomItemButton {
+  background: transparent !important;
+  color: var(--ink-soft) !important;
+}
+
+.cl-organizationSwitcherPopoverActionButton:hover,
+.cl-userButtonPopoverActionButton:hover,
+.cl-userButtonPopoverCustomItemButton:hover {
+  background: var(--surface-2) !important;
+}
+
+.cl-organizationPreviewMainIdentifier {
+  color: var(--ink-soft) !important;
 }

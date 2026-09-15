@@ -8,7 +8,7 @@ import { ThemeToggle } from "./ThemeToggle";
  */
 export function MobileAccountPanel({ onClose }: { onClose: () => void }) {
   return (
-    <div className="absolute right-0 top-[calc(100%+8px)] z-20 flex w-[200px] flex-col gap-3 rounded-[10px] border border-line bg-surface p-3.5 shadow-frame">
+    <div className="absolute right-0 top-[calc(100%+8px)] z-20 flex w-[250px] flex-col gap-3 rounded-[10px] border border-line bg-surface p-3.5 shadow-frame">
       <div className="flex items-center justify-between font-display text-sm font-semibold text-ink">
         <span>Household &amp; theme</span>
         <button

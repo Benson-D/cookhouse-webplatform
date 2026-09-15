@@ -27,13 +27,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           colorWarning: "var(--amber)",
           colorShimmer: "var(--line-soft)",
         },
-        elements: {
-          // Clerk can't auto-derive a contrast color from a var() reference,
-          // so its solid-primary buttons get an invalid text color — inline
-          // style overrides it (confirmed via devtools).
-          formButtonPrimary: { color: "var(--accent-ink)" },
-          membersPageInviteButton: { color: "var(--accent-ink)" },
-        },
       }}
     >
       <html lang="en" className="h-full antialiased">
