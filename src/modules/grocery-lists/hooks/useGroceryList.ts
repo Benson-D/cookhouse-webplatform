@@ -2,11 +2,11 @@
 
 import { trpc } from "@/lib/trpc";
 
-// 3-5s, per root CLAUDE.md's "Real-time layer" decision — a shared shopping
-// trip is the case that actually needs another member's edit to show up
-// without a manual refresh, so this polls faster than anything else in the
-// app (recipes' ~10-15s, see useRecipeList/useRecipe).
-const GROCERY_LIST_POLL_MS = 4_000;
+// Polling (4s) is temporarily disabled — cost/load concern on the $5/mo
+// DigitalOcean plan while this is still a single-household app with no real
+// urgency for sub-5s sync. Revisit with a real solution (longer interval,
+// pause when the tab isn't focused, or a push-based approach) rather than
+// just re-enabling this blindly.
 
 /**
  * The household's active grocery list.
@@ -23,13 +23,7 @@ export function useGroceryList() {
   const utils = trpc.useUtils();
   const invalidate = () => utils.groceryLists.getActive.invalidate();
 
-  const query = trpc.groceryLists.getActive.useQuery(undefined, {
-    refetchInterval: GROCERY_LIST_POLL_MS,
-    // The poll interval is already a retry — stacking TanStack Query's own
-    // backoff-retry on top of a failed poll just hammers a struggling
-    // endpoint with extra attempts the next poll would've covered anyway.
-    retry: false,
-  });
+  const query = trpc.groceryLists.getActive.useQuery(undefined);
   const setChecked = trpc.groceryLists.setChecked.useMutation({ onSuccess: invalidate });
   const removeItem = trpc.groceryLists.removeItem.useMutation({ onSuccess: invalidate });
   const complete = trpc.groceryLists.complete.useMutation({ onSuccess: invalidate });
