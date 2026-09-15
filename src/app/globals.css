@@ -243,14 +243,17 @@ body {
 /* Matches CHButton's ghost variant exactly (border-line, bg-transparent, text-ink, hover:bg-surface-2). */
 .cl-organizationSwitcherPopoverActionButton,
 .cl-userButtonPopoverActionButton,
-.cl-userButtonPopoverCustomItemButton {
+.cl-userButtonPopoverCustomItemButton,
+.cl-socialButtonsBlockButtonText {
   background: transparent !important;
   color: var(--ink-soft) !important;
 }
 
 .cl-organizationSwitcherPopoverActionButton:hover,
 .cl-userButtonPopoverActionButton:hover,
-.cl-userButtonPopoverCustomItemButton:hover {
+.cl-userButtonPopoverCustomItemButton:hover,
+.cl-socialButtonsIconButton:hover,
+.cl-socialButtonsBlockButton:hover {
   background: var(--surface-2) !important;
 }
 
