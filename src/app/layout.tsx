@@ -8,18 +8,7 @@ export const metadata: Metadata = {
   description: "Shared recipes, grocery lists and spending for your household.",
 };
 
-/**
- * All system fonts, so no next/font import — `--font-display-stack` and
- * friends in globals.css are the whole story.
- *
- * `appearance.variables` points Clerk at this app's own CSS custom
- * properties rather than Clerk's defaults (a purple brand color nowhere in
- * this design, and light-mode-assuming text that goes illegible on a dark
- * background). Passed as `var(--x)` strings, not resolved hex values, so
- * this needs setting once — no theme-state plumbing, no re-render on
- * toggle: the browser repaints Clerk's UI the same way it repaints
- * everything else when the underlying custom property changes.
- */
+/** `appearance.variables` points Clerk at this app's own CSS custom properties instead of Clerk's defaults. */
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <ClerkProvider
@@ -37,6 +26,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           colorSuccess: "var(--accent)",
           colorWarning: "var(--amber)",
           colorShimmer: "var(--line-soft)",
+        },
+        elements: {
+          // Clerk can't auto-derive a contrast color from a var() reference,
+          // so its solid-primary buttons get an invalid text color — inline
+          // style overrides it (confirmed via devtools).
+          formButtonPrimary: { color: "var(--accent-ink)" },
+          membersPageInviteButton: { color: "var(--accent-ink)" },
         },
       }}
     >
