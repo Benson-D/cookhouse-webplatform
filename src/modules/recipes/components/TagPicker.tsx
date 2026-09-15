@@ -4,14 +4,8 @@ import { groupTagsByType, labelForTagGroup } from "../utils/tags";
 import { TruncatedTagGroup } from "./FilterPanel";
 
 /**
- * Tag selection for the form — the same chip vocabulary as the list filter,
- * grouped and truncated the same way `FilterPanel` is (`TruncatedTagGroup`,
- * shared from there) so a populated Cuisine/Diet group doesn't render as a
- * flat wall of chips here either.
- *
- * **Pick-only, never type.** Creating a `Tag` is admin-only, so this is a
- * closed list from `tags.list`; there is deliberately no "add a tag" affordance
- * for a non-admin to be refused by.
+ * Tag selection for the form, grouped and truncated via `FilterPanel`'s
+ * `TruncatedTagGroup`. Pick-only — tags are admin-created, so no "add a tag".
  */
 export function TagPicker({
   label,
