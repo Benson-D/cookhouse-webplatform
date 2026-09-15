@@ -40,7 +40,7 @@ export function StapleFooter({
   }
 
   return (
-    <div className="grid grid-cols-[1fr_160px_76px] items-center gap-2.5 pt-3.5">
+    <div className="grid grid-cols-1 items-center gap-2.5 pt-3.5 md:grid-cols-[1fr_160px_76px]">
       <CHSelect<Ingredient>
         ariaLabel="Ingredient"
         placeholder="search or add an ingredient"
