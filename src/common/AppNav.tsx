@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 import { ThemeToggle } from "./ThemeToggle";
 import { MobileAccountPanel } from "./MobileAccountPanel";
+import { HouseIcon } from "./Icons";
 
 export const NAV_LINKS = [
   { href: "/recipes", label: "Recipes" },
@@ -72,7 +73,7 @@ export function AppNav() {
             <UserButton.MenuItems>
               <UserButton.Action
                 label="Household & theme"
-                labelIcon={<span aria-hidden>⚙️</span>}
+                labelIcon={<HouseIcon />}
                 onClick={() => setIsAccountPanelOpen(true)}
               />
             </UserButton.MenuItems>

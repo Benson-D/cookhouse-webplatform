@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CardGridLoadingState, ErrorState, EmptyState, SubpageHeader } from "@/common";
+import { CardGridLoadingState, ErrorState, EmptyState, SearchIcon, SubpageHeader } from "@/common";
 import { usePagination } from "@/modules/recipes/hooks/usePagination";
 import { useRecipeFilters } from "@/modules/recipes/hooks/useRecipeFilters";
 import { useRecipeList } from "@/modules/recipes/hooks/useRecipeList";
@@ -64,9 +64,7 @@ export function AddFromRecipesScreen() {
 
       <div className="flex flex-wrap items-center gap-3 px-[22px] pb-3.5 pt-[18px]">
         <div className="flex min-w-[180px] flex-1 items-center gap-[9px] rounded-lg border border-line bg-surface-2 px-3 py-2">
-          <span aria-hidden className="text-ink-faint">
-            🔍
-          </span>
+          <SearchIcon className="text-ink-faint" />
           <input
             type="search"
             value={filters.search}
