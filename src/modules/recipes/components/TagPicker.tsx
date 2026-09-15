@@ -1,9 +1,13 @@
-import { TagChip } from "@/common";
+import { CHSectionLabel } from "@/common";
 import type { Tag } from "../types";
-import { groupTagsByType } from "../utils/tags";
+import { groupTagsByType, labelForTagGroup } from "../utils/tags";
+import { TruncatedTagGroup } from "./FilterPanel";
 
 /**
- * Tag selection for the form — the same chip vocabulary as the list filter.
+ * Tag selection for the form — the same chip vocabulary as the list filter,
+ * grouped and truncated the same way `FilterPanel` is (`TruncatedTagGroup`,
+ * shared from there) so a populated Cuisine/Diet group doesn't render as a
+ * flat wall of chips here either.
  *
  * **Pick-only, never type.** Creating a `Tag` is admin-only, so this is a
  * closed list from `tags.list`; there is deliberately no "add a tag" affordance
@@ -31,21 +35,20 @@ export function TagPicker({
           No tags exist yet. An admin creates them.
         </p>
       ) : (
-        <div className="flex flex-wrap items-center gap-[7px]">
-          {groupTagsByType(tags).map((group, index) => (
-            <div key={group[0].id} className="flex flex-wrap items-center gap-[7px]">
-              {index > 0 && <span aria-hidden className="mx-1 h-[18px] w-px bg-line" />}
-              {group.map((tag) => (
-                <TagChip
-                  key={tag.id}
-                  label={tag.name}
-                  selected={selectedTagIds.includes(tag.id)}
-                  onToggle={() => onToggle(tag.id)}
-                />
-              ))}
+        groupTagsByType(tags).map((group) => {
+          const type = group[0]?.type ?? null;
+          return (
+            <div key={type ?? "other"}>
+              <CHSectionLabel className="first:mt-0">{labelForTagGroup(type)}</CHSectionLabel>
+              <TruncatedTagGroup
+                tags={group}
+                groupLabel={labelForTagGroup(type).toLowerCase()}
+                selectedTagIds={selectedTagIds}
+                onToggleTag={onToggle}
+              />
             </div>
-          ))}
-        </div>
+          );
+        })
       )}
     </div>
   );

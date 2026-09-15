@@ -33,7 +33,7 @@ function TagList({
 }
 
 /** Previews `GROUP_PREVIEW_COUNT` tags with a `TagList`, no-op once a group is small enough that nothing's cut off. */
-function TruncatedTagGroup({
+export function TruncatedTagGroup({
   tags,
   groupLabel,
   selectedTagIds,
