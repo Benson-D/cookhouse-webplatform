@@ -38,14 +38,23 @@ export function GroceryListHeader({
         <span className="tabular font-mono text-[11.5px] text-ink-faint">{subtitle}</span>
       </div>
 
-      <div className="flex flex-wrap gap-[9px]">
-        <CHLink variant="ghost" href="/grocery-list/add-from-recipes">
+      <div className="flex w-full flex-col gap-[9px] md:w-auto md:flex-row md:flex-wrap">
+        <CHLink
+          variant="ghost"
+          href="/grocery-list/add-from-recipes"
+          className="w-full text-center md:w-auto"
+        >
           Add from recipes
         </CHLink>
-        <CHLink variant="ghost" href="/receipts/new">
+        <CHLink variant="ghost" href="/receipts/new" className="w-full text-center md:w-auto">
           Scan receipt
         </CHLink>
-        <CHButton variant="primary" onClick={onComplete} disabled={isCompleting}>
+        <CHButton
+          variant="primary"
+          onClick={onComplete}
+          disabled={isCompleting}
+          className="w-full text-center md:w-auto"
+        >
           {isCompleting ? "Completing…" : "Complete list"}
         </CHButton>
       </div>

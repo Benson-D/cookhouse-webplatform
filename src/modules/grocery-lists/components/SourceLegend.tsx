@@ -14,7 +14,7 @@ const ENTRIES: { source: string; description: string }[] = [
  */
 export function SourceLegend() {
   return (
-    <div className="flex flex-wrap items-center gap-4 border-t border-line-soft bg-surface-2 px-[22px] py-3 text-[12.5px] text-ink-soft">
+    <div className="flex flex-col items-start gap-2.5 border-t border-line-soft bg-surface-2 px-[22px] py-3 text-[12.5px] text-ink-soft md:flex-row md:flex-wrap md:items-center md:gap-4">
       {ENTRIES.map(({ source, description }) => (
         <div key={source} className="flex items-center gap-[7px]">
           <SourceBadge source={source} />
@@ -24,7 +24,7 @@ export function SourceLegend() {
 
       <Link
         href="/grocery-list/staples"
-        className="ml-auto cursor-pointer underline decoration-1 underline-offset-2 hover:text-ink"
+        className="cursor-pointer underline decoration-1 underline-offset-2 hover:text-ink md:ml-auto"
       >
         Manage staples →
       </Link>
