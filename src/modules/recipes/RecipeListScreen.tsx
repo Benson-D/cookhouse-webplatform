@@ -11,10 +11,9 @@ import { RecipeCard } from "./components/RecipeCard";
 import { RecipeToolPanel } from "./components/RecipeToolPanel";
 
 /**
- * Composes pagination, filters, the list query and the tag groups, and
- * holds no query of its own. Changing any filter resets pagination back to
- * the first page, via `useRecipeFilters`' `onChange` wired to
- * `pagination.reset`.
+ * The household's main recipe library — search by name, filter by tag
+ * (meal type, cuisine, diet) and cook time, favorite a recipe, and page
+ * through the results as a card grid.
  */
 export function RecipeListScreen() {
   const pagination = usePagination();

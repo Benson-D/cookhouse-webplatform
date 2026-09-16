@@ -226,13 +226,27 @@ background), not a ported one, following the same lighten-for-dark
 relationship `--accent` and `--amber` already establish.
 
 Theme is switched by a `data-app-theme` attribute on `<html>`. **Absent means
-"follow the system"** — `globals.css` handles that with `prefers-color-scheme`,
-so the default path needs no attribute, no inline script, and has no hydration
-mismatch. `ThemeToggle` sets the attribute explicitly to override, and treats
-the attribute (not React state) as the source of truth, reading it back with
-`useSyncExternalStore` — mirroring it into state would mean restoring from
-localStorage via a setState-in-effect, which `react-hooks/set-state-in-effect`
-rejects and which cascades renders.
+dark** — `globals.css`'s `:root` is dark by default, with
+`[data-app-theme="light"]` as the one override, so the default path needs no
+attribute, no inline script, and has no hydration mismatch. This replaced an
+earlier `prefers-color-scheme`-driven default, which was correct in principle
+but meant the very first paint reflected the visitor's OS setting rather than
+whatever they'd actually chosen. `ThemeToggle` sets the attribute explicitly
+to override, restores a stored choice from `localStorage` on mount, and
+treats the attribute (not React state) as its own source of truth, read back
+with `useSyncExternalStore` — mirroring it into state would mean restoring it
+with a setState-in-effect, which `react-hooks/set-state-in-effect` rejects
+and which cascades renders.
+
+A cookie-based version was also tried and dropped the same session: reading
+the choice server-side in `app/layout.tsx` (an async server component) would
+close the one remaining gap — someone who explicitly picks Light seeing a
+one-frame dark flash on their next reload, since `localStorage` isn't
+readable server-side and only a post-hydration effect can apply it. Judged
+not worth it: dark is the default and, in practice, what actually gets used,
+so the flash only ever hits the Light path, and the cookie/server-component
+machinery it'd take to close that is more than that edge case is worth on an
+app this size.
 
 Flipping the theme touches one attribute, zero components. Don't hardcode a hex
 value or a stock Tailwind color in a component — if it isn't one of the
