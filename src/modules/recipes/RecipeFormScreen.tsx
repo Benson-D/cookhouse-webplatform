@@ -23,10 +23,10 @@ import {
 } from "./recipe-form.schema";
 
 /**
- * Logical component for both `/recipes/new` and `/recipes/[id]/edit` —
- * composes the hooks with `RecipeFormHeader` / `RecipeFormBody` /
- * `RecipeFormFooter`. One submit, not two steps: see CLAUDE.md's "Recipe
- * create flow" for why the create→upload ordering is absorbed here.
+ * The recipe form — create a new recipe or edit an existing one: name,
+ * photos, ingredients, method, and tags, saved in one submit. See
+ * CLAUDE.md's "Recipe create flow" for why photo uploads happen after
+ * create returns an id, absorbed here rather than as a separate step.
  */
 export function RecipeFormScreen({ recipeId }: { recipeId?: string }) {
   const router = useRouter();
@@ -53,8 +53,8 @@ export function RecipeFormScreen({ recipeId }: { recipeId?: string }) {
     values: recipe ? fromRecipeDetail(recipe, parsedInstructions) : undefined,
   });
 
-  // `useWatch`, not `form.watch()` — watch() returns a fresh function each
-  // render, which makes the React Compiler skip the whole component.
+  // `useWatch`, not `form.watch()` — watch() re-renders the whole form on
+  // any field change; useWatch re-renders only for this one.
   const selectedTagIds = useWatch({ control: form.control, name: "tagIds" });
 
   if (isLoading) {

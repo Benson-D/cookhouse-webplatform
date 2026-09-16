@@ -18,7 +18,7 @@ export function ExpandRow({
     <button
       type="button"
       onClick={onClick}
-      className="flex w-full items-center justify-between rounded-lg border border-dashed border-line px-3 py-2.5 text-[13px] text-ink-soft hover:border-ink-faint hover:bg-surface-2"
+      className="my-2 flex w-full items-center justify-between rounded-lg border border-dashed border-line px-3 py-2.5 text-[13px] text-ink-soft hover:border-ink-faint hover:bg-surface-2"
     >
       <span>▾ {label}</span>
       <span>{actionLabel}</span>
