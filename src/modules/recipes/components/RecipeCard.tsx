@@ -32,8 +32,16 @@ export function RecipeCard({
           style={recipe.coverImageUrl ? undefined : { background: placeholderGradient(recipe.id) }}
         >
           {recipe.coverImageUrl && (
+            // `absolute inset-0` (not h-full w-full) — a grid item's default
+            // min-height: auto lets an <img>'s own intrinsic size grow this
+            // box past its aspect-[4/3] ratio otherwise, unlike the gradient
+            // placeholder above, which has no content to do that.
             // eslint-disable-next-line @next/next/no-img-element -- presigned bucket URL, host not yet fixed
-            <img src={recipe.coverImageUrl} alt="" className="h-full w-full object-cover" />
+            <img
+              src={recipe.coverImageUrl}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover"
+            />
           )}
         </div>
 
