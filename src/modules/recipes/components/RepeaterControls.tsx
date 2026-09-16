@@ -18,7 +18,7 @@ export function RemoveRowButton({ onClick, label }: { onClick: () => void; label
       type="button"
       onClick={onClick}
       aria-label={label}
-      className="rounded-md border border-transparent text-center text-[15px] text-ink-faint hover:text-ink"
+      className="rounded-md border border-transparent px-2 text-center text-[15px] text-ink-faint hover:bg-surface-2 hover:text-ink"
     >
       ×
     </button>

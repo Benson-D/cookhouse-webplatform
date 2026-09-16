@@ -2,8 +2,10 @@
 
 import { useFieldArray, useFormContext, type Control } from "react-hook-form";
 import { CHDecimalField, CHSelect, CHTextInput, UnitPicker } from "@/common";
+import { cn } from "@/lib/cn";
 import type { RecipeFormInput, RecipeFormValues } from "../recipe-form.schema";
 import { AddLineButton, RemoveRowButton } from "./RepeaterControls";
+import styles from "./IngredientRows.module.css";
 
 type Ingredient = { id: string; name: string };
 type Unit = { id: string; name: string; abbreviation: string | null };
@@ -56,57 +58,70 @@ export function IngredientRows({
           const ingredientName = watch(`ingredients.${index}.ingredientName`);
           const unitId = watch(`ingredients.${index}.unitId`) ?? "";
           const amount = watch(`ingredients.${index}.amount`) ?? "";
+          const isLast = index === fields.length - 1;
 
           return (
             <div key={field.id} className="flex flex-col gap-1">
-              <div className="grid grid-cols-2 items-center gap-2 sm:grid-cols-[68px_108px_1fr_1fr_28px]">
-                <CHDecimalField
-                  value={amount}
-                  onChange={(value) => setValue(`ingredients.${index}.amount`, value)}
-                  placeholder="1"
-                  aria-label={`Amount for ingredient ${index + 1}`}
-                  invalid={Boolean(rowErrors?.amount)}
-                />
+              <div className={cn(styles.row, !isLast && styles.rowDivider)}>
+                <div className={styles.amount}>
+                  <CHDecimalField
+                    value={amount}
+                    onChange={(value) => setValue(`ingredients.${index}.amount`, value)}
+                    placeholder="1"
+                    aria-label={`Amount for ingredient ${index + 1}`}
+                    invalid={Boolean(rowErrors?.amount)}
+                    className="w-full"
+                  />
+                </div>
 
-                <UnitPicker
-                  label={`Unit for ingredient ${index + 1}`}
-                  unitId={unitId}
-                  units={units}
-                  onSelect={(unit) => setValue(`ingredients.${index}.unitId`, unit.id)}
-                />
+                <div className={styles.unit}>
+                  <UnitPicker
+                    label={`Unit for ingredient ${index + 1}`}
+                    unitId={unitId}
+                    units={units}
+                    onSelect={(unit) => setValue(`ingredients.${index}.unitId`, unit.id)}
+                  />
+                </div>
 
-                <CHSelect<Ingredient>
-                  ariaLabel={`Ingredient ${index + 1}`}
-                  placeholder="ingredient"
-                  invalid={Boolean(rowErrors?.ingredientId)}
-                  value={ingredientId ? { id: ingredientId, name: ingredientName } : null}
-                  options={ingredientOptions}
-                  getOptionId={(ingredient) => ingredient.id}
-                  getOptionLabel={(ingredient) => ingredient.name}
-                  onSearch={onSearchIngredients}
-                  onSelect={(ingredient) => {
-                    setValue(`ingredients.${index}.ingredientId`, ingredient.id, {
-                      shouldValidate: true,
-                    });
-                    setValue(`ingredients.${index}.ingredientName`, ingredient.name);
-                  }}
-                  onCreate={onResolveIngredient}
-                  onClear={() => {
-                    setValue(`ingredients.${index}.ingredientId`, "", { shouldValidate: true });
-                    setValue(`ingredients.${index}.ingredientName`, "");
-                  }}
-                />
+                <div className={styles.ingredient}>
+                  <CHSelect<Ingredient>
+                    ariaLabel={`Ingredient ${index + 1}`}
+                    placeholder="ingredient"
+                    invalid={Boolean(rowErrors?.ingredientId)}
+                    value={ingredientId ? { id: ingredientId, name: ingredientName } : null}
+                    options={ingredientOptions}
+                    getOptionId={(ingredient) => ingredient.id}
+                    getOptionLabel={(ingredient) => ingredient.name}
+                    onSearch={onSearchIngredients}
+                    onSelect={(ingredient) => {
+                      setValue(`ingredients.${index}.ingredientId`, ingredient.id, {
+                        shouldValidate: true,
+                      });
+                      setValue(`ingredients.${index}.ingredientName`, ingredient.name);
+                    }}
+                    onCreate={onResolveIngredient}
+                    onClear={() => {
+                      setValue(`ingredients.${index}.ingredientId`, "", { shouldValidate: true });
+                      setValue(`ingredients.${index}.ingredientName`, "");
+                    }}
+                  />
+                </div>
 
-                <CHTextInput
-                  {...register(`ingredients.${index}.notes`)}
-                  placeholder="note"
-                  aria-label={`Note for ingredient ${index + 1}`}
-                />
+                <div className={styles.note}>
+                  <CHTextInput
+                    {...register(`ingredients.${index}.notes`)}
+                    placeholder="note"
+                    aria-label={`Note for ingredient ${index + 1}`}
+                    className="w-full"
+                  />
+                </div>
 
-                <RemoveRowButton
-                  onClick={() => remove(index)}
-                  label={`Remove ingredient ${index + 1}`}
-                />
+                <div className={styles.remove}>
+                  <RemoveRowButton
+                    onClick={() => remove(index)}
+                    label={`Remove ingredient ${index + 1}`}
+                  />
+                </div>
               </div>
 
               {rowErrors?.ingredientId?.message && (
