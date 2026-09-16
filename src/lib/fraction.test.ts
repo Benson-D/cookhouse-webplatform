@@ -1,4 +1,4 @@
-import { toFractionLabel } from "./fraction";
+import { parseFractionInput, toFractionLabel } from "./fraction";
 
 describe("toFractionLabel", () => {
   it("returns whole numbers as-is", () => {
@@ -31,5 +31,32 @@ describe("toFractionLabel", () => {
   it("snaps a near-match within tolerance to the nearest fraction", () => {
     expect(toFractionLabel(0.13)).toBe("⅛");
     expect(toFractionLabel(0.505)).toBe("½");
+  });
+});
+
+describe("parseFractionInput", () => {
+  it("parses a plain fraction", () => {
+    expect(parseFractionInput("1/2")).toBe(0.5);
+    expect(parseFractionInput("3/4")).toBe(0.75);
+  });
+
+  it("parses a mixed number", () => {
+    expect(parseFractionInput("1 1/2")).toBe(1.5);
+    expect(parseFractionInput("2 3/4")).toBe(2.75);
+  });
+
+  it("tolerates surrounding whitespace", () => {
+    expect(parseFractionInput("  1/2  ")).toBe(0.5);
+  });
+
+  it("returns null for a zero denominator", () => {
+    expect(parseFractionInput("1/0")).toBe(null);
+  });
+
+  it("returns null for plain decimals and non-fraction text", () => {
+    expect(parseFractionInput("1.5")).toBe(null);
+    expect(parseFractionInput("2")).toBe(null);
+    expect(parseFractionInput("")).toBe(null);
+    expect(parseFractionInput("abc")).toBe(null);
   });
 });

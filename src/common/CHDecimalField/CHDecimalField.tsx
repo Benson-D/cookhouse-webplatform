@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type InputHTMLAttributes } from "react";
 import { cn } from "@/lib/cn";
-import { toFractionLabel } from "@/lib/fraction";
+import { parseFractionInput, toFractionLabel } from "@/lib/fraction";
 
 const classes =
   "rounded-[7px] border border-line bg-surface-2 px-[11px] py-2 text-[13.5px] text-ink placeholder:text-ink-faint focus:outline-2 focus:outline-offset-1 focus:outline-accent disabled:text-ink-faint disabled:cursor-not-allowed";
@@ -16,14 +16,12 @@ function formatForDisplay(raw: string): string {
 }
 
 /**
- * A decimal amount field that shows common kitchen fractions ("1¾") once
- * you're done editing, but always reports and accepts plain decimals
- * ("1.75") — typing stays plain-number simple, no fraction syntax to parse.
+ * A decimal amount field that shows kitchen fractions ("1¾") once you're
+ * done editing. Accepts a plain decimal or "a/b" fraction syntax while
+ * typing — either way, blur shows the fraction label.
  *
- * `value`/`onChange` rather than spreading `register(...)`, same as
- * `UnitPicker` — the value shown while focused (the raw decimal, for easy
- * editing) genuinely differs from the value shown once blurred (the
- * formatted fraction), so this can't be a plain passthrough input.
+ * `value`/`onChange`, not `register(...)`: the focused and blurred text
+ * genuinely differ, so this can't be a plain passthrough input.
  */
 export function CHDecimalField({
   value,
@@ -65,7 +63,13 @@ export function CHDecimalField({
       }}
       onBlur={() => {
         isFocused.current = false;
-        setText(formatForDisplay(value));
+        // Resolve a typed fraction to its decimal value before formatting.
+        const fraction = parseFractionInput(text);
+        const resolved = fraction === null ? text : String(fraction);
+        if (fraction !== null) {
+          onChange(resolved);
+        }
+        setText(formatForDisplay(resolved));
         onBlur?.();
       }}
       {...props}

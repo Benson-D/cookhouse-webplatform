@@ -41,3 +41,21 @@ export function toFractionLabel(amount: number): string {
 
   return whole > 0 ? `${whole}${match.label}` : match.label;
 }
+
+/**
+ * "1/2" -> 0.5, "1 1/2" -> 1.5 — the input-side counterpart to
+ * `toFractionLabel`, but reads plain "a/b" text rather than that function's
+ * Unicode output. Returns `null` for anything that isn't a complete, valid
+ * fraction (including a zero denominator), so a caller can fall back to
+ * treating the text as an ordinary decimal instead.
+ */
+export function parseFractionInput(text: string): number | null {
+  const match = text.trim().match(/^(?:(\d+)\s+)?(\d+)\/(\d+)$/);
+  if (!match) return null;
+
+  const whole = match[1] ? Number(match[1]) : 0;
+  const denominator = Number(match[3]);
+  if (denominator === 0) return null;
+
+  return whole + Number(match[2]) / denominator;
+}
