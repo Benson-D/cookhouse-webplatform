@@ -73,6 +73,7 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
         <div>
           <RecipeMeta recipe={recipe} />
 
+          <CHSectionLabel>Method</CHSectionLabel>
           <MethodInstructions instructions={parsedInstructions} />
 
           <RecipeDetailActions

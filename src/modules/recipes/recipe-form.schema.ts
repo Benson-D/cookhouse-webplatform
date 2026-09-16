@@ -60,8 +60,6 @@ const ingredientRowSchema = z.object({
 const instructionRowSchema = z.object({
   text: z.string().trim().min(1, "Describe this step"),
   timerSeconds: optionalInt("Must be a whole number of seconds", 0),
-  // Key must be omittable, not just "" — presence is what tells the form to render the heading input.
-  heading: optionalText.optional(),
 });
 
 export const recipeFormSchema = z
@@ -120,7 +118,6 @@ function toRecipeFields(values: RecipeFormValues) {
       ...(instruction.timerSeconds !== undefined && {
         timerSeconds: instruction.timerSeconds,
       }),
-      ...(instruction.heading !== undefined && { heading: instruction.heading }),
     })),
     ingredients: values.ingredients.map((row) => ({
       ingredientId: row.ingredientId,
@@ -174,7 +171,7 @@ export function fromRecipeDetail(
     }[];
     tags: { tag: { id: string } }[];
   },
-  instructions: { text: string; timerSeconds?: number; heading?: string }[]
+  instructions: { text: string; timerSeconds?: number }[]
 ): RecipeFormInput {
   const text = (value: string | number | null | undefined) =>
     value === null || value === undefined ? "" : String(value);
@@ -195,9 +192,6 @@ export function fromRecipeDetail(
     instructions: instructions.map((instruction) => ({
       text: instruction.text,
       timerSeconds: text(instruction.timerSeconds),
-      // Not run through `text()`: that collapses undefined to "", which would
-      // make every step look like it has an (empty) heading when loaded back.
-      heading: instruction.heading,
     })),
     tagIds: recipe.tags.map(({ tag }) => tag.id),
   };
