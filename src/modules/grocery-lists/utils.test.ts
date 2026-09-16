@@ -4,7 +4,8 @@ import {
   formatRelativeTime,
   shouldHideAmount,
   formatSource,
-  sortByIngredientName,
+  displayName,
+  sortByDisplayName,
 } from "./utils";
 
 describe("getInitials", () => {
@@ -77,18 +78,39 @@ describe("formatSource", () => {
   });
 });
 
-describe("sortByIngredientName", () => {
-  it("sorts A-Z by ingredient name", () => {
-    const items = [{ ingredient: { name: "Zucchini" } }, { ingredient: { name: "Apple" } }];
-    expect(sortByIngredientName(items).map((item) => item.ingredient.name)).toEqual([
-      "Apple",
-      "Zucchini",
-    ]);
+describe("displayName", () => {
+  it("reads the ingredient's name when there is one", () => {
+    expect(displayName({ ingredient: { name: "Zucchini" }, label: null })).toBe("Zucchini");
+  });
+
+  it("falls back to the label when there's no matched ingredient", () => {
+    expect(displayName({ ingredient: null, label: "soap" })).toBe("soap");
+  });
+});
+
+describe("sortByDisplayName", () => {
+  it("sorts A-Z by display name", () => {
+    const items = [
+      { ingredient: { name: "Zucchini" }, label: null },
+      { ingredient: { name: "Apple" }, label: null },
+    ];
+    expect(sortByDisplayName(items).map(displayName)).toEqual(["Apple", "Zucchini"]);
+  });
+
+  it("sorts label-only rows alongside matched ones", () => {
+    const items = [
+      { ingredient: { name: "Zucchini" }, label: null },
+      { ingredient: null, label: "Blueberry granola" },
+    ];
+    expect(sortByDisplayName(items).map(displayName)).toEqual(["Blueberry granola", "Zucchini"]);
   });
 
   it("doesn't mutate the original array", () => {
-    const items = [{ ingredient: { name: "Zucchini" } }, { ingredient: { name: "Apple" } }];
-    sortByIngredientName(items);
-    expect(items[0].ingredient.name).toBe("Zucchini");
+    const items = [
+      { ingredient: { name: "Zucchini" }, label: null },
+      { ingredient: { name: "Apple" }, label: null },
+    ];
+    sortByDisplayName(items);
+    expect(items[0].ingredient?.name).toBe("Zucchini");
   });
 });

@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/cn";
 import { formatAmount } from "@/lib/formatAmount";
-import { shouldHideAmount } from "../utils";
+import { displayName, shouldHideAmount } from "../utils";
 import type { GroceryListItem } from "../types";
 import { SourceBadge } from "./SourceBadge";
 
@@ -29,6 +29,7 @@ export function GroceryListRow({
   onRemove: () => void;
 }) {
   const hideAmount = shouldHideAmount(item.unit);
+  const name = displayName(item);
 
   return (
     <li className="relative grid grid-cols-[20px_76px_1fr_auto] items-center gap-3 border-b border-line-soft px-3 py-2.5 text-sm hover:bg-surface-2">
@@ -36,7 +37,7 @@ export function GroceryListRow({
         type="button"
         role="checkbox"
         aria-checked={item.checked}
-        aria-label={item.ingredient.name}
+        aria-label={name}
         onClick={() => onToggle(!item.checked)}
         className={cn(
           "grid h-[17px] w-[17px] place-items-center rounded-[5px] border-[1.5px] text-[10px] font-bold transition duration-140 after:absolute after:inset-0 after:content-[''] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent active:scale-[0.88]",
@@ -61,7 +62,7 @@ export function GroceryListRow({
       <span
         className={cn("font-medium", item.checked ? "text-ink-faint line-through" : "text-ink")}
       >
-        {item.ingredient.name}
+        {name}
       </span>
 
       <div className="relative z-10 flex items-center gap-2">
@@ -69,7 +70,7 @@ export function GroceryListRow({
         <button
           type="button"
           onClick={onRemove}
-          aria-label={`Remove ${item.ingredient.name}`}
+          aria-label={`Remove ${name}`}
           className="text-[15px] text-ink-faint hover:text-ink"
         >
           ×

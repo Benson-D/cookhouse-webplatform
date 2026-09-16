@@ -56,7 +56,17 @@ export function formatSource(source: string): string {
   return SOURCE_LABELS[source] ?? source;
 }
 
-/** A-Z by ingredient name — the merged list otherwise renders in whatever order the backend produced it, which gets hard to scan once a list has many items. Returns a new array; doesn't mutate. */
-export function sortByIngredientName<T extends { ingredient: { name: string } }>(items: T[]): T[] {
-  return [...items].sort((a, b) => a.ingredient.name.localeCompare(b.ingredient.name));
+/** A row's name — an ingredient's, or the typed-in text for one that never matched an ingredient. Exactly one of the two is ever populated. */
+export function displayName(item: {
+  ingredient: { name: string } | null;
+  label: string | null;
+}): string {
+  return item.ingredient?.name ?? item.label ?? "";
+}
+
+/** A-Z by display name — the merged list otherwise renders in whatever order the backend produced it, which gets hard to scan once a list has many items. Returns a new array; doesn't mutate. */
+export function sortByDisplayName<
+  T extends { ingredient: { name: string } | null; label: string | null },
+>(items: T[]): T[] {
+  return [...items].sort((a, b) => displayName(a).localeCompare(displayName(b)));
 }
