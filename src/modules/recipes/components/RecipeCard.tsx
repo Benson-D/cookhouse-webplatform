@@ -57,7 +57,7 @@ export function RecipeCard({
 
       <Link
         href={`/recipes/${recipe.id}`}
-        className="font-display text-[15.5px] font-semibold leading-[1.25] text-ink no-underline transition-colors duration-220 ease-[cubic-bezier(0.22,1,0.36,1)] after:absolute after:inset-0 after:content-[''] group-hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        className="line-clamp-2 font-display text-[15.5px] font-semibold leading-[1.25] text-ink no-underline transition-colors duration-220 ease-[cubic-bezier(0.22,1,0.36,1)] after:absolute after:inset-0 after:content-[''] group-hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
         {recipe.name}
       </Link>

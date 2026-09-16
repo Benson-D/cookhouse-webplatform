@@ -66,7 +66,7 @@ export function RecipePickCard({
 
       <span
         className={cn(
-          "font-display text-[15.5px] font-semibold leading-[1.25] transition-colors duration-220 ease-[cubic-bezier(0.22,1,0.36,1)]",
+          "line-clamp-2 font-display text-[15.5px] font-semibold leading-[1.25] transition-colors duration-220 ease-[cubic-bezier(0.22,1,0.36,1)]",
           selected ? "text-accent" : "text-ink group-hover:text-accent"
         )}
       >
