@@ -36,9 +36,8 @@ function normalize(value: string) {
 }
 
 const inputClasses =
-  "w-full rounded-[7px] border bg-surface-2 py-2 pl-[11px] text-[13.5px] text-ink placeholder:text-ink-faint focus:outline-2 focus:outline-offset-1 focus:outline-accent";
-const buttonClasses = "flex items-center px-2 text-ink-faint";
-const clearButtonClasses = "flex items-center px-1 text-ink-faint hover:text-ink";
+  "w-full rounded-[7px] border bg-surface-2 py-2 pl-[11px] pr-8 text-[13.5px] text-ink placeholder:text-ink-faint focus:outline-2 focus:outline-offset-1 focus:outline-accent";
+const buttonClasses = "absolute inset-y-0 right-0 flex items-center px-2 text-ink-faint";
 const panelClasses =
   "absolute left-0 right-0 top-full z-20 mt-1 max-h-56 overflow-y-auto rounded-[7px] border border-line bg-surface py-1 shadow-frame empty:hidden";
 const optionBaseClasses = "cursor-default px-[11px] py-1.5 text-[13.5px]";
@@ -54,8 +53,6 @@ type CHSelectProps<T> = {
   onSearch?: (query: string) => void;
   onSelect: (item: T) => void;
   onCreate?: (name: string) => Promise<T>;
-  /** Shows a clear (×) button once there's a selection or typed text; wiping both is the caller's job (e.g. reset to `null`). */
-  onClear?: () => void;
   placeholder?: string;
   /** Accessible name for the many callers with no visible `label`. Ignored once `label` is given — that becomes the accessible name instead. */
   ariaLabel?: string;
@@ -83,7 +80,6 @@ export function CHSelect<T>({
   onSearch,
   onSelect,
   onCreate,
-  onClear,
   placeholder,
   ariaLabel,
   invalid,
@@ -95,10 +91,6 @@ export function CHSelect<T>({
   const id = useId();
   const [query, setQuery] = useState("");
   const [isCreating, setIsCreating] = useState(false);
-  // Bumped on clear to remount the Combobox — the only reliable way to blank
-  // typed text that was never committed as a selection, since Headless UI's
-  // `displayValue` only re-syncs the input when `value` itself changes.
-  const [resetKey, setResetKey] = useState(0);
   const isInvalid = invalid ?? Boolean(error);
 
   const normalizedQuery = normalize(query);
@@ -108,14 +100,6 @@ export function CHSelect<T>({
   const canCreate = Boolean(onCreate) && normalizedQuery.length > 0 && !exactMatch;
 
   const selected: ChosenItem<T> | null = value ? { kind: "existing", item: value } : null;
-  const showClear = Boolean(onClear) && (value !== null || query.length > 0);
-
-  function handleClear() {
-    setQuery("");
-    onSearch?.("");
-    onClear?.();
-    setResetKey((key) => key + 1);
-  }
 
   async function handleChange(chosen: ChosenItem<T> | null) {
     if (!chosen) return;
@@ -150,14 +134,7 @@ export function CHSelect<T>({
         </label>
       )}
 
-      <Combobox
-        key={resetKey}
-        as="div"
-        className="relative"
-        immediate
-        value={selected}
-        onChange={handleChange}
-      >
+      <Combobox as="div" className="relative" immediate value={selected} onChange={handleChange}>
         <ComboboxInput
           id={label ? id : undefined}
           aria-label={label ? undefined : ariaLabel}
@@ -173,29 +150,15 @@ export function CHSelect<T>({
           }}
           className={cn(
             inputClasses,
-            showClear ? "pr-14" : "pr-8",
             isInvalid ? "border-danger focus:outline-danger" : "border-line",
             !label && className
           )}
         />
 
-        <div className="absolute inset-y-0 right-0 flex items-center">
-          {showClear && (
-            <button
-              type="button"
-              onClick={handleClear}
-              aria-label={`Clear ${ariaLabel ?? label ?? "selection"}`}
-              className={clearButtonClasses}
-            >
-              ×
-            </button>
-          )}
-
-          {/* A click target separate from typing — opens the panel without a keystroke. */}
-          <ComboboxButton className={buttonClasses}>
-            {({ open }) => <SelectChevron open={open} />}
-          </ComboboxButton>
-        </div>
+        {/* A click target separate from typing — opens the panel without a keystroke. */}
+        <ComboboxButton className={buttonClasses}>
+          {({ open }) => <SelectChevron open={open} />}
+        </ComboboxButton>
 
         {(options.length > 0 || canCreate) && (
           <ComboboxOptions anchor={false} className={panelClasses}>

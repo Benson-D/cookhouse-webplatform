@@ -91,10 +91,6 @@ export function IngredientRows({
                     setValue(`ingredients.${index}.ingredientName`, ingredient.name);
                   }}
                   onCreate={onResolveIngredient}
-                  onClear={() => {
-                    setValue(`ingredients.${index}.ingredientId`, "", { shouldValidate: true });
-                    setValue(`ingredients.${index}.ingredientName`, "");
-                  }}
                 />
 
                 <CHTextInput

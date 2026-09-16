@@ -52,7 +52,6 @@ export function StapleFooter({
         onSearch={setSearch}
         onSelect={setIngredient}
         onCreate={resolve}
-        onClear={() => setIngredient(null)}
       />
 
       <CHSelect<(typeof FREQUENCY_OPTIONS)[number]>
