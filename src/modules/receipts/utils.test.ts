@@ -1,4 +1,11 @@
-import { toReviewItems, needsLook, groupItems, isReadyToConfirm, buildConfirmItems } from "./utils";
+import {
+  toReviewItems,
+  needsLook,
+  groupItems,
+  isReadyToConfirm,
+  buildConfirmItems,
+  resolveAsFreeText,
+} from "./utils";
 import type { ReviewLineItem, ScanResult } from "./types";
 
 function makeItem(overrides: Partial<ReviewLineItem> = {}): ReviewLineItem {
@@ -153,5 +160,12 @@ describe("buildConfirmItems", () => {
     const [result] = buildConfirmItems([makeItem({ price: "4.5", quantity: "" })]);
     expect(result.price).toBe(4.5);
     expect(result.quantity).toBeUndefined();
+  });
+});
+
+describe("resolveAsFreeText", () => {
+  it("resolves with the typed text and no real id, without touching the network", async () => {
+    const result = await resolveAsFreeText("  toilet paper  ");
+    expect(result).toEqual({ id: "", name: "toilet paper" });
   });
 });

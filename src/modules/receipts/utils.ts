@@ -1,4 +1,20 @@
-import type { ConfirmedPurchaseInput, ReviewLineItem, ScanResult } from "./types";
+import type {
+  ConfirmedPurchaseInput,
+  IngredientOverride,
+  ReviewLineItem,
+  ScanResult,
+} from "./types";
+
+/**
+ * The review screen's own `CHSelect` `onCreate` — typing a name with no
+ * match here just edits this line's text, it doesn't create anything.
+ * `confirmPurchases` does the real ingredient matching server-side once the
+ * receipt is confirmed, so an eager `ingredients.create` during review would
+ * pre-create a row that check never gets a chance to reject.
+ */
+export async function resolveAsFreeText(name: string): Promise<IngredientOverride> {
+  return { id: "", name: name.trim() };
+}
 
 /** Seeds review state from a fresh scan — nothing is promoted or removed yet. */
 export function toReviewItems(scan: ScanResult): ReviewLineItem[] {

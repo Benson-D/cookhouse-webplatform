@@ -63,8 +63,8 @@ importers:
         version: 4.5.7(@types/react@19.2.18)(immer@11.1.18)(react@19.2.8)
     devDependencies:
       '@benson-d/api-contract':
-        specifier: ^0.1.12
-        version: 0.1.12
+        specifier: ^0.1.16
+        version: 0.1.16
       '@storybook/addon-a11y':
         specifier: ^10.5.10
         version: 10.5.10(storybook@10.5.10(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8))
@@ -316,8 +316,8 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  '@benson-d/api-contract@0.1.12':
-    resolution: {integrity: sha512-swdQJdtPfStwydVA2aN6g8rpMeZ24i8f6cgfrh0f+u8StBIREVbAikIq6ArQCDc6ybR9wu7djM+V4TDDq1IpYA==, tarball: https://npm.pkg.github.com/download/@benson-d/api-contract/0.1.12/feeecc4c59c91ed33ae33c369a9bdba869e0a647}
+  '@benson-d/api-contract@0.1.16':
+    resolution: {integrity: sha512-kPY3TfWlN+/+0XElz9tsXaPVU2Se+MCqUcpXZILQEXMQ/QP2jQW4SqOIUj3DwgnSxWm7xiruVGSqeyxV9jq/jw==, tarball: https://npm.pkg.github.com/download/@benson-d/api-contract/0.1.16/a9848c220df9f5430dc7543ba2fcf35fcece2c28}
 
   '@clerk/backend@2.33.6':
     resolution: {integrity: sha512-5foMmTHEQFt4mDv7AN0RDwUHZhGcg/JYe5hnl9SU/LFS8ZHY29Z2HDtIBmzKgjRfOJTMKj1AM81LgK2UFsGm9Q==}
@@ -4846,7 +4846,7 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@benson-d/api-contract@0.1.12': {}
+  '@benson-d/api-contract@0.1.16': {}
 
   '@clerk/backend@2.33.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:

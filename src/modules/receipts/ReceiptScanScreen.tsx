@@ -10,7 +10,13 @@ import { ReceiptPickerPrompt } from "./components/ReceiptPickerPrompt";
 import { ReceiptLineRow } from "./components/ReceiptLineRow";
 import { ReceiptMatchedList } from "./components/ReceiptMatchedList";
 import { ReceiptScanFooter } from "./components/ReceiptScanFooter";
-import { buildConfirmItems, groupItems, isReadyToConfirm, toReviewItems } from "./utils";
+import {
+  buildConfirmItems,
+  groupItems,
+  isReadyToConfirm,
+  resolveAsFreeText,
+  toReviewItems,
+} from "./utils";
 import type { ReviewLineItem } from "./types";
 
 /**
@@ -154,7 +160,7 @@ export function ReceiptScanScreen() {
                     item={item}
                     ingredientOptions={picker.options}
                     onSearchIngredients={picker.setSearch}
-                    onResolveIngredient={picker.resolve}
+                    onResolveIngredient={resolveAsFreeText}
                     onChange={(patch) => updateItem(item.id, patch)}
                     onRemove={() => removeItem(item.id)}
                   />

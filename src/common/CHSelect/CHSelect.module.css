@@ -1,0 +1,29 @@
+@reference "../../app/globals.css";
+
+.input {
+  @apply w-full rounded-[7px] border bg-surface-2 py-2 pl-[11px]
+    text-[13.5px] text-ink placeholder:text-ink-faint
+    focus:outline-2 focus:outline-offset-1 focus:outline-accent;
+}
+
+.button {
+  @apply flex items-center px-2 text-ink-faint;
+}
+
+.clearButton {
+  @apply flex items-center px-1 text-ink-faint hover:text-ink;
+}
+
+.panel {
+  @apply absolute left-0 right-0 top-full z-20 mt-1 max-h-56
+    overflow-y-auto rounded-[7px] border border-line bg-surface
+    py-1 shadow-frame empty:hidden;
+}
+
+.option {
+  @apply cursor-default px-[11px] py-1.5 text-[13.5px];
+}
+
+.optionFocused {
+  @apply bg-accent-soft text-accent;
+}

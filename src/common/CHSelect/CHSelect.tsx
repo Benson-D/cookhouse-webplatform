@@ -9,6 +9,7 @@ import {
   ComboboxOptions,
 } from "@headlessui/react";
 import { cn } from "@/lib/cn";
+import styles from "./CHSelect.module.css";
 
 function SelectChevron({ open }: { open: boolean }) {
   return (
@@ -29,20 +30,11 @@ function SelectChevron({ open }: { open: boolean }) {
 }
 
 /** What picking a row means: an existing item, or (if `onCreate` is given) a new one. */
-type ChosenItem<T> = { kind: "existing"; item: T } | { kind: "create"; name: string };
+type SelectValue<T> = { kind: "existing"; item: T } | { kind: "create"; name: string };
 
 function normalize(value: string) {
   return value.trim().toLowerCase();
 }
-
-const inputClasses =
-  "w-full rounded-[7px] border bg-surface-2 py-2 pl-[11px] text-[13.5px] text-ink placeholder:text-ink-faint focus:outline-2 focus:outline-offset-1 focus:outline-accent";
-const buttonClasses = "flex items-center px-2 text-ink-faint";
-const clearButtonClasses = "flex items-center px-1 text-ink-faint hover:text-ink";
-const panelClasses =
-  "absolute left-0 right-0 top-full z-20 mt-1 max-h-56 overflow-y-auto rounded-[7px] border border-line bg-surface py-1 shadow-frame empty:hidden";
-const optionBaseClasses = "cursor-default px-[11px] py-1.5 text-[13.5px]";
-const optionFocusClasses = "bg-accent-soft text-accent";
 
 type CHSelectProps<T> = {
   value: T | null;
@@ -107,7 +99,7 @@ export function CHSelect<T>({
   );
   const canCreate = Boolean(onCreate) && normalizedQuery.length > 0 && !exactMatch;
 
-  const selected: ChosenItem<T> | null = value ? { kind: "existing", item: value } : null;
+  const selected: SelectValue<T> | null = value ? { kind: "existing", item: value } : null;
   const showClear = Boolean(onClear) && (value !== null || query.length > 0);
 
   function handleClear() {
@@ -117,7 +109,7 @@ export function CHSelect<T>({
     setResetKey((key) => key + 1);
   }
 
-  async function handleChange(chosen: ChosenItem<T> | null) {
+  async function handleChange(chosen: SelectValue<T> | null) {
     if (!chosen) return;
 
     if (chosen.kind === "existing") {
@@ -164,7 +156,7 @@ export function CHSelect<T>({
           aria-invalid={isInvalid || undefined}
           autoComplete="off"
           placeholder={placeholder}
-          displayValue={(chosen: ChosenItem<T> | null) =>
+          displayValue={(chosen: SelectValue<T> | null) =>
             chosen?.kind === "existing" ? getOptionLabel(chosen.item) : ""
           }
           onChange={(event) => {
@@ -172,7 +164,7 @@ export function CHSelect<T>({
             onSearch?.(event.target.value);
           }}
           className={cn(
-            inputClasses,
+            styles.input,
             showClear ? "pr-14" : "pr-8",
             isInvalid ? "border-danger focus:outline-danger" : "border-line",
             !label && className
@@ -185,34 +177,34 @@ export function CHSelect<T>({
               type="button"
               onClick={handleClear}
               aria-label={`Clear ${ariaLabel ?? label ?? "selection"}`}
-              className={clearButtonClasses}
+              className={styles.clearButton}
             >
               ×
             </button>
           )}
 
           {/* A click target separate from typing — opens the panel without a keystroke. */}
-          <ComboboxButton className={buttonClasses}>
+          <ComboboxButton className={styles.button}>
             {({ open }) => <SelectChevron open={open} />}
           </ComboboxButton>
         </div>
 
         {(options.length > 0 || canCreate) && (
-          <ComboboxOptions anchor={false} className={panelClasses}>
+          <ComboboxOptions anchor={false} className={styles.panel}>
             {options.map((option) => {
               const disabled = getOptionDisabled?.(option) ?? false;
               return (
                 <ComboboxOption
                   key={getOptionId(option)}
-                  value={{ kind: "existing", item: option } satisfies ChosenItem<T>}
+                  value={{ kind: "existing", item: option } satisfies SelectValue<T>}
                   disabled={disabled}
                   className={({ focus }) =>
                     cn(
-                      optionBaseClasses,
+                      styles.option,
                       disabled
                         ? "cursor-not-allowed text-ink-faint"
                         : focus
-                          ? optionFocusClasses
+                          ? styles.optionFocused
                           : "text-ink"
                     )
                   }
@@ -225,10 +217,10 @@ export function CHSelect<T>({
             {canCreate && (
               <ComboboxOption
                 // .trim(), not normalize() — preserves the user's capitalization.
-                value={{ kind: "create", name: query.trim() } satisfies ChosenItem<T>}
+                value={{ kind: "create", name: query.trim() } satisfies SelectValue<T>}
                 disabled={isCreating}
                 className={({ focus }) =>
-                  cn(optionBaseClasses, "font-semibold", focus ? optionFocusClasses : "text-accent")
+                  cn(styles.option, "font-semibold", focus ? styles.optionFocused : "text-accent")
                 }
               >
                 {isCreating ? "Adding…" : `Add “${query.trim()}”`}
