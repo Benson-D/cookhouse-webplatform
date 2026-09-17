@@ -28,11 +28,11 @@ export function UnitPicker({
   onSelect: (unit: Unit) => void;
   label: string;
 }) {
-  const [query, setQuery] = useState("");
+  const [filterText, setFilterText] = useState("");
 
   const all = useMemo(() => [NO_UNIT, ...units], [units]);
-  const options = query.trim()
-    ? all.filter((unit) => matches(unit.abbreviation ?? unit.name, query))
+  const options = filterText.trim()
+    ? all.filter((unit) => matches(unit.abbreviation ?? unit.name, filterText))
     : all;
   const selected = units.find((unit) => unit.id === unitId) ?? NO_UNIT;
 
@@ -44,7 +44,7 @@ export function UnitPicker({
       options={options}
       getOptionId={(unit) => unit.id || "none"}
       getOptionLabel={(unit) => unit.abbreviation ?? unit.name}
-      onSearch={setQuery}
+      onSearch={setFilterText}
       onSelect={onSelect}
     />
   );
