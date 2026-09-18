@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CHSectionLabel, CHTextInput, ErrorState, SubpageHeader } from "@/common";
+import { CHSectionLabel, CHSelect, ErrorState, SubpageHeader } from "@/common";
 import { useIngredientSearchPicker } from "@/hooks/useIngredientSearchPicker";
+import { useStoreSearchPicker } from "@/hooks/useStoreSearchPicker";
 import { useReceiptScan } from "./hooks/useReceiptScan";
 import { useConfirmPurchases } from "./hooks/useConfirmPurchases";
 import { ReceiptPickerPrompt } from "./components/ReceiptPickerPrompt";
@@ -34,6 +35,7 @@ export function ReceiptScanScreen() {
   const { scan, isScanning, scanError } = useReceiptScan();
   const { confirm, isConfirming, confirmError } = useConfirmPurchases();
   const picker = useIngredientSearchPicker();
+  const storePicker = useStoreSearchPicker();
 
   const [receiptId, setReceiptId] = useState<string | null>(null);
   const [storeName, setStoreName] = useState("");
@@ -142,11 +144,16 @@ export function ReceiptScanScreen() {
         </div>
 
         <div>
-          <CHTextInput
+          <CHSelect
             label="Store"
             className="mb-4"
-            value={storeName}
-            onChange={(event) => setStoreName(event.target.value)}
+            value={storeName ? { id: "", name: storeName } : null}
+            options={storePicker.options}
+            getOptionId={(store) => store.id}
+            getOptionLabel={(store) => store.name}
+            onSearch={storePicker.setSearch}
+            onSelect={(store) => setStoreName(store.name)}
+            onCreate={storePicker.resolve}
             placeholder="Where was this bought?"
           />
 
