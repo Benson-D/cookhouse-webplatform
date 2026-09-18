@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { transformDataToForm, transformFormToData, type Instruction } from "./utils/instructions";
 
 /**
  * Form schemas for the recipe create/edit flow.
@@ -57,10 +58,26 @@ const ingredientRowSchema = z.object({
   notes: optionalText,
 });
 
-const instructionRowSchema = z.object({
+/**
+ * The method field is one flat, ordered list — a "heading" item applies to
+ * every "step" item below it until the next heading. `type` is what
+ * discriminates the two, not a separate field-array or a reference id.
+ */
+const instructionStepSchema = z.object({
+  type: z.literal("step"),
   text: z.string().trim().min(1, "Describe this step"),
   timerSeconds: optionalInt("Must be a whole number of seconds", 0),
 });
+
+const instructionHeadingSchema = z.object({
+  type: z.literal("heading"),
+  text: z.string(),
+});
+
+const instructionItemSchema = z.discriminatedUnion("type", [
+  instructionHeadingSchema,
+  instructionStepSchema,
+]);
 
 export const recipeFormSchema = z
   .object({
@@ -70,7 +87,7 @@ export const recipeFormSchema = z
     prepTime: optionalInt("Must be a whole number of minutes", 0),
     cookingTime: optionalInt("Must be a whole number of minutes", 0),
     ingredients: z.array(ingredientRowSchema),
-    instructions: z.array(instructionRowSchema),
+    instructions: z.array(instructionItemSchema),
     tagIds: z.array(z.string()),
   })
   .superRefine((values, ctx) => {
@@ -112,12 +129,9 @@ function toRecipeFields(values: RecipeFormValues) {
     servings: values.servings,
     prepTime: values.prepTime,
     cookingTime: values.cookingTime,
-    instructions: values.instructions.map((instruction, index) => ({
+    instructions: transformFormToData(values.instructions).map((instruction, index) => ({
       step: index + 1,
-      text: instruction.text,
-      ...(instruction.timerSeconds !== undefined && {
-        timerSeconds: instruction.timerSeconds,
-      }),
+      ...instruction,
     })),
     ingredients: values.ingredients.map((row) => ({
       ingredientId: row.ingredientId,
@@ -171,7 +185,7 @@ export function fromRecipeDetail(
     }[];
     tags: { tag: { id: string } }[];
   },
-  instructions: { text: string; timerSeconds?: number }[]
+  instructions: Instruction[]
 ): RecipeFormInput {
   const text = (value: string | number | null | undefined) =>
     value === null || value === undefined ? "" : String(value);
@@ -189,10 +203,7 @@ export function fromRecipeDetail(
       amount: text(row.amount),
       notes: text(row.notes),
     })),
-    instructions: instructions.map((instruction) => ({
-      text: instruction.text,
-      timerSeconds: text(instruction.timerSeconds),
-    })),
+    instructions: transformDataToForm(instructions),
     tagIds: recipe.tags.map(({ tag }) => tag.id),
   };
 }

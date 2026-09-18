@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -42,6 +43,16 @@ export function RecipeFormScreen({ recipeId }: { recipeId?: string }) {
   const { uploadOne } = useUploadRecipeImage();
   const images = useRecipeImages(id, pendingImages, uploadOne);
 
+  // fromRecipeDetail mints a fresh crypto.randomUUID() per method section
+  // (see recipe-form.schema.ts), so calling it inline on every render would
+  // hand useForm's `values` a new object every time even when nothing
+  // changed — and since react-hook-form resets whenever `values` looks
+  // different, that's an infinite render loop, not just wasted work.
+  const values = useMemo(
+    () => (recipe ? fromRecipeDetail(recipe, parsedInstructions) : undefined),
+    [recipe, parsedInstructions]
+  );
+
   // Three type params: fields hold strings (RecipeFormInput), the submit
   // handler receives them parsed (RecipeFormValues). Collapsing the two is
   // what makes zodResolver fail to typecheck against useForm.
@@ -50,7 +61,7 @@ export function RecipeFormScreen({ recipeId }: { recipeId?: string }) {
     defaultValues: emptyRecipeForm,
     // An existing recipe arrives asynchronously, so `values` re-seeds the form
     // when it lands rather than being captured once at mount.
-    values: recipe ? fromRecipeDetail(recipe, parsedInstructions) : undefined,
+    values,
   });
 
   // `useWatch`, not `form.watch()` — watch() re-renders the whole form on
