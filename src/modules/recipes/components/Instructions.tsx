@@ -5,6 +5,7 @@ import type { RecipeFormInput, RecipeFormValues } from "../recipe-form.schema";
 import { useInstructions } from "../hooks/useInstructions";
 import { InstructionHeading } from "./InstructionHeading";
 import { InstructionRow } from "./InstructionRow";
+import { MethodHint } from "./MethodHint";
 import { AddLineButton } from "./RepeaterControls";
 
 /** The method field: repeating steps, each optionally starting a named section. */
@@ -19,9 +20,12 @@ export function Instructions({
 
   return (
     <div className="flex flex-col gap-[5px]">
-      <span className="text-[10.5px] font-bold uppercase tracking-[0.11em] text-ink-faint">
-        {label}
-      </span>
+      <div className="flex items-center gap-1.5">
+        <span className="text-[10.5px] font-bold uppercase tracking-[0.11em] text-ink-faint">
+          {label}
+        </span>
+        <MethodHint />
+      </div>
 
       <div className="flex flex-col gap-2">
         {fields.map((field, index) =>

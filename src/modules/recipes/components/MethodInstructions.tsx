@@ -40,7 +40,7 @@ export function MethodInstructions({ instructions }: { instructions: Instruction
         {groups.map((group, groupIndex) => (
           <Fragment key={groupIndex}>
             {group.heading && (
-              <CHSectionLabel className="mt-5 mb-3 first:mt-0">{group.heading}</CHSectionLabel>
+              <CHSectionLabel className="mt-5 mb-3">{group.heading}</CHSectionLabel>
             )}
 
             <ol className="m-0 flex list-none flex-col gap-[13px] p-0">

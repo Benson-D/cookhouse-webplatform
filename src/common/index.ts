@@ -16,7 +16,7 @@ export { CHTextInput } from "./CHTextInput/CHTextInput";
 export { EmptyState } from "./EmptyState/EmptyState";
 export { ErrorState } from "./ErrorState/ErrorState";
 export { ExpandRow } from "./ExpandRow/ExpandRow";
-export { HouseIcon, SearchIcon } from "./Icons";
+export { HouseIcon, InfoIcon, SearchIcon } from "./Icons";
 export { CardGridLoadingState, LoadingState } from "./LoadingState/LoadingState";
 export { MobileAccountPanel } from "./MobileAccountPanel";
 export { MobileTabBar } from "./MobileTabBar";
