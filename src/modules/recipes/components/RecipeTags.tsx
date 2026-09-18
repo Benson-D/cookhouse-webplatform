@@ -47,7 +47,7 @@ export function RecipeTags({
   const hasActiveTags = activePanelTags.length > 0 || maxCookingTime !== null;
 
   return (
-    <div className="flex flex-wrap items-center gap-[7px] px-[22px] pb-4">
+    <div className="flex flex-wrap items-center gap-x-[7px] gap-y-3 px-[22px] pb-4">
       {mealTimeTags.map((tag) => (
         <TagChip
           key={tag.id}
