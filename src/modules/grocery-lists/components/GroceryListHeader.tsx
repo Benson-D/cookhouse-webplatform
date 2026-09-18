@@ -2,11 +2,15 @@
 
 import { useOrganization } from "@clerk/nextjs";
 import { CHButton, CHLink } from "@/common";
+import { cn } from "@/lib/cn";
+import { useTapToConfirm } from "@/hooks/useTapToConfirm";
 import { formatStartedDay } from "../utils";
 
 /**
  * Add item lives in the quick-add row below, not here. Household size comes
- * from Clerk's `useOrganization`, not a backend call.
+ * from Clerk's `useOrganization`, not a backend call. Complete list is
+ * tap-to-confirm, same as Remove all and Delete recipe, since completing is
+ * hard to undo — the very next fetch archives this list for good.
  */
 export function GroceryListHeader({
   startedAt,
@@ -22,6 +26,7 @@ export function GroceryListHeader({
 }) {
   const { organization } = useOrganization();
   const memberCount = organization?.membersCount;
+  const { awaitingConfirmation, handleTap } = useTapToConfirm(onComplete);
 
   const subtitle = [
     formatStartedDay(new Date(startedAt)),
@@ -51,11 +56,18 @@ export function GroceryListHeader({
         </CHLink>
         <CHButton
           variant="primary"
-          onClick={onComplete}
-          disabled={isCompleting}
-          className="w-full text-center md:w-auto"
+          onClick={handleTap}
+          disabled={isCompleting || itemCount === 0}
+          className={cn(
+            "w-full text-center md:w-auto",
+            awaitingConfirmation && "border-danger bg-transparent text-danger hover:bg-transparent"
+          )}
         >
-          {isCompleting ? "Completing…" : "Complete list"}
+          {isCompleting
+            ? "Completing…"
+            : awaitingConfirmation
+              ? "Tap again to complete →"
+              : "Complete list"}
         </CHButton>
       </div>
     </div>
