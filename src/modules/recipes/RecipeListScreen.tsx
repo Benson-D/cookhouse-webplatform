@@ -18,8 +18,6 @@ import { RecipeToolPanel } from "./components/RecipeList/RecipeToolPanel";
 export function RecipeListScreen() {
   const pagination = usePagination();
   const filters = useRecipeFilters({ onChange: pagination.reset });
-  // poll: true dropped for now — cost/load concern on the $5/mo DigitalOcean
-  // plan (see useGroceryList's comment). Revisit with a real solution.
   const list = useRecipeList({ filters, pagination });
   const tagGroups = useRecipeTagGroups();
   const { toggleFavorite, pendingFavoriteId } = useFavoriteRecipe();

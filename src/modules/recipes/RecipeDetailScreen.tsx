@@ -16,8 +16,6 @@ import { RecipeDetailActions } from "./components/RecipeDetail/RecipeDetailActio
 /** Logical component: composes `useRecipe` with the module's presentational pieces. */
 export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
   const router = useRouter();
-  // poll: true dropped for now — cost/load concern on the $5/mo DigitalOcean
-  // plan (see useGroceryList's comment). Revisit with a real solution.
   const { recipe, parsedInstructions, images, isLoading, isError, error, refetch } =
     useRecipe(recipeId);
 

@@ -2,40 +2,25 @@
 
 import { useMemo } from "react";
 import { trpc } from "@/lib/trpc";
-import type { RecipeDetail, RecipeImageWithUrl } from "../types";
+import type { RecipeImageWithUrl } from "../types";
 import { parseInstructions } from "../utils/instructions";
-
-// 12s poll, per root CLAUDE.md's "Real-time layer" decision.
-const RECIPE_POLL_MS = 12_000;
 
 /**
  * One recipe in full, plus its render-ready image URLs — fetched separately,
  * since each image needs its own presigned URL.
- *
- * `poll` defaults off — `RecipeFormScreen`'s edit mode also uses this hook,
- * and polling there could reset an in-progress edit when the form re-seeds
- * from a changed `recipe`. Only `RecipeDetailScreen` passes `poll: true`.
  */
-export function useRecipe(recipeId: string | null, { poll = false }: { poll?: boolean } = {}) {
-  // Null recipeId means a new recipe — nothing to fetch, so disable the query
-  // instead of sending a placeholder id.
+export function useRecipe(recipeId: string | null) {
+  // recipeId can be null (creating a new recipe) - nothing to fetch yet
   const recipeQuery = trpc.recipes.getById.useQuery(
     { id: recipeId ?? "" },
-    {
-      enabled: recipeId !== null,
-      // Polling is already a retry, so a failed poll shouldn't also stack
-      // TanStack Query's own backoff-retry on top of it.
-      ...(poll && { refetchInterval: RECIPE_POLL_MS, retry: false }),
-    }
+    { enabled: recipeId !== null }
   );
   const imagesQuery = trpc.recipes.images.useQuery(
     { id: recipeId ?? "" },
     { enabled: recipeId !== null && recipeQuery.isSuccess }
   );
 
-  // Annotated to dodge TS2589 ("excessively deep") — same type either way.
-  const recipe: RecipeDetail | undefined = recipeQuery.data;
-
+  const recipe = recipeQuery.data;
   const images: RecipeImageWithUrl[] = imagesQuery.data ?? [];
 
   // `instructions` is a `Json` column typed `unknown` at the wire boundary,

@@ -2,24 +2,14 @@
 
 import { trpc } from "@/lib/trpc";
 
-// ~10-15s, per root CLAUDE.md's "Real-time layer" decision — slower than the
-// grocery list's 3-5s, since nobody's waiting on a recipe-list update the
-// way two people shopping from the same list are.
-const RECIPE_POLL_MS = 12_000;
-
 /**
  * Just the `recipes.list` query. Filters and pagination are owned by
  * `useRecipeFilters`/`usePagination` — the composing screen calls both and
  * passes their values in here.
- *
- * `poll` defaults off — this hook is also used by the "Add from recipes"
- * picker (`AddFromRecipesScreen`), which the polling decision doesn't cover.
- * Only `RecipeListScreen` passes `poll: true`.
  */
 export function useRecipeList({
   filters,
   pagination,
-  poll = false,
 }: {
   filters: {
     debouncedSearch: string;
@@ -28,7 +18,6 @@ export function useRecipeList({
     maxCookingTime: number | null;
   };
   pagination: { skip: number; pageSize: number };
-  poll?: boolean;
 }) {
   const query = trpc.recipes.list.useQuery(
     {
@@ -43,9 +32,6 @@ export function useRecipeList({
       // Keeps the previous page on screen while the next one loads, so
       // paging doesn't blank the grid on every click.
       placeholderData: (previous) => previous,
-      // Polling is already a retry, so a failed poll shouldn't also stack
-      // TanStack Query's own backoff-retry on top of it.
-      ...(poll && { refetchInterval: RECIPE_POLL_MS, retry: false }),
     }
   );
 

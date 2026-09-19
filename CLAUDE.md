@@ -439,20 +439,17 @@ These look like bugs if you don't know them. Full reasoning is in the root
   keeping around unused. The column and the backend's `.url()` input
   validation are untouched — this was a frontend-only call — so reintroducing
   the field is cheap if the real import feature below ever gets built.
-- **Polling (`refetchInterval`) is opt-in on both recipe hooks, not
-  unconditional** — see root `CLAUDE.md`'s "Real-time layer" decision for the
-  interval values and why grocery lists poll faster than recipes.
-  `useGroceryList` polls unconditionally (its query has exactly one
-  consumer), but `useRecipeList` and `useRecipe` are each shared by a second
-  screen the polling decision doesn't cover, so both take a `{ poll?:
-boolean }` option defaulting to `false`: `RecipeListScreen` and
-  `RecipeDetailScreen` pass `poll: true`; `AddFromRecipesScreen` (also built
-  on `useRecipeList`) and `RecipeFormScreen`'s edit mode (also built on
-  `useRecipe`) don't. The edit-mode case is the one that actually matters —
-  `useForm`'s `values: fromRecipeDetail(recipe, steps)` re-seeds the form
-  whenever `recipe` changes identity, so polling there would risk a
+- **Neither recipe hook polls** — see root `CLAUDE.md`'s "Real-time layer"
+  decision. Only `useGroceryList` does; recipes don't have the same
+  simultaneous-editing case a shared grocery list does, so `useRecipeList`
+  and `useRecipe` are both plain queries with no `refetchInterval`. Worth
+  remembering if recipe polling ever comes back: `useRecipeList` is shared
+  by `AddFromRecipesScreen`, and `useRecipe` by `RecipeFormScreen`'s edit
+  mode, where `useForm`'s `values: fromRecipeDetail(recipe, steps)` re-seeds
+  the form whenever `recipe` changes identity — polling there would risk a
   background refetch silently discarding an in-progress, unsaved edit the
-  moment it lands.
+  moment it lands. Any reintroduction needs an opt-in flag, not an
+  unconditional one, for exactly that reason.
 
 ## Spending reports UI
 
