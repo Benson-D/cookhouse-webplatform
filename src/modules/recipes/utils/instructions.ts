@@ -18,12 +18,14 @@ export function parseInstructions(instructions: unknown): Instruction[] {
   }
 
   return instructions
-    .filter(
-      (entry): entry is Instruction =>
+    .filter((entry): entry is Instruction => {
+      const isInstruction =
         typeof entry === "object" &&
         entry !== null &&
-        typeof (entry as Instruction).text === "string"
-    )
+        "text" in entry &&
+        typeof entry.text === "string";
+      return isInstruction;
+    })
     .map((entry, index) => ({
       step: typeof entry.step === "number" ? entry.step : index + 1,
       text: entry.text,
