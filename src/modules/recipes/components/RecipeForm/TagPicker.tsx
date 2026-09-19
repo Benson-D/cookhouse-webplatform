@@ -1,7 +1,7 @@
 import { CHSectionLabel } from "@/common";
-import type { Tag } from "../types";
-import { groupTagsByType, labelForTagGroup } from "../utils/tags";
-import { TruncatedTagGroup } from "./FilterPanel";
+import type { Tag } from "../../types";
+import { groupTagsByType, labelForTagGroup } from "../../utils/tags";
+import { TruncatedTagGroup } from "../RecipeList/FilterPanel";
 
 /**
  * Tag selection for the form, grouped and truncated via `FilterPanel`'s

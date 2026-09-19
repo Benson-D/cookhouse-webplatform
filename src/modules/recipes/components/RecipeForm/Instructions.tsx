@@ -1,8 +1,8 @@
 "use client";
 
 import type { Control } from "react-hook-form";
-import type { RecipeFormInput, RecipeFormValues } from "../recipe-form.schema";
-import { useInstructions } from "../hooks/useInstructions";
+import type { RecipeFormInput, RecipeFormValues } from "../../recipe-form.schema";
+import { useInstructions } from "../../hooks/useInstructions";
 import { InstructionHeading } from "./InstructionHeading";
 import { InstructionRow } from "./InstructionRow";
 import { MethodHint } from "./MethodHint";

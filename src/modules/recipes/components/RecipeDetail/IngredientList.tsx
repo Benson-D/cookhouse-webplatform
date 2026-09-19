@@ -1,5 +1,5 @@
-import { formatIngredientAmount } from "../utils/ingredientAmount";
-import type { RecipeDetail } from "../types";
+import { formatIngredientAmount } from "../../utils/ingredientAmount";
+import type { RecipeDetail } from "../../types";
 
 /**
  * The amount column is monospace and tabular so figures line up down the

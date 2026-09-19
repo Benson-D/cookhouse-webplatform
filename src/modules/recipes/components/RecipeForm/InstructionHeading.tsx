@@ -2,7 +2,7 @@
 
 import { Controller, type Control } from "react-hook-form";
 import { cn } from "@/lib/cn";
-import type { RecipeFormInput, RecipeFormValues } from "../recipe-form.schema";
+import type { RecipeFormInput, RecipeFormValues } from "../../recipe-form.schema";
 import { RemoveRowButton } from "./RepeaterControls";
 
 /** A named section title within the method field, e.g. "How to make the sauce". */

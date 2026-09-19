@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/cn";
-import type { RecipeImageWithUrl } from "../types";
-import { placeholderGradient } from "../utils/placeholder";
+import type { RecipeImageWithUrl } from "../../types";
+import { placeholderGradient } from "../../utils/placeholder";
 
 /**
  * Hero photo plus the ordered thumbnail strip.

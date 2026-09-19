@@ -3,7 +3,7 @@
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { CHButton } from "@/common";
 import { FilterPanel } from "./FilterPanel";
-import type { Tag } from "../types";
+import type { Tag } from "../../types";
 
 export function FilterDropdown({
   tags,

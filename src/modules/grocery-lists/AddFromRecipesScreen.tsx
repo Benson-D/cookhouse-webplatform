@@ -7,10 +7,10 @@ import { usePagination } from "@/modules/recipes/hooks/usePagination";
 import { useRecipeFilters } from "@/modules/recipes/hooks/useRecipeFilters";
 import { useRecipeList } from "@/modules/recipes/hooks/useRecipeList";
 import { useRecipeTagGroups } from "@/modules/recipes/hooks/useRecipeTagGroups";
-import { FilterDropdown } from "@/modules/recipes/components/FilterDropdown";
-import { RecipeTags } from "@/modules/recipes/components/RecipeTags";
-import { RecipePickCard } from "@/modules/recipes/components/RecipePickCard";
-import { PaginationFooter } from "@/modules/recipes/components/PaginationFooter";
+import { FilterDropdown } from "@/modules/recipes/components/RecipeList/FilterDropdown";
+import { RecipeTags } from "@/modules/recipes/components/RecipeList/RecipeTags";
+import { RecipePickCard } from "@/modules/recipes/components/RecipeList/RecipePickCard";
+import { PaginationFooter } from "@/modules/recipes/components/RecipeList/PaginationFooter";
 import { useAddFromRecipes } from "./hooks/useAddFromRecipes";
 import { PickerFooter } from "./components/PickerFooter";
 

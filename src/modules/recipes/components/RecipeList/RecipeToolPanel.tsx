@@ -1,7 +1,7 @@
 import { RecipeToolbar } from "./RecipeToolbar";
 import { RecipeTags } from "./RecipeTags";
-import type { useRecipeFilters } from "../hooks/useRecipeFilters";
-import type { useRecipeTagGroups } from "../hooks/useRecipeTagGroups";
+import type { useRecipeFilters } from "../../hooks/useRecipeFilters";
+import type { useRecipeTagGroups } from "../../hooks/useRecipeTagGroups";
 
 /**
  * Everything above the recipe grid: the search/favorites/filter-panel

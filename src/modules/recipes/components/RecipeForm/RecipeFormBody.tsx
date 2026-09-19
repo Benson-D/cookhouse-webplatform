@@ -2,9 +2,9 @@
 
 import { useFormContext } from "react-hook-form";
 import { CHNumInput, CHTextArea } from "@/common";
-import type { GalleryItem } from "../types";
-import type { RecipeFormInput, RecipeFormValues } from "../recipe-form.schema";
-import type { Tag } from "../types";
+import type { GalleryItem } from "../../types";
+import type { RecipeFormInput, RecipeFormValues } from "../../recipe-form.schema";
+import type { Tag } from "../../types";
 import { ImageUploader } from "./ImageUploader";
 import { IngredientRows } from "./IngredientRows";
 import { Instructions } from "./Instructions";

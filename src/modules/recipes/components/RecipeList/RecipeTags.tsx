@@ -1,8 +1,8 @@
 "use client";
 
 import { TagChip } from "@/common";
-import { formatCookTimeFilter } from "../utils/cookTime";
-import type { Tag } from "../types";
+import { formatCookTimeFilter } from "../../utils/cookTime";
+import type { Tag } from "../../types";
 
 /** A removable summary chip — the panel-sourced filters (tags outside meal-time, plus cook time) stay visible even with the panel closed. */
 function RemovableChip({ label, onRemove }: { label: string; onRemove: () => void }) {

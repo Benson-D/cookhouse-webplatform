@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormContext } from "react-hook-form";
-import type { RecipeFormInput, RecipeFormValues } from "../recipe-form.schema";
+import type { RecipeFormInput, RecipeFormValues } from "../../recipe-form.schema";
 import { CHTextInput } from "@/common";
 
 /** Title and the one field that exists from the very first render: the name. */

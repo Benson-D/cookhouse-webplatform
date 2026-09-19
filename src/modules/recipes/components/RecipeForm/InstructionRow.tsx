@@ -2,7 +2,7 @@
 
 import { useFormContext } from "react-hook-form";
 import { CHNumInput, CHTextArea } from "@/common";
-import type { RecipeFormInput, RecipeFormValues } from "../recipe-form.schema";
+import type { RecipeFormInput, RecipeFormValues } from "../../recipe-form.schema";
 import { RemoveRowButton } from "./RepeaterControls";
 
 /** One method step: its instruction text, an optional timer, and a step number restarting after each heading. */

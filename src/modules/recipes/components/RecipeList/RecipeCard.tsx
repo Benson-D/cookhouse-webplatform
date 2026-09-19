@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { TagBadge } from "@/common";
-import type { RecipeSummary } from "../types";
-import { formatRecipeMeta } from "../utils/recipeMeta";
-import { placeholderGradient } from "../utils/placeholder";
+import type { RecipeSummary } from "../../types";
+import { formatRecipeMeta } from "../../utils/recipeMeta";
+import { placeholderGradient } from "../../utils/placeholder";
 import { FavoriteButton } from "./FavoriteButton";
 
 /**

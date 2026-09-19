@@ -1,8 +1,8 @@
 import { TagBadge } from "@/common";
 import { cn } from "@/lib/cn";
-import type { RecipeSummary } from "../types";
-import { formatRecipeMeta } from "../utils/recipeMeta";
-import { placeholderGradient } from "../utils/placeholder";
+import type { RecipeSummary } from "../../types";
+import { formatRecipeMeta } from "../../utils/recipeMeta";
+import { placeholderGradient } from "../../utils/placeholder";
 
 /**
  * `RecipeCard`'s sibling for the grocery list's "Add from recipes" picker.

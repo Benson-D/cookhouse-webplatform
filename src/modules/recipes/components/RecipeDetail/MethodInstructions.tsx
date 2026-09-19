@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { CHSectionLabel } from "@/common";
-import { formatTimer, groupByHeading, type Instruction } from "../utils/instructions";
+import { formatTimer, groupByHeading, type Instruction } from "../../utils/instructions";
 
 /**
  * Grouped by `heading` — some recipes are really two or three sub-recipes in

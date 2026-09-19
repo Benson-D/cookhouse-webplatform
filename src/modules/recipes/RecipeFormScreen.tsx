@@ -12,9 +12,9 @@ import { useRecipeImages } from "./hooks/useRecipeImages";
 import { usePendingImages } from "./hooks/usePendingImages";
 import { useUploadRecipeImage } from "./hooks/useUploadRecipeImage";
 import { useTags } from "./hooks/useTags";
-import { RecipeFormHeader } from "./components/RecipeFormHeader";
-import { RecipeFormBody } from "./components/RecipeFormBody";
-import { RecipeFormFooter } from "./components/RecipeFormFooter";
+import { RecipeFormHeader } from "./components/RecipeForm/RecipeFormHeader";
+import { RecipeFormBody } from "./components/RecipeForm/RecipeFormBody";
+import { RecipeFormFooter } from "./components/RecipeForm/RecipeFormFooter";
 import {
   emptyRecipeForm,
   fromRecipeDetail,

@@ -6,9 +6,9 @@ import { useRecipeFilters } from "./hooks/useRecipeFilters";
 import { useRecipeList } from "./hooks/useRecipeList";
 import { useRecipeTagGroups } from "./hooks/useRecipeTagGroups";
 import { useFavoriteRecipe } from "./hooks/useFavoriteRecipe";
-import { PaginationFooter } from "./components/PaginationFooter";
-import { RecipeCard } from "./components/RecipeCard";
-import { RecipeToolPanel } from "./components/RecipeToolPanel";
+import { PaginationFooter } from "./components/RecipeList/PaginationFooter";
+import { RecipeCard } from "./components/RecipeList/RecipeCard";
+import { RecipeToolPanel } from "./components/RecipeList/RecipeToolPanel";
 
 /**
  * The household's main recipe library — search by name, filter by tag

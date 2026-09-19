@@ -7,11 +7,11 @@ import { useRecipe } from "./hooks/useRecipe";
 import { useFavoriteRecipe } from "./hooks/useFavoriteRecipe";
 import { useDeleteRecipe } from "./hooks/useDeleteRecipe";
 import { useAddRecipeToGroceryList } from "./hooks/useAddRecipeToGroceryList";
-import { IngredientList } from "./components/IngredientList";
-import { MethodInstructions } from "./components/MethodInstructions";
-import { RecipeGallery } from "./components/RecipeGallery";
-import { RecipeMeta } from "./components/RecipeMeta";
-import { RecipeDetailActions } from "./components/RecipeDetailActions";
+import { IngredientList } from "./components/RecipeDetail/IngredientList";
+import { MethodInstructions } from "./components/RecipeDetail/MethodInstructions";
+import { RecipeGallery } from "./components/RecipeDetail/RecipeGallery";
+import { RecipeMeta } from "./components/RecipeDetail/RecipeMeta";
+import { RecipeDetailActions } from "./components/RecipeDetail/RecipeDetailActions";
 
 /** Logical component: composes `useRecipe` with the module's presentational pieces. */
 export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
@@ -20,13 +20,14 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
   // plan (see useGroceryList's comment). Revisit with a real solution.
   const { recipe, parsedInstructions, images, isLoading, isError, error, refetch } =
     useRecipe(recipeId);
-  const { toggleFavorite, pendingFavoriteId } = useFavoriteRecipe();
+
   const {
     handleAddToList,
     isAdding,
     justAdded,
     error: addError,
   } = useAddRecipeToGroceryList(recipeId);
+  const { toggleFavorite, pendingFavoriteId } = useFavoriteRecipe();
   const { deleteRecipe, isDeleting } = useDeleteRecipe();
 
   const confirmDelete = async () => {

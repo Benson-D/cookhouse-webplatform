@@ -1,6 +1,6 @@
 import { CHButton, CHLink, SearchIcon } from "@/common";
 import { FilterDropdown } from "./FilterDropdown";
-import type { Tag } from "../types";
+import type { Tag } from "../../types";
 
 /** Search field, favorites toggle, the filters panel trigger, and the new-recipe action. */
 export function RecipeToolbar({
