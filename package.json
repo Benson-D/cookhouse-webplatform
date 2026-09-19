@@ -43,7 +43,7 @@
     "@testing-library/react": "^16.3.3",
     "@trpc/server": "^11.0.0-rc.502",
     "@types/jest": "^30.0.0",
-    "@types/node": "^20",
+    "@types/node": "^26",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
