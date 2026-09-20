@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { CHDecimalField, CHSelect, CHTextInput, UnitPicker } from "@/common";
 import { useCreatableSelect } from "@/hooks/useCreatableSelect";
+import { useIngredientSearchPicker } from "@/hooks/useIngredientSearchPicker";
 import { cn } from "@/lib/cn";
 import type { RecipeFormInput, RecipeFormValues } from "../../recipe-form.schema";
 import { RemoveRowButton } from "./RepeaterControls";
@@ -12,22 +13,21 @@ import styles from "./IngredientRows.module.css";
 type Ingredient = { id: string; name: string };
 type Unit = { id: string; name: string; abbreviation: string | null };
 
-/** One ingredient row: amount, unit (pick-only), ingredient (typed, autocompleted, created on demand), and a note. */
+/**
+ * One ingredient row: amount, unit (pick-only), ingredient (typed,
+ * autocompleted, created on demand), and a note. Owns its own ingredient
+ * picker — each row's search/typing is independent, so typing in one row
+ * never changes what another row's dropdown shows.
+ */
 export function IngredientRow({
   index,
   isLast,
-  ingredientOptions,
   units,
-  onSearch,
-  searchFn,
   onRemove,
 }: {
   index: number;
   isLast: boolean;
-  ingredientOptions: Ingredient[];
   units: Unit[];
-  onSearch: (query: string) => void;
-  searchFn: (name: string) => Promise<Ingredient>;
   onRemove: () => void;
 }) {
   const { register, setValue, watch, formState } = useFormContext<
@@ -46,7 +46,13 @@ export function IngredientRow({
     setValue(`ingredients.${index}.ingredientName`, ingredient.name);
   }
 
-  const creatable = useCreatableSelect({ options: ingredientOptions, searchFn });
+  const ingredientPicker = useIngredientSearchPicker();
+
+  const creatable = useCreatableSelect<Ingredient>({
+    options: ingredientPicker.options,
+    inputValue: ingredientPicker.searchValue,
+    findOrCreate: ingredientPicker.findOrCreate,
+  });
 
   // This row owns "clearing" entirely — CHSelect has no clear button or
   // concept of one. Bumping this key remounts CHSelect, which is the only
@@ -95,10 +101,7 @@ export function IngredientRow({
             getOptionId={(ingredient) => ingredient.id}
             getOptionLabel={(ingredient) => ingredient.name}
             className={ingredientId || ingredientName ? "pr-14" : undefined}
-            onInputChange={(event) => {
-              creatable.onInputChange(event);
-              onSearch(event.target.value);
-            }}
+            onInputChange={(event) => ingredientPicker.setSearchValue(event.target.value)}
             onChange={async (ingredient) => {
               if (!ingredient) return;
               setIngredient(await creatable.handleSelect(ingredient));

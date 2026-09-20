@@ -10,7 +10,6 @@ import { IngredientRows } from "./IngredientRows";
 import { Instructions } from "./Instructions";
 import { TagPicker } from "./TagPicker";
 
-type Ingredient = { id: string; name: string };
 type Unit = { id: string; name: string; abbreviation: string | null };
 
 /**
@@ -23,9 +22,6 @@ type Unit = { id: string; name: string; abbreviation: string | null };
 export function RecipeFormBody({
   isEditing,
   units,
-  ingredientOptions,
-  onSearch,
-  searchFn,
   tags,
   selectedTagIds,
   onToggleTag,
@@ -37,9 +33,6 @@ export function RecipeFormBody({
 }: {
   isEditing: boolean;
   units: Unit[];
-  ingredientOptions: Ingredient[];
-  onSearch: (query: string) => void;
-  searchFn: (name: string) => Promise<Ingredient>;
   tags: Tag[];
   selectedTagIds: string[];
   onToggleTag: (tagId: string) => void;
@@ -101,14 +94,7 @@ export function RecipeFormBody({
         onRemove={onRemoveImage}
       />
 
-      <IngredientRows
-        label="Ingredients"
-        control={control}
-        ingredientOptions={ingredientOptions}
-        units={units}
-        onSearch={onSearch}
-        searchFn={searchFn}
-      />
+      <IngredientRows label="Ingredients" control={control} units={units} />
 
       <Instructions label="Method" control={control} />
 

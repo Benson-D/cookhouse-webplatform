@@ -17,25 +17,22 @@ const MIN_SEARCH_LENGTH = 3;
  * page), but not on a 1-2 character partial one — too noisy to be useful.
  */
 export function useStoreSearchPicker() {
-  const [search, setSearch] = useState("");
-  const debouncedSearch = useDebounce(search);
-  const trimmedSearch = debouncedSearch.trim();
+  const [searchValue, setSearchValue] = useState("");
+  const debouncedSearch = useDebounce(searchValue);
+  const trimmedSearchValue = debouncedSearch.trim();
 
   const query = trpc.stores.search.useQuery(
-    { search: trimmedSearch || undefined },
+    { search: trimmedSearchValue || undefined },
     {
       staleTime: 30 * 1000,
-      enabled: trimmedSearch.length === 0 || trimmedSearch.length >= MIN_SEARCH_LENGTH,
+      enabled: trimmedSearchValue.length === 0 || trimmedSearchValue.length >= MIN_SEARCH_LENGTH,
     }
   );
 
   return {
-    search,
-    setSearch,
+    searchValue,
+    setSearchValue,
     options: query.data ?? [],
     isSearching: query.isFetching,
-
-    /** No backend request — a typed name with no match is just echoed back. */
-    resolve: (name: string) => Promise.resolve({ id: "", name: name.trim() }),
   };
 }

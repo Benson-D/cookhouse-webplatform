@@ -16,29 +16,29 @@ const MIN_SEARCH_LENGTH = 3;
  * page), but not on a 1-2 character partial one — too noisy to be useful.
  */
 export function useIngredientSearchPicker() {
-  const [search, setSearch] = useState("");
-  const debouncedSearch = useDebounce(search);
-  const trimmedSearch = debouncedSearch.trim();
+  const [searchValue, setSearchValue] = useState("");
+  const debouncedSearch = useDebounce(searchValue);
+  const trimmedSearchValue = debouncedSearch.trim();
 
   const query = trpc.ingredients.list.useQuery(
-    { search: trimmedSearch || undefined },
+    { search: trimmedSearchValue || undefined },
     {
       staleTime: 30 * 1000,
-      enabled: trimmedSearch.length === 0 || trimmedSearch.length >= MIN_SEARCH_LENGTH,
+      enabled: trimmedSearchValue.length === 0 || trimmedSearchValue.length >= MIN_SEARCH_LENGTH,
     }
   );
 
   const create = trpc.ingredients.create.useMutation();
 
   return {
-    search,
-    setSearch,
+    searchValue,
+    setSearchValue,
     options: query.data ?? [],
     isSearching: query.isFetching,
 
     /** Resolves typed text to a canonical ingredient, creating it if new. */
-    resolve: (name: string) => create.mutateAsync({ name: name.trim() }),
-    isResolving: create.isPending,
+    findOrCreate: (name: string) => create.mutateAsync({ name: name.trim() }),
+    isCreating: create.isPending,
   };
 }
 

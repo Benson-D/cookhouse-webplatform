@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 type NamedOption = { id: string; name: string };
 
 /** Reserved id for the synthetic "Add {name}" row — real ids never collide with it. */
@@ -13,43 +11,29 @@ const CREATE_OPTION_ID = "__create__";
  */
 export function useCreatableSelect<T extends NamedOption>({
   options,
-  searchFn,
+  inputValue,
+  findOrCreate,
 }: {
   options: T[];
-  searchFn: (name: string) => Promise<T>;
+  inputValue: string;
+  findOrCreate: (name: string) => Promise<T>;
 }) {
-  const [searchValue, setSearchValue] = useState("");
-  const [isCreating, setIsCreating] = useState(false);
-
-  const trimmedSearchValue = searchValue.trim();
+  const trimmedSearchValue = inputValue.trim();
   const canCreate = trimmedSearchValue.length > 0 && options.length === 0;
 
   const createOption = canCreate
-    ? ({ id: CREATE_OPTION_ID, name: isCreating ? "Adding…" : `Add "${trimmedSearchValue}"` } as T)
+    ? ({ id: CREATE_OPTION_ID, name: `Add "${trimmedSearchValue}"` } as T)
     : null;
 
-  function isCreateOption(item: T) {
-    return item.id === CREATE_OPTION_ID;
-  }
+  const handleSelect = async (item: T): Promise<T> => {
+    const isCreateOption = item.id === CREATE_OPTION_ID;
+    if (!isCreateOption) return Promise.resolve(item);
 
-  async function handleSelect(item: T): Promise<T> {
-    if (!isCreateOption(item)) return item;
-
-    setIsCreating(true);
-
-    try {
-      const created = await searchFn(trimmedSearchValue);
-      setSearchValue("");
-      return created;
-    } finally {
-      setIsCreating(false);
-    }
-  }
+    return findOrCreate(trimmedSearchValue);
+  };
 
   return {
     options: createOption ? [...options, createOption] : options,
-    onInputChange: (event: React.ChangeEvent<HTMLInputElement>) =>
-      setSearchValue(event.target.value),
     handleSelect,
   };
 }

@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ErrorState, LoadingState } from "@/common";
 import { useRecipe } from "./hooks/useRecipe";
 import { useSaveRecipe } from "./hooks/useSaveRecipe";
-import { useIngredientSearchPicker, useUnits } from "@/hooks/useIngredientSearchPicker";
+import { useUnits } from "@/hooks/useIngredientSearchPicker";
 import { useRecipeImages } from "./hooks/useRecipeImages";
 import { usePendingImages } from "./hooks/usePendingImages";
 import { useUploadRecipeImage } from "./hooks/useUploadRecipeImage";
@@ -38,7 +38,6 @@ export function RecipeFormScreen({ recipeId }: { recipeId?: string }) {
   const { create, update, isSaving, saveError } = useSaveRecipe();
   const { tags } = useTags();
   const { units } = useUnits();
-  const ingredientPicker = useIngredientSearchPicker();
   const pendingImages = usePendingImages();
   const { uploadOne } = useUploadRecipeImage();
   const images = useRecipeImages(id, pendingImages, uploadOne);
@@ -125,9 +124,6 @@ export function RecipeFormScreen({ recipeId }: { recipeId?: string }) {
         <RecipeFormBody
           isEditing={isEditing}
           units={units}
-          ingredientOptions={ingredientPicker.options}
-          onSearch={ingredientPicker.setSearch}
-          searchFn={ingredientPicker.resolve}
           tags={tags}
           selectedTagIds={selectedTagIds}
           onToggleTag={onToggleTag}

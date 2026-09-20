@@ -5,13 +5,7 @@ import type {
   ScanResult,
 } from "./types";
 
-/**
- * The review screen's own `CHSelect` `onCreate` — typing a name with no
- * match here just edits this line's text, it doesn't create anything.
- * `confirmPurchases` does the real ingredient matching server-side once the
- * receipt is confirmed, so an eager `ingredients.create` during review would
- * pre-create a row that check never gets a chance to reject.
- */
+/** A `useCreatableSelect` `findOrCreate` that echoes typed text locally instead of eagerly creating anything. */
 export async function resolveAsFreeText(name: string): Promise<IngredientOverride> {
   return { id: "", name: name.trim() };
 }

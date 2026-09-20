@@ -5,29 +5,22 @@ import type { RecipeFormInput, RecipeFormValues } from "../../recipe-form.schema
 import { IngredientRow } from "./IngredientRow";
 import { AddLineButton } from "./RepeaterControls";
 
-type Ingredient = { id: string; name: string };
 type Unit = { id: string; name: string; abbreviation: string | null };
 
 /**
- * Presentational: form state and the ingredient resolver arrive as props, so
- * this holds no query of its own. Each row is its own component
- * (`IngredientRow`) since it needs its own `useCreatableSelect` call — a
- * hook can't be called inside this `.map()` directly.
+ * Presentational: form state arrives as props, so this holds no query of
+ * its own. Each row is its own component (`IngredientRow`) since it owns
+ * its own ingredient search — a hook can't be called inside this `.map()`
+ * directly.
  */
 export function IngredientRows({
   label,
   control,
-  ingredientOptions,
   units,
-  onSearch,
-  searchFn,
 }: {
   label: string;
   control: Control<RecipeFormInput, unknown, RecipeFormValues>;
-  ingredientOptions: Ingredient[];
   units: Unit[];
-  onSearch: (query: string) => void;
-  searchFn: (name: string) => Promise<Ingredient>;
 }) {
   const { fields, append, remove } = useFieldArray({
     control,
@@ -46,10 +39,7 @@ export function IngredientRows({
             key={field.id}
             index={index}
             isLast={index === fields.length - 1}
-            ingredientOptions={ingredientOptions}
             units={units}
-            onSearch={onSearch}
-            searchFn={searchFn}
             onRemove={() => remove(index)}
           />
         ))}

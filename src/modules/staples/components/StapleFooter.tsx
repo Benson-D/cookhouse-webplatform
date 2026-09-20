@@ -28,12 +28,18 @@ export function StapleFooter({
   onAdd: (ingredientId: string, frequencyDays: number) => void;
   isAdding: boolean;
 }) {
-  const { options: ingredientOptions, setSearch, resolve } = useIngredientSearchPicker();
+  const {
+    searchValue,
+    options: ingredientOptions,
+    setSearchValue,
+    findOrCreate,
+  } = useIngredientSearchPicker();
   const [ingredient, setIngredient] = useState<Ingredient | null>(null);
   const [frequencyDays, setFrequencyDays] = useState<number>(FREQUENCY_OPTIONS[1].days);
   const creatable = useCreatableSelect<Ingredient>({
     options: ingredientOptions,
-    searchFn: resolve,
+    inputValue: searchValue,
+    findOrCreate,
   });
 
   const existingIngredientIds = new Set(existingStaples.map((staple) => staple.ingredientId));
@@ -54,10 +60,7 @@ export function StapleFooter({
         getOptionId={(item) => item.id}
         getOptionLabel={(item) => item.name}
         getOptionDisabled={(item) => existingIngredientIds.has(item.id)}
-        onInputChange={(event) => {
-          creatable.onInputChange(event);
-          setSearch(event.target.value);
-        }}
+        onInputChange={(event) => setSearchValue(event.target.value)}
         onChange={async (item) => {
           if (!item) return;
           setIngredient(await creatable.handleSelect(item));

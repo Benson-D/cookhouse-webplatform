@@ -140,11 +140,18 @@ function SearchableDemo() {
  * `useCreatableSelect` composes the search-and-create pattern on top of the
  * dumb primitive — CHSelect only ever sees a plain `options` array with one
  * extra synthetic item folded in, with no idea it means "create a new
- * ingredient."
+ * ingredient." Input/search state lives in the domain hook that owns the
+ * search (here, a plain `useState` standing in for `useIngredientSearchPicker`),
+ * not in `useCreatableSelect` itself.
  */
 function CreatableDemo({ onCreate }: { onCreate: (name: string) => Promise<Ingredient> }) {
+  const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Ingredient | null>(null);
-  const creatable = useCreatableSelect({ options: INGREDIENTS, searchFn: onCreate });
+  const creatable = useCreatableSelect({
+    options: INGREDIENTS,
+    inputValue: query,
+    findOrCreate: onCreate,
+  });
 
   return (
     <CHSelect<Ingredient>
@@ -154,7 +161,7 @@ function CreatableDemo({ onCreate }: { onCreate: (name: string) => Promise<Ingre
       options={creatable.options}
       getOptionId={getIngredientId}
       getOptionLabel={getIngredientLabel}
-      onInputChange={creatable.onInputChange}
+      onInputChange={(event) => setQuery(event.target.value)}
       onChange={async (item) => {
         if (!item) return;
         setSelected(await creatable.handleSelect(item));
@@ -188,7 +195,12 @@ export const EmptyResults: Story = {
   },
 };
 
-/** Drives the real create flow through `useCreatableSelect`, including its transient "Adding…" state. */
+/**
+ * Drives the real create flow through `useCreatableSelect`. A transient
+ * "Adding…" state (like `useIngredientSearchPicker.isCreating`) is up to
+ * whichever domain hook owns the actual mutation — this demo has none, so
+ * the option just resolves straight to the created item.
+ */
 export const CreateNewItem: Story = {
   render: () => (
     <CreatableDemo
@@ -203,7 +215,6 @@ export const CreateNewItem: Story = {
     await userEvent.type(canvas.getByRole("combobox"), "smoked paprika");
     await userEvent.click(await canvas.findByText('Add "smoked paprika"'));
 
-    await waitFor(() => expect(canvas.getByText("Adding…")).toBeInTheDocument());
     await waitFor(() => expect(canvas.getByDisplayValue("smoked paprika")).toBeInTheDocument());
   },
 };
