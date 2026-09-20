@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { expect, fn, userEvent, waitFor, within } from "storybook/test";
 import { CHSelect } from "./CHSelect";
+import { useCreatableSelect } from "@/hooks/useCreatableSelect";
 
 // ─── Fixtures & helpers ──────────────────────────────────────────────────
 
@@ -28,7 +29,15 @@ const FREQUENCY_OPTIONS = [
 
 // ─── Storybook metadata ───────────────────────────────────────────────────
 
-/** Fixed to `{ id, name }` — the real shape ingredients/units use. `onSelect` is mocked; picking an option just logs to the Actions panel. */
+/**
+ * Fixed to `{ id, name }` — the real shape ingredients/units use. `onChange`
+ * is mocked; picking an option just logs to the Actions panel. CHSelect
+ * itself is a dumb primitive — it has no idea what typed text means and no
+ * clear button of its own; see `SearchFilter` and `CreateNewItem` below for
+ * how a caller composes those on top of it (the latter via
+ * `useCreatableSelect`, which folds a synthetic "Add {name}" row straight
+ * into the plain `options` array CHSelect already renders).
+ */
 const meta = {
   title: "common/CHSelect",
   component: CHSelect<Ingredient>,
@@ -38,7 +47,7 @@ const meta = {
     options: INGREDIENTS,
     getOptionId: getIngredientId,
     getOptionLabel: getIngredientLabel,
-    onSelect: fn(),
+    onChange: fn(),
     ariaLabel: "Ingredient",
     placeholder: "search",
   },
@@ -98,14 +107,14 @@ export const DifferentItemShape: Story = {
       options={[...FREQUENCY_OPTIONS]}
       getOptionId={(option) => String(option.days)}
       getOptionLabel={(option) => option.label}
-      onSelect={fn()}
+      onChange={fn()}
     />
   ),
 };
 
 // ─── Demo components ───────────────────────────────────────────────────
 
-/** Filtering happens here, not inside CHSelect — `onSearch` only reports the query, same as every real consumer. */
+/** Filtering happens here, not inside CHSelect — `onInputChange` is just the underlying input's own change event, same as every real consumer. */
 function SearchableDemo() {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Ingredient | null>(null);
@@ -121,15 +130,42 @@ function SearchableDemo() {
       options={filtered}
       getOptionId={getIngredientId}
       getOptionLabel={getIngredientLabel}
-      onSearch={setQuery}
-      onSelect={setSelected}
+      onInputChange={(event) => setQuery(event.target.value)}
+      onChange={setSelected}
+    />
+  );
+}
+
+/**
+ * `useCreatableSelect` composes the search-and-create pattern on top of the
+ * dumb primitive — CHSelect only ever sees a plain `options` array with one
+ * extra synthetic item folded in, with no idea it means "create a new
+ * ingredient."
+ */
+function CreatableDemo({ onCreate }: { onCreate: (name: string) => Promise<Ingredient> }) {
+  const [selected, setSelected] = useState<Ingredient | null>(null);
+  const creatable = useCreatableSelect({ options: INGREDIENTS, searchFn: onCreate });
+
+  return (
+    <CHSelect<Ingredient>
+      ariaLabel="Ingredient"
+      placeholder="search or add an ingredient"
+      value={selected}
+      options={creatable.options}
+      getOptionId={getIngredientId}
+      getOptionLabel={getIngredientLabel}
+      onInputChange={creatable.onInputChange}
+      onChange={async (item) => {
+        if (!item) return;
+        setSelected(await creatable.handleSelect(item));
+      }}
     />
   );
 }
 
 // ─── Interactive states ────────────────────────────────────────────────
 
-/** Filters to exactly the matching option — proves onSearch's caller-side filtering (the real pattern every consumer uses) actually narrows the list. */
+/** Filters to exactly the matching option — proves onInputChange's caller-side filtering (the real pattern every consumer uses) actually narrows the list. */
 export const SearchFilter: Story = {
   render: () => <SearchableDemo />,
   play: async ({ canvasElement }) => {
@@ -142,7 +178,7 @@ export const SearchFilter: Story = {
   },
 };
 
-/** No match and no `onCreate` to fall back to — the panel has nothing to show. */
+/** No match and no options to fall back to — the panel has nothing to show. */
 export const EmptyResults: Story = {
   render: () => <SearchableDemo />,
   play: async ({ canvasElement }) => {
@@ -152,26 +188,22 @@ export const EmptyResults: Story = {
   },
 };
 
-/** Drives the real create flow, including the transient `isCreating` state — it has no prop to check directly, so a play function is the only honest way to cover it. */
+/** Drives the real create flow through `useCreatableSelect`, including its transient "Adding…" state. */
 export const CreateNewItem: Story = {
-  args: {
-    placeholder: "search or add an ingredient",
-    onCreate: fn(async (name: string) => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      return { id: `new-${name}`, name };
-    }),
-  },
-  play: async ({ canvasElement, args }) => {
+  render: () => (
+    <CreatableDemo
+      onCreate={async (name) => {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        return { id: `new-${name}`, name };
+      }}
+    />
+  ),
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.type(canvas.getByRole("combobox"), "smoked paprika");
-    await userEvent.click(await canvas.findByText("Add “smoked paprika”"));
+    await userEvent.click(await canvas.findByText('Add "smoked paprika"'));
 
     await waitFor(() => expect(canvas.getByText("Adding…")).toBeInTheDocument());
-    await waitFor(() =>
-      expect(args.onSelect).toHaveBeenCalledWith({
-        id: "new-smoked paprika",
-        name: "smoked paprika",
-      })
-    );
+    await waitFor(() => expect(canvas.getByDisplayValue("smoked paprika")).toBeInTheDocument());
   },
 };

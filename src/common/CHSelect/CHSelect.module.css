@@ -10,10 +10,6 @@
   @apply flex items-center px-2 text-ink-faint;
 }
 
-.clearButton {
-  @apply flex items-center px-1 text-ink-faint hover:text-ink;
-}
-
 .panel {
   @apply absolute left-0 right-0 top-full z-20 mt-1 max-h-56
     overflow-y-auto rounded-[7px] border border-line bg-surface

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CHSectionLabel, CHSelect, ErrorState, SubpageHeader } from "@/common";
+import { useCreatableSelect } from "@/hooks/useCreatableSelect";
 import { useIngredientSearchPicker } from "@/hooks/useIngredientSearchPicker";
 import { useStoreSearchPicker } from "@/hooks/useStoreSearchPicker";
 import { useReceiptScan } from "./hooks/useReceiptScan";
@@ -34,11 +35,15 @@ export function ReceiptScanScreen() {
   const router = useRouter();
   const { scan, isScanning, scanError } = useReceiptScan();
   const { confirm, isConfirming, confirmError } = useConfirmPurchases();
-  const picker = useIngredientSearchPicker();
+  const ingredientPicker = useIngredientSearchPicker();
   const storePicker = useStoreSearchPicker();
 
   const [receiptId, setReceiptId] = useState<string | null>(null);
   const [storeName, setStoreName] = useState("");
+  const storeCreatable = useCreatableSelect({
+    options: storePicker.options,
+    searchFn: storePicker.resolve,
+  });
   const [items, setItems] = useState<ReviewLineItem[]>([]);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const previewUrlRef = useRef<string | null>(null);
@@ -148,12 +153,18 @@ export function ReceiptScanScreen() {
             label="Store"
             className="mb-4"
             value={storeName ? { id: "", name: storeName } : null}
-            options={storePicker.options}
+            options={storeCreatable.options}
             getOptionId={(store) => store.id}
             getOptionLabel={(store) => store.name}
-            onSearch={storePicker.setSearch}
-            onSelect={(store) => setStoreName(store.name)}
-            onCreate={storePicker.resolve}
+            onInputChange={(event) => {
+              storeCreatable.onInputChange(event);
+              storePicker.setSearch(event.target.value);
+            }}
+            onChange={async (store) => {
+              if (!store) return;
+              const resolved = await storeCreatable.handleSelect(store);
+              setStoreName(resolved.name);
+            }}
             placeholder="Where was this bought?"
           />
 
@@ -165,9 +176,9 @@ export function ReceiptScanScreen() {
                   <ReceiptLineRow
                     key={item.id}
                     item={item}
-                    ingredientOptions={picker.options}
-                    onSearchIngredients={picker.setSearch}
-                    onResolveIngredient={resolveAsFreeText}
+                    ingredientOptions={ingredientPicker.options}
+                    onSearch={ingredientPicker.setSearch}
+                    searchFn={resolveAsFreeText}
                     onChange={(patch) => updateItem(item.id, patch)}
                     onRemove={() => removeItem(item.id)}
                   />

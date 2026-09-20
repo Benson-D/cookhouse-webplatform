@@ -24,8 +24,8 @@ export function RecipeFormBody({
   isEditing,
   units,
   ingredientOptions,
-  onSearchIngredients,
-  onResolveIngredient,
+  onSearch,
+  searchFn,
   tags,
   selectedTagIds,
   onToggleTag,
@@ -38,8 +38,8 @@ export function RecipeFormBody({
   isEditing: boolean;
   units: Unit[];
   ingredientOptions: Ingredient[];
-  onSearchIngredients: (query: string) => void;
-  onResolveIngredient: (name: string) => Promise<Ingredient>;
+  onSearch: (query: string) => void;
+  searchFn: (name: string) => Promise<Ingredient>;
   tags: Tag[];
   selectedTagIds: string[];
   onToggleTag: (tagId: string) => void;
@@ -106,8 +106,8 @@ export function RecipeFormBody({
         control={control}
         ingredientOptions={ingredientOptions}
         units={units}
-        onSearchIngredients={onSearchIngredients}
-        onResolveIngredient={onResolveIngredient}
+        onSearch={onSearch}
+        searchFn={searchFn}
       />
 
       <Instructions label="Method" control={control} />

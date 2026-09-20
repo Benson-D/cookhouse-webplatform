@@ -1,6 +1,7 @@
 "use client";
 
 import { CHSelect, CHTextInput, TagBadge } from "@/common";
+import { useCreatableSelect } from "@/hooks/useCreatableSelect";
 import type { ReviewLineItem } from "../types";
 
 type Ingredient = { id: string; name: string };
@@ -14,15 +15,15 @@ type Ingredient = { id: string; name: string };
 export function ReceiptLineRow({
   item,
   ingredientOptions,
-  onSearchIngredients,
-  onResolveIngredient,
+  onSearch,
+  searchFn,
   onChange,
   onRemove,
 }: {
   item: ReviewLineItem;
   ingredientOptions: Ingredient[];
-  onSearchIngredients: (query: string) => void;
-  onResolveIngredient: (name: string) => Promise<Ingredient>;
+  onSearch: (query: string) => void;
+  searchFn: (name: string) => Promise<Ingredient>;
   onChange: (patch: Partial<ReviewLineItem>) => void;
   onRemove: () => void;
 }) {
@@ -32,6 +33,8 @@ export function ReceiptLineRow({
       ? { id: item.matchedIngredientId, name: item.matchedIngredientName }
       : { id: "", name: item.description };
   const selectedIngredient: Ingredient = item.override ?? matchedIngredient;
+
+  const ingredientSelect = useCreatableSelect({ options: ingredientOptions, searchFn });
 
   return (
     <div className="flex flex-col gap-1 border-b border-line-soft py-2.5 last:border-b-0">
@@ -54,12 +57,18 @@ export function ReceiptLineRow({
           ariaLabel={`Ingredient for ${item.description}`}
           placeholder="search or add an ingredient"
           value={selectedIngredient}
-          options={ingredientOptions}
+          options={ingredientSelect.options}
           getOptionId={(ingredient) => ingredient.id}
           getOptionLabel={(ingredient) => ingredient.name}
-          onSearch={onSearchIngredients}
-          onSelect={(ingredient) => onChange({ override: ingredient })}
-          onCreate={onResolveIngredient}
+          onInputChange={(event) => {
+            ingredientSelect.onInputChange(event);
+            onSearch(event.target.value);
+          }}
+          onChange={async (ingredient) => {
+            if (!ingredient) return;
+            const resolved = await ingredientSelect.handleSelect(ingredient);
+            onChange({ override: resolved });
+          }}
         />
         <button
           type="button"

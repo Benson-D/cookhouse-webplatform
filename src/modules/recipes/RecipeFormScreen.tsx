@@ -38,7 +38,7 @@ export function RecipeFormScreen({ recipeId }: { recipeId?: string }) {
   const { create, update, isSaving, saveError } = useSaveRecipe();
   const { tags } = useTags();
   const { units } = useUnits();
-  const picker = useIngredientSearchPicker();
+  const ingredientPicker = useIngredientSearchPicker();
   const pendingImages = usePendingImages();
   const { uploadOne } = useUploadRecipeImage();
   const images = useRecipeImages(id, pendingImages, uploadOne);
@@ -125,9 +125,9 @@ export function RecipeFormScreen({ recipeId }: { recipeId?: string }) {
         <RecipeFormBody
           isEditing={isEditing}
           units={units}
-          ingredientOptions={picker.options}
-          onSearchIngredients={picker.setSearch}
-          onResolveIngredient={picker.resolve}
+          ingredientOptions={ingredientPicker.options}
+          onSearch={ingredientPicker.setSearch}
+          searchFn={ingredientPicker.resolve}
           tags={tags}
           selectedTagIds={selectedTagIds}
           onToggleTag={onToggleTag}

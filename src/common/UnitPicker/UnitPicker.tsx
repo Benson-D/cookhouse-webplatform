@@ -14,8 +14,9 @@ function matches(text: string, query: string) {
 
 /**
  * A `CHSelect` wired to `MeasurementUnit`. Units are seeded reference data,
- * all loaded up front, so filtering is local rather than wired through
- * `onSearch`. No `onCreate` — units are seeded, not user-created.
+ * all loaded up front, so filtering happens locally against `onInputChange`
+ * rather than a backend query. Never creatable — units are seeded, not
+ * user-created.
  */
 export function UnitPicker({
   unitId,
@@ -44,8 +45,8 @@ export function UnitPicker({
       options={options}
       getOptionId={(unit) => unit.id || "none"}
       getOptionLabel={(unit) => unit.abbreviation ?? unit.name}
-      onSearch={setFilterText}
-      onSelect={onSelect}
+      onInputChange={(event) => setFilterText(event.target.value)}
+      onChange={(unit) => unit && onSelect(unit)}
     />
   );
 }

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { CHButton, CHSelect } from "@/common";
 import { useIngredientSearchPicker } from "@/hooks/useIngredientSearchPicker";
+import { useCreatableSelect } from "@/hooks/useCreatableSelect";
 import { FREQUENCY_OPTIONS } from "../utils";
 import type { Staple } from "../types";
 
@@ -11,8 +12,8 @@ type Ingredient = { id: string; name: string };
 /**
  * The screen's footer: an inline ingredient + frequency + Add row, same
  * shape as the recipe form's "+ Add ingredient" row, reusing
- * `useIngredientSearchPicker` and `CHSelect`'s search/create-on-type
- * behavior wholesale.
+ * `useIngredientSearchPicker` and `useCreatableSelect`'s search/create
+ * composition wholesale.
  *
  * Already-staple ingredients grey out in the picker rather than being
  * filtered out — still worth seeing what's already covered. The backend's
@@ -30,6 +31,10 @@ export function StapleFooter({
   const { options: ingredientOptions, setSearch, resolve } = useIngredientSearchPicker();
   const [ingredient, setIngredient] = useState<Ingredient | null>(null);
   const [frequencyDays, setFrequencyDays] = useState<number>(FREQUENCY_OPTIONS[1].days);
+  const creatable = useCreatableSelect<Ingredient>({
+    options: ingredientOptions,
+    searchFn: resolve,
+  });
 
   const existingIngredientIds = new Set(existingStaples.map((staple) => staple.ingredientId));
 
@@ -45,13 +50,18 @@ export function StapleFooter({
         ariaLabel="Ingredient"
         placeholder="search or add an ingredient"
         value={ingredient}
-        options={ingredientOptions}
+        options={creatable.options}
         getOptionId={(item) => item.id}
         getOptionLabel={(item) => item.name}
         getOptionDisabled={(item) => existingIngredientIds.has(item.id)}
-        onSearch={setSearch}
-        onSelect={setIngredient}
-        onCreate={resolve}
+        onInputChange={(event) => {
+          creatable.onInputChange(event);
+          setSearch(event.target.value);
+        }}
+        onChange={async (item) => {
+          if (!item) return;
+          setIngredient(await creatable.handleSelect(item));
+        }}
       />
 
       <CHSelect<(typeof FREQUENCY_OPTIONS)[number]>
@@ -60,7 +70,7 @@ export function StapleFooter({
         options={[...FREQUENCY_OPTIONS]}
         getOptionId={(option) => String(option.days)}
         getOptionLabel={(option) => option.label}
-        onSelect={(option) => setFrequencyDays(option.days)}
+        onChange={(option) => option && setFrequencyDays(option.days)}
       />
 
       <CHButton variant="primary" onClick={handleAdd} disabled={!ingredient || isAdding}>

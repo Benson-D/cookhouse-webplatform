@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId } from "react";
 import {
   Combobox,
   ComboboxButton,
@@ -29,25 +29,16 @@ function SelectChevron({ open }: { open: boolean }) {
   );
 }
 
-/** What picking a row means: an existing item, or (if `onCreate` is given) a new one. */
-type SelectValue<T> = { kind: "existing"; item: T } | { kind: "create"; name: string };
-
-function normalize(value: string) {
-  return value.trim().toLowerCase();
-}
-
 type CHSelectProps<T> = {
   value: T | null;
+  onChange: (value: T | null) => void;
   options: T[];
   getOptionId: (item: T) => string;
   getOptionLabel: (item: T) => string;
   /** Greys an option out and blocks picking it — still shown, not filtered out (e.g. an ingredient that's already a staple). */
   getOptionDisabled?: (item: T) => boolean;
-  onSearch?: (query: string) => void;
-  onSelect: (item: T) => void;
-  onCreate?: (name: string) => Promise<T>;
-  /** Shows a clear (×) button once there's a selection or typed text; wiping both is the caller's job (e.g. reset to `null`). */
-  onClear?: () => void;
+  /** The underlying `ComboboxInput`'s own change event, forwarded unmodified — searching, debouncing, and everything else typed text might mean belongs to the caller, not here. */
+  onInputChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   /** Accessible name for the many callers with no visible `label`. Ignored once `label` is given — that becomes the accessible name instead. */
   ariaLabel?: string;
@@ -63,19 +54,21 @@ type CHSelectProps<T> = {
  * type `T` via `getOptionId`/`getOptionLabel`. Grows its own optional
  * label/hint/error chrome, same as `CHTextInput`.
  *
- * Pass `onCreate` to let typing something with no match offer to create it
- * (e.g. ingredients); omit it for a closed, pick-only list (e.g. units).
+ * A pure UI primitive: it renders the combobox, its options, and the
+ * selected value — nothing else. It has no idea what typed text means
+ * (search, create, anything), and offers no clear button of its own;
+ * composing those behaviors (and, where needed, a caller's own clear
+ * control) is entirely up to whoever uses it. See `useCreatableSelect` for
+ * the shared searchable-and-creatable composition most pickers want.
  */
 export function CHSelect<T>({
   value,
+  onChange,
   options,
   getOptionId,
   getOptionLabel,
   getOptionDisabled,
-  onSearch,
-  onSelect,
-  onCreate,
-  onClear,
+  onInputChange,
   placeholder,
   ariaLabel,
   invalid,
@@ -85,48 +78,7 @@ export function CHSelect<T>({
   className,
 }: CHSelectProps<T>) {
   const id = useId();
-  const [query, setQuery] = useState("");
-  const [isCreating, setIsCreating] = useState(false);
-  // Bumped on clear to remount the Combobox — the only reliable way to blank
-  // typed text that was never committed as a selection, since Headless UI's
-  // `displayValue` only re-syncs the input when `value` itself changes.
-  const [resetKey, setResetKey] = useState(0);
   const isInvalid = invalid ?? Boolean(error);
-
-  const normalizedQuery = normalize(query);
-  const exactMatch = options.some(
-    (option) => normalize(getOptionLabel(option)) === normalizedQuery
-  );
-  const canCreate = Boolean(onCreate) && normalizedQuery.length > 0 && !exactMatch;
-
-  const selected: SelectValue<T> | null = value ? { kind: "existing", item: value } : null;
-  const showClear = Boolean(onClear) && (value !== null || query.length > 0);
-
-  function handleClear() {
-    setQuery("");
-    onSearch?.("");
-    onClear?.();
-    setResetKey((key) => key + 1);
-  }
-
-  async function handleChange(chosen: SelectValue<T> | null) {
-    if (!chosen) return;
-
-    if (chosen.kind === "existing") {
-      onSelect(chosen.item);
-      return;
-    }
-
-    // Only reachable when `onCreate` was passed — that's what makes `canCreate`
-    // true in the first place, but TypeScript can't see that from here.
-    if (!onCreate) return;
-    setIsCreating(true);
-    try {
-      onSelect(await onCreate(chosen.name));
-    } finally {
-      setIsCreating(false);
-    }
-  }
 
   return (
     // `contents` when unlabeled: this div never lays out — its child acts as
@@ -142,61 +94,38 @@ export function CHSelect<T>({
         </label>
       )}
 
-      <Combobox
-        key={resetKey}
-        as="div"
-        className="relative"
-        immediate
-        value={selected}
-        onChange={handleChange}
-      >
+      <Combobox as="div" className="relative" immediate value={value} onChange={onChange}>
         <ComboboxInput
           id={label ? id : undefined}
           aria-label={label ? undefined : ariaLabel}
           aria-invalid={isInvalid || undefined}
           autoComplete="off"
           placeholder={placeholder}
-          displayValue={(chosen: SelectValue<T> | null) =>
-            chosen?.kind === "existing" ? getOptionLabel(chosen.item) : ""
-          }
-          onChange={(event) => {
-            setQuery(event.target.value);
-            onSearch?.(event.target.value);
-          }}
+          displayValue={(item: T | null) => (item ? getOptionLabel(item) : "")}
+          onChange={onInputChange}
           className={cn(
             styles.input,
-            showClear ? "pr-14" : "pr-8",
+            "pr-8",
             isInvalid ? "border-danger focus:outline-danger" : "border-line",
             !label && className
           )}
         />
 
         <div className="absolute inset-y-0 right-0 flex items-center">
-          {showClear && (
-            <button
-              type="button"
-              onClick={handleClear}
-              aria-label={`Clear ${ariaLabel ?? label ?? "selection"}`}
-              className={styles.clearButton}
-            >
-              ×
-            </button>
-          )}
-
           {/* A click target separate from typing — opens the panel without a keystroke. */}
           <ComboboxButton className={styles.button}>
             {({ open }) => <SelectChevron open={open} />}
           </ComboboxButton>
         </div>
 
-        {(options.length > 0 || canCreate) && (
+        {options.length > 0 && (
           <ComboboxOptions anchor={false} className={styles.panel}>
             {options.map((option) => {
               const disabled = getOptionDisabled?.(option) ?? false;
               return (
                 <ComboboxOption
                   key={getOptionId(option)}
-                  value={{ kind: "existing", item: option } satisfies SelectValue<T>}
+                  value={option}
                   disabled={disabled}
                   className={({ focus }) =>
                     cn(
@@ -213,19 +142,6 @@ export function CHSelect<T>({
                 </ComboboxOption>
               );
             })}
-
-            {canCreate && (
-              <ComboboxOption
-                // .trim(), not normalize() — preserves the user's capitalization.
-                value={{ kind: "create", name: query.trim() } satisfies SelectValue<T>}
-                disabled={isCreating}
-                className={({ focus }) =>
-                  cn(styles.option, "font-semibold", focus ? styles.optionFocused : "text-accent")
-                }
-              >
-                {isCreating ? "Adding…" : `Add “${query.trim()}”`}
-              </ComboboxOption>
-            )}
           </ComboboxOptions>
         )}
       </Combobox>
