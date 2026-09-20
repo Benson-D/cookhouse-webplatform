@@ -29,18 +29,21 @@ export default function Home() {
       <div
         className={`${cardClasses} left-[6%] top-[7%] -rotate-[8deg] md:left-[9%] md:top-[13%]`}
         style={{ background: placeholderGradient("landing-1") }}
+        suppressHydrationWarning
       >
         <PotIcon className="h-5 w-5 stroke-white/85 md:h-[30px] md:w-[30px]" />
       </div>
       <div
         className={`${cardClasses} right-[6%] top-[7%] rotate-[7deg] md:right-[10%] md:top-[12%]`}
         style={{ background: placeholderGradient("landing-2") }}
+        suppressHydrationWarning
       >
         <CartIcon className="h-5 w-5 stroke-white/85 md:h-[30px] md:w-[30px]" />
       </div>
       <div
         className={`${cardClasses} bottom-[13%] left-[15%] hidden rotate-[6deg] md:grid`}
         style={{ background: placeholderGradient("landing-3") }}
+        suppressHydrationWarning
       >
         <ReceiptIcon className="h-5 w-5 stroke-white/85 md:h-[30px] md:w-[30px]" />
       </div>

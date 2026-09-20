@@ -30,6 +30,7 @@ export function RecipeCard({
         <div
           className="relative h-full w-full overflow-hidden rounded-lg border border-line-soft transition-transform duration-260 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1.5 after:absolute after:inset-0 after:rounded-lg after:opacity-0 after:shadow-frame after:content-[''] after:transition-opacity after:duration-260 after:ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:after:opacity-100"
           style={recipe.coverImageUrl ? undefined : { background: placeholderGradient(recipe.id) }}
+          suppressHydrationWarning
         >
           {recipe.coverImageUrl && (
             // `absolute inset-0` (not h-full w-full) — a grid item's default

@@ -31,6 +31,7 @@ export function RecipeGallery({
       <div
         className="aspect-[3/2] rounded-[9px] border border-line-soft"
         style={{ background: placeholderGradient(fallbackSeed) }}
+        suppressHydrationWarning
         role="img"
         aria-label={`No photo for ${recipeName}`}
       />

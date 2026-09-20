@@ -39,6 +39,7 @@ export function RecipePickCard({
             selected && "outline outline-2 outline-offset-2 outline-accent"
           )}
           style={recipe.coverImageUrl ? undefined : { background: placeholderGradient(recipe.id) }}
+          suppressHydrationWarning
         >
           {recipe.coverImageUrl && (
             // absolute inset-0, same fix as RecipeCard — a grid item's default
