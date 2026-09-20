@@ -24,10 +24,11 @@ import {
 } from "./recipe-form.schema";
 
 /**
- * The recipe form — create a new recipe or edit an existing one: name,
- * photos, ingredients, method, and tags, saved in one submit. See
- * CLAUDE.md's "Recipe create flow" for why photo uploads happen after
- * create returns an id, absorbed here rather than as a separate step.
+ * Recipe create/edit form.
+ *
+ * Handles recipe fields, images, ingredients, instructions, and tags.
+ * A new recipe is created before pending images are uploaded because image
+ * uploads require the recipe id returned by the create operation.
  */
 export function RecipeFormScreen({ recipeId }: { recipeId?: string }) {
   const router = useRouter();
@@ -42,24 +43,18 @@ export function RecipeFormScreen({ recipeId }: { recipeId?: string }) {
   const { uploadOne } = useUploadRecipeImage();
   const images = useRecipeImages(id, pendingImages, uploadOne);
 
-  // fromRecipeDetail mints a fresh crypto.randomUUID() per method section
-  // (see recipe-form.schema.ts), so calling it inline on every render would
-  // hand useForm's `values` a new object every time even when nothing
-  // changed — and since react-hook-form resets whenever `values` looks
-  // different, that's an infinite render loop, not just wasted work.
+  // fromRecipeDetail returns a fresh object each call, so memoize it — a
+  // "new" values object on every render re-seeds the form each time.
   const values = useMemo(
     () => (recipe ? fromRecipeDetail(recipe, parsedInstructions) : undefined),
     [recipe, parsedInstructions]
   );
 
-  // Three type params: fields hold strings (RecipeFormInput), the submit
-  // handler receives them parsed (RecipeFormValues). Collapsing the two is
-  // what makes zodResolver fail to typecheck against useForm.
+  // Recipe data loads asynchronously, so `values` re-seeds the form when it
+  // becomes available. Input and parsed submit types differ because of Zod.
   const form = useForm<RecipeFormInput, unknown, RecipeFormValues>({
     resolver: zodResolver(recipeFormSchema),
     defaultValues: emptyRecipeForm,
-    // An existing recipe arrives asynchronously, so `values` re-seeds the form
-    // when it lands rather than being captured once at mount.
     values,
   });
 
