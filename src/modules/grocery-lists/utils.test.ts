@@ -91,26 +91,41 @@ describe("displayName", () => {
 describe("sortByDisplayName", () => {
   it("sorts A-Z by display name", () => {
     const items = [
-      { ingredient: { name: "Zucchini" }, label: null },
-      { ingredient: { name: "Apple" }, label: null },
+      { ingredient: { name: "Zucchini" }, label: null, checked: false },
+      { ingredient: { name: "Apple" }, label: null, checked: false },
     ];
     expect(sortByDisplayName(items).map(displayName)).toEqual(["Apple", "Zucchini"]);
   });
 
   it("sorts label-only rows alongside matched ones", () => {
     const items = [
-      { ingredient: { name: "Zucchini" }, label: null },
-      { ingredient: null, label: "Blueberry granola" },
+      { ingredient: { name: "Zucchini" }, label: null, checked: false },
+      { ingredient: null, label: "Blueberry granola", checked: false },
     ];
     expect(sortByDisplayName(items).map(displayName)).toEqual(["Blueberry granola", "Zucchini"]);
   });
 
   it("doesn't mutate the original array", () => {
     const items = [
-      { ingredient: { name: "Zucchini" }, label: null },
-      { ingredient: { name: "Apple" }, label: null },
+      { ingredient: { name: "Zucchini" }, label: null, checked: false },
+      { ingredient: { name: "Apple" }, label: null, checked: false },
     ];
     sortByDisplayName(items);
     expect(items[0].ingredient?.name).toBe("Zucchini");
+  });
+
+  it("pushes checked items to the bottom, each group still A-Z", () => {
+    const items = [
+      { ingredient: { name: "Apple" }, label: null, checked: true },
+      { ingredient: { name: "Zucchini" }, label: null, checked: false },
+      { ingredient: { name: "Milk" }, label: null, checked: true },
+      { ingredient: { name: "Bread" }, label: null, checked: false },
+    ];
+    expect(sortByDisplayName(items).map(displayName)).toEqual([
+      "Bread",
+      "Zucchini",
+      "Apple",
+      "Milk",
+    ]);
   });
 });

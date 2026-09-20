@@ -64,9 +64,12 @@ export function displayName(item: {
   return item.ingredient?.name ?? item.label ?? "";
 }
 
-/** A-Z by display name — the merged list otherwise renders in whatever order the backend produced it, which gets hard to scan once a list has many items. Returns a new array; doesn't mutate. */
+/** A-Z by display name, unchecked items first and checked ones pushed to the bottom. Returns a new array; doesn't mutate. */
 export function sortByDisplayName<
-  T extends { ingredient: { name: string } | null; label: string | null },
+  T extends { ingredient: { name: string } | null; label: string | null; checked: boolean },
 >(items: T[]): T[] {
-  return [...items].sort((a, b) => displayName(a).localeCompare(displayName(b)));
+  return [...items].sort((a, b) => {
+    if (a.checked !== b.checked) return a.checked ? 1 : -1;
+    return displayName(a).localeCompare(displayName(b));
+  });
 }
