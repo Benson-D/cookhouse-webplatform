@@ -10,3 +10,4 @@ type RouterOutputs = inferRouterOutputs<AppRouter>;
 
 export type GroceryList = RouterOutputs["groceryLists"]["getActive"];
 export type GroceryListItem = GroceryList["items"][number];
+export type GroceryCategoryOverride = GroceryList["categoryOverrides"][number];

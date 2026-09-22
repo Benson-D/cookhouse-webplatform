@@ -2,7 +2,7 @@
 
 import { trpc } from "@/lib/trpc";
 
-/** Every staple for the household, plus create/remove — no optimistic updates, mutations invalidate and refetch (same pattern as `useGroceryList`). */
+/** Every staple for the household, plus create/remove — no optimistic updates, mutations invalidate and refetch. */
 export function useStaples() {
   const utils = trpc.useUtils();
   // Refetches the list so a create/remove shows up immediately.

@@ -6,6 +6,7 @@ import {
   formatSource,
   displayName,
   sortByDisplayName,
+  groupByCategory,
 } from "./utils";
 
 describe("getInitials", () => {
@@ -127,5 +128,168 @@ describe("sortByDisplayName", () => {
       "Apple",
       "Milk",
     ]);
+  });
+});
+
+describe("groupByCategory", () => {
+  it("buckets items into fixed sections in fixed order, dropping empty ones", () => {
+    const items = [
+      {
+        ingredientId: "i1",
+        label: null,
+        ingredient: { name: "Milk", category: "dairy" },
+        checked: false,
+      },
+      {
+        ingredientId: "i2",
+        label: null,
+        ingredient: { name: "Apple", category: "produce" },
+        checked: false,
+      },
+    ];
+    const { sections } = groupByCategory(items, []);
+    expect(sections.map((s) => s.section)).toEqual(["Produce", "Dairy"]);
+  });
+
+  it("combines meat and seafood into one section", () => {
+    const items = [
+      {
+        ingredientId: "i1",
+        label: null,
+        ingredient: { name: "Steak", category: "meat" },
+        checked: false,
+      },
+      {
+        ingredientId: "i2",
+        label: null,
+        ingredient: { name: "Shrimp", category: "seafood" },
+        checked: false,
+      },
+    ];
+    const { sections } = groupByCategory(items, []);
+    expect(sections).toHaveLength(1);
+    expect(sections[0]!.section).toBe("Meat & Seafood");
+    expect(sections[0]!.items.map(displayName)).toEqual(["Shrimp", "Steak"]);
+  });
+
+  it("puts spices in their own section, separate from Pantry", () => {
+    const items = [
+      {
+        ingredientId: "i1",
+        label: null,
+        ingredient: { name: "Cumin", category: "spice" },
+        checked: false,
+      },
+      {
+        ingredientId: "i2",
+        label: null,
+        ingredient: { name: "Flour", category: "pantry" },
+        checked: false,
+      },
+    ];
+    const { sections } = groupByCategory(items, []);
+    expect(sections.map((s) => s.section)).toEqual(["Pantry", "Spices"]);
+  });
+
+  it("recognizes snacks, beverages, alcohol, and desserts as their own sections", () => {
+    const items = [
+      {
+        ingredientId: "i1",
+        label: null,
+        ingredient: { name: "Chips", category: "snacks" },
+        checked: false,
+      },
+      {
+        ingredientId: "i2",
+        label: null,
+        ingredient: { name: "Soda", category: "beverages" },
+        checked: false,
+      },
+      {
+        ingredientId: "i3",
+        label: null,
+        ingredient: { name: "Beer", category: "alcohol" },
+        checked: false,
+      },
+      {
+        ingredientId: "i4",
+        label: null,
+        ingredient: { name: "Cookies", category: "desserts" },
+        checked: false,
+      },
+    ];
+    const { sections } = groupByCategory(items, []);
+    expect(sections.map((s) => s.section)).toEqual(["Snacks", "Beverages", "Alcohol", "Desserts"]);
+  });
+
+  it("falls back to Uncategorized for no category or an unrecognized one", () => {
+    const items = [
+      {
+        ingredientId: "i1",
+        label: null,
+        ingredient: { name: "Mystery", category: null },
+        checked: false,
+      },
+      {
+        ingredientId: "i2",
+        label: null,
+        ingredient: { name: "Soap", category: "cleaning" },
+        checked: false,
+      },
+      { ingredientId: null, label: "Odd item", ingredient: null, checked: false },
+    ];
+    const { sections } = groupByCategory(items, []);
+    expect(sections).toHaveLength(1);
+    expect(sections[0]!.section).toBe("Uncategorized");
+    expect(sections[0]!.items).toHaveLength(3);
+  });
+
+  it("prefers a household's override over the ingredient's own category", () => {
+    const items = [
+      {
+        ingredientId: "i1",
+        label: null,
+        ingredient: { name: "Tofu", category: "chilled" },
+        checked: false,
+      },
+    ];
+    const { sections } = groupByCategory(items, [
+      { ingredientId: "i1", label: null, category: "Pantry" },
+    ]);
+    expect(sections).toEqual([{ section: "Pantry", items: items }]);
+  });
+
+  it("matches a label-only item's override by its label text", () => {
+    const items = [{ ingredientId: null, label: "Paper towels", ingredient: null, checked: false }];
+    const { sections } = groupByCategory(items, [
+      { ingredientId: null, label: "Paper towels", category: "Household" },
+    ]);
+    expect(sections[0]!.section).toBe("Household");
+  });
+
+  it("collects every checked item into one pile, regardless of category, sorted A-Z", () => {
+    const items = [
+      {
+        ingredientId: "i1",
+        label: null,
+        ingredient: { name: "Zucchini", category: "produce" },
+        checked: true,
+      },
+      {
+        ingredientId: "i2",
+        label: null,
+        ingredient: { name: "Bread", category: "bakery" },
+        checked: true,
+      },
+      {
+        ingredientId: "i3",
+        label: null,
+        ingredient: { name: "Milk", category: "dairy" },
+        checked: false,
+      },
+    ];
+    const { sections, checkedOff } = groupByCategory(items, []);
+    expect(sections).toEqual([{ section: "Dairy", items: [items[2]] }]);
+    expect(checkedOff.map(displayName)).toEqual(["Bread", "Zucchini"]);
   });
 });

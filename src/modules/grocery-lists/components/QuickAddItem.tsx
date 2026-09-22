@@ -1,15 +1,16 @@
 "use client";
 
-import { useState, type SubmitEvent } from "react";
+import { useState, type ReactNode, type SubmitEvent } from "react";
 import { CHButton } from "@/common";
 import { useAddGroceryItem } from "../hooks/useAddGroceryItem";
 
 /**
- * Styled like the recipe list's own search bar on purpose — the point is
- * "no recipe needed." Name-only, no ingredient/unit picker: see
- * `useAddGroceryItem` for why.
+ * A quick-add field for putting an item on the grocery list by name alone,
+ * no recipe involved. There's no ingredient or unit picker here — a name is
+ * enough to add a row, and a quantity or unit can be filled in later without
+ * changing the row's shape.
  */
-export function QuickAddItem() {
+export function QuickAddItem({ trailingContent }: { trailingContent?: ReactNode } = {}) {
   const [name, setName] = useState("");
   const { addByName, isAdding, error } = useAddGroceryItem();
 
@@ -41,6 +42,7 @@ export function QuickAddItem() {
         <CHButton type="submit" variant="primary" disabled={!name.trim() || isAdding}>
           {isAdding ? "Adding…" : "Add"}
         </CHButton>
+        {trailingContent}
       </div>
 
       {error && (

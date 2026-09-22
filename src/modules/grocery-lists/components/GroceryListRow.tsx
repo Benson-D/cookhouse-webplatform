@@ -1,5 +1,6 @@
 "use client";
 
+import { forwardRef, type CSSProperties, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { formatAmount } from "@/lib/formatAmount";
 import { displayName, shouldHideAmount } from "../utils";
@@ -18,21 +19,35 @@ import { SourceBadge } from "./SourceBadge";
  * `after:absolute after:inset-0` stretch `RecipeCard` uses. The remove
  * button needs `relative z-10` to win back its own clicks, since the
  * stretch would otherwise win the DOM-order tie.
+ *
+ * `dragHandle`/`style`/`className`/`ref` exist for the categorized view's
+ * draggable rows — omitted, this renders exactly as it always has.
  */
-export function GroceryListRow({
-  item,
-  onToggle,
-  onRemove,
-}: {
-  item: GroceryListItem;
-  onToggle: (checked: boolean) => void;
-  onRemove: () => void;
-}) {
+export const GroceryListRow = forwardRef<
+  HTMLLIElement,
+  {
+    item: GroceryListItem;
+    onToggle: (checked: boolean) => void;
+    onRemove: () => void;
+    dragHandle?: ReactNode;
+    style?: CSSProperties;
+    className?: string;
+  }
+>(function GroceryListRow({ item, onToggle, onRemove, dragHandle, style, className }, ref) {
   const hideAmount = shouldHideAmount(item.unit);
   const name = displayName(item);
 
   return (
-    <li className="relative grid grid-cols-[20px_76px_1fr_auto] items-center gap-3 border-b border-line-soft px-3 py-2.5 text-sm hover:bg-surface-2">
+    <li
+      ref={ref}
+      style={style}
+      className={cn(
+        "relative grid items-center gap-3 border-b border-line-soft px-3 py-2.5 text-sm hover:bg-surface-2",
+        dragHandle ? "grid-cols-[14px_20px_76px_1fr_auto]" : "grid-cols-[20px_76px_1fr_auto]",
+        className
+      )}
+    >
+      {dragHandle}
       <button
         type="button"
         role="checkbox"
@@ -78,4 +93,4 @@ export function GroceryListRow({
       </div>
     </li>
   );
-}
+});
