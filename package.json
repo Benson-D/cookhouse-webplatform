@@ -37,7 +37,7 @@
     "zustand": "^4.5.5"
   },
   "devDependencies": {
-    "@benson-d/api-contract": "^0.1.20",
+    "@benson-d/api-contract": "^0.1.22",
     "@storybook/addon-a11y": "^10.5.10",
     "@storybook/addon-docs": "^10.5.10",
     "@storybook/nextjs-vite": "^10.5.10",

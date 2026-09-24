@@ -1,6 +1,6 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { EmptyState, ErrorState, LoadingState } from "@/common";
 import { useGroceryList } from "./hooks/useGroceryList";
 import { useCheckGroceryItem } from "./hooks/useCheckGroceryItem";
@@ -13,9 +13,10 @@ import { QuickAddItem } from "./components/QuickAddItem";
 import { GroceryListRow } from "./components/GroceryListRow";
 import { CategorizedGroceryList } from "./components/CategorizedGroceryList";
 import { GroceryViewToggle, type GroceryListView } from "./components/GroceryViewToggle";
+import { ShowAllCategoriesToggle } from "./components/ShowAllCategoriesToggle";
 import { GroceryListFooter } from "./components/GroceryListFooter";
 import { SourceLegend } from "./components/SourceLegend";
-import { sortByDisplayName } from "./utils";
+import { groupByCategory, sortByDisplayName } from "./utils";
 
 const VIEW_STORAGE_KEY = "cookhouse-grocery-view";
 const viewListeners = new Set<() => void>();
@@ -54,6 +55,7 @@ export function GroceryListScreen() {
   const { setCategoryOverride } = useSetGroceryCategoryOverride();
 
   const view = useSyncExternalStore(subscribeView, getViewSnapshot, getServerViewSnapshot);
+  const [showAllCategories, setShowAllCategories] = useState(false);
 
   if (isLoading) {
     return <LoadingState label="Loading your grocery list…" rows={6} />;
@@ -70,6 +72,10 @@ export function GroceryListScreen() {
   }
 
   const checkedCount = list.items.filter((item) => item.checked).length;
+  const { sections, checkedOff, hasHiddenSections } = groupByCategory(
+    list.items,
+    list.categoryOverrides
+  );
 
   return (
     <div className="flex flex-col">
@@ -83,8 +89,15 @@ export function GroceryListScreen() {
       <QuickAddItem
         trailingContent={
           list.items.length > 0 && (
-            <div className="mt-3 w-full md:mt-0 md:w-auto">
+            <div className="mt-3 flex w-full items-center justify-between md:mt-0 md:w-auto md:justify-start">
               <GroceryViewToggle view={view} onChange={storeView} />
+              {view === "categories" && hasHiddenSections && (
+                <ShowAllCategoriesToggle
+                  show={showAllCategories}
+                  onToggle={() => setShowAllCategories((value) => !value)}
+                  className="md:hidden"
+                />
+              )}
             </div>
           )
         }
@@ -97,8 +110,11 @@ export function GroceryListScreen() {
         />
       ) : view === "categories" ? (
         <CategorizedGroceryList
-          items={list.items}
-          overrides={list.categoryOverrides}
+          sections={sections}
+          checkedOff={checkedOff}
+          hasHiddenSections={hasHiddenSections}
+          showAllCategories={showAllCategories}
+          onToggleShowAllCategories={() => setShowAllCategories((value) => !value)}
           onToggle={setChecked}
           onRemove={removeItem}
           onMoveToCategory={setCategoryOverride}

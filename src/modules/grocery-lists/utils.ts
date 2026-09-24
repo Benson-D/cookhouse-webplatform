@@ -142,17 +142,29 @@ type GroceryItemLike = CategoryOverrideKey & {
   checked: boolean;
 };
 
+/** Every fixed section plus the "Uncategorized" catch-all, in display order. */
+export const ALL_GROCERY_CATEGORY_SECTIONS: GroceryCategorySection[] = [
+  ...GROCERY_CATEGORY_SECTIONS,
+  "Uncategorized",
+];
+
 /**
  * Groups unchecked items into their resolved category sections (fixed
  * order, A-Z within each, empty sections dropped), with every checked item
  * — regardless of category — collected into one separate pile instead.
  * Checked off isn't a real category: it's not part of the ordered sections.
- * Returns new arrays; doesn't mutate.
+ * `hasHiddenSections` is true when at least one fixed section has nothing
+ * in it right now, i.e. there's something a "show all categories" control
+ * would actually reveal. Returns new arrays; doesn't mutate.
  */
 export function groupByCategory<T extends GroceryItemLike>(
   items: T[],
   overrides: (CategoryOverrideKey & { category: string })[]
-): { sections: { section: GroceryCategorySection; items: T[] }[]; checkedOff: T[] } {
+): {
+  sections: { section: GroceryCategorySection; items: T[] }[];
+  checkedOff: T[];
+  hasHiddenSections: boolean;
+} {
   const overrideMap = new Map(
     overrides.map((override) => [overrideKey(override), override.category])
   );
@@ -166,10 +178,13 @@ export function groupByCategory<T extends GroceryItemLike>(
     else buckets.set(section, [item]);
   }
 
-  const orderedSections: GroceryCategorySection[] = [...GROCERY_CATEGORY_SECTIONS, "Uncategorized"];
-  const sections = orderedSections
-    .filter((section) => buckets.has(section))
-    .map((section) => ({ section, items: sortByDisplayName(buckets.get(section)!) }));
+  const sections = ALL_GROCERY_CATEGORY_SECTIONS.filter((section) => buckets.has(section)).map(
+    (section) => ({ section, items: sortByDisplayName(buckets.get(section)!) })
+  );
 
-  return { sections, checkedOff: sortByDisplayName(items.filter((item) => item.checked)) };
+  return {
+    sections,
+    checkedOff: sortByDisplayName(items.filter((item) => item.checked)),
+    hasHiddenSections: sections.length < ALL_GROCERY_CATEGORY_SECTIONS.length,
+  };
 }

@@ -1,26 +1,40 @@
 "use client";
 
 import { DndContext, type DragEndEvent } from "@dnd-kit/core";
-import { groupByCategory } from "../utils";
-import type { GroceryCategoryOverride, GroceryListItem } from "../types";
+import { ALL_GROCERY_CATEGORY_SECTIONS, type GroceryCategorySection } from "../utils";
+import type { GroceryListItem } from "../types";
 import { CategorySection } from "./CategorySection";
 import { CheckedOffSection } from "./CheckedOffSection";
+import { ShowAllCategoriesToggle } from "./ShowAllCategoriesToggle";
 
 /**
  * The grocery list grouped into fixed category sections, drag-and-drop to
  * move an item between them. `onMoveToCategory` receives whichever of
  * ingredientId/label the dragged item carries, plus the section it landed
  * on — same shape `useSetGroceryCategoryOverride`'s `setCategoryOverride` expects.
+ *
+ * A category with nothing in it is hidden by default (an empty header for
+ * every unused section would be clutter) — `showAllCategories` reveals the
+ * rest so there's somewhere to drag an item that doesn't belong in any
+ * populated section yet. That control also renders on its own row on
+ * mobile (see `GroceryListScreen`), so grouping and the show/hide state
+ * both live one level up rather than here.
  */
 export function CategorizedGroceryList({
-  items,
-  overrides,
+  sections,
+  checkedOff,
+  hasHiddenSections,
+  showAllCategories,
+  onToggleShowAllCategories,
   onToggle,
   onRemove,
   onMoveToCategory,
 }: {
-  items: GroceryListItem[];
-  overrides: GroceryCategoryOverride[];
+  sections: { section: GroceryCategorySection; items: GroceryListItem[] }[];
+  checkedOff: GroceryListItem[];
+  hasHiddenSections: boolean;
+  showAllCategories: boolean;
+  onToggleShowAllCategories: () => void;
   onToggle: (itemId: string, checked: boolean) => void;
   onRemove: (itemId: string) => void;
   onMoveToCategory: (
@@ -28,7 +42,10 @@ export function CategorizedGroceryList({
     category: string
   ) => void;
 }) {
-  const { sections, checkedOff } = groupByCategory(items, overrides);
+  const bySection = new Map(sections.map((s) => [s.section, s.items]));
+  const visibleSections = ALL_GROCERY_CATEGORY_SECTIONS.filter(
+    (section) => bySection.has(section) || showAllCategories
+  ).map((section) => ({ section, items: bySection.get(section) ?? [] }));
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (!over) return;
@@ -39,7 +56,15 @@ export function CategorizedGroceryList({
   return (
     <DndContext onDragEnd={handleDragEnd}>
       <div className="flex flex-col pb-2">
-        {sections.map(({ section, items: sectionItems }) => (
+        {hasHiddenSections && (
+          <ShowAllCategoriesToggle
+            show={showAllCategories}
+            onToggle={onToggleShowAllCategories}
+            className="ml-[22px] mt-2 hidden md:block"
+          />
+        )}
+
+        {visibleSections.map(({ section, items: sectionItems }) => (
           <CategorySection
             key={section}
             section={section}
