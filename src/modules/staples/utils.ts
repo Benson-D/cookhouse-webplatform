@@ -5,6 +5,9 @@ export const FREQUENCY_OPTIONS = [
   { label: "Every 2 weeks", days: 14 },
   { label: "Monthly", days: 30 },
   { label: "Every 2 months", days: 60 },
+  { label: "Every 3 months", days: 90 },
+  { label: "Every 6 months", days: 180 },
+  { label: "Yearly", days: 365 },
 ] as const;
 
 /** Falls back to a plain day count for anything outside the four presets — the backend takes a raw int, not just these four. */
