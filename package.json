@@ -38,9 +38,9 @@
   },
   "devDependencies": {
     "@benson-d/api-contract": "^0.1.23",
-    "@storybook/addon-a11y": "^10.5.10",
-    "@storybook/addon-docs": "^10.5.10",
-    "@storybook/nextjs-vite": "^10.5.10",
+    "@storybook/addon-a11y": "^10.6.1",
+    "@storybook/addon-docs": "^10.6.1",
+    "@storybook/nextjs-vite": "^10.6.1",
     "@tailwindcss/postcss": "^4",
     "@testing-library/react": "^16.3.3",
     "@trpc/server": "^11.0.0-rc.502",
@@ -57,7 +57,7 @@
     "jest-environment-node": "^30.5.1",
     "lint-staged": "^17.4.1",
     "prettier": "^3.9.6",
-    "storybook": "^10.5.10",
+    "storybook": "^10.6.1",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vite": "latest"
