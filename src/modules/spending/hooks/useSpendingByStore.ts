@@ -2,16 +2,14 @@
 
 import { keepPreviousData } from "@tanstack/react-query";
 import { trpc } from "@/lib/trpc";
-import type { DateRange, SpendBarRow } from "../types";
+import type { DateRange } from "../types";
 
-export function useSpendingByStore(range: DateRange) {
+/** Top 5 stores plus an "Other" row, optionally narrowed to one category. */
+export function useSpendingByStore(range: DateRange, category: string | null) {
   const query = trpc.spending.byStore.useQuery(
-    { from: range.from, to: range.to },
+    { from: range.from, to: range.to, category: category ?? undefined },
     { placeholderData: keepPreviousData }
   );
 
-  const rows: SpendBarRow[] =
-    query.data?.stores.map(({ store, total }) => ({ label: store, total })) ?? [];
-
-  return { rows, isLoading: query.isPending };
+  return { stores: query.data?.stores ?? [], isLoading: query.isPending };
 }

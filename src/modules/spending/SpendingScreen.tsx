@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { CHLink, CHSectionLabel, EmptyState, ErrorState } from "@/common";
 import { useSpendingRange } from "./hooks/useSpendingRange";
 import { useSpendingSummary } from "./hooks/useSpendingSummary";
@@ -13,11 +14,12 @@ import { SpendingLoadingState } from "./components/SpendingLoadingState";
 import { TrendSection } from "./components/TrendSection";
 import { SpendBarList } from "./components/SpendBarList";
 import { formatRangeLabel } from "./utils";
+import { StoreSection } from "./components/StoreSection";
 
 /**
  * Maps directly to `cookhouse-api/src/modules/spending/`'s five read-only
  * queries: `summary` (the hero), `trend` (the chart + table), `topItems`
- * (the drill-down), and `byCategory` / `byStore` (the two bar-lists).
+ * (the drill-down), `byCategory` (a bar-list) and `byStore` (a chart).
  * Changing the date-range preset re-runs all five against the same range.
  */
 export function SpendingScreen() {
@@ -25,7 +27,16 @@ export function SpendingScreen() {
   const { summary, isLoading, isError, error, refetch } = useSpendingSummary(range);
   const trend = useSpendingTrend(range);
   const byCategory = useSpendingByCategory(range);
-  const byStore = useSpendingByStore(range);
+
+  // Store's category chips are the categories with spend in this range. A
+  // selection that falls out of range when the preset changes resets to All.
+  const [storeCategory, setStoreCategory] = useState<string | null>(null);
+  const storeCategoryOptions = byCategory.rows
+    .map((row) => row.label)
+    .filter((category) => category !== "Uncategorized");
+  const activeStoreCategory =
+    storeCategory && storeCategoryOptions.includes(storeCategory) ? storeCategory : null;
+  const byStore = useSpendingByStore(range, activeStoreCategory);
 
   if (isLoading) {
     return <SpendingLoadingState />;
@@ -91,12 +102,11 @@ export function SpendingScreen() {
         moreLabel={(n) => `${n} more categor${n === 1 ? "y" : "ies"}`}
       />
 
-      <CHSectionLabel className="mb-1 mt-1 px-[22px]">By store</CHSectionLabel>
-      <SpendBarList
-        rows={byStore.rows}
-        previewCount={4}
-        moreLabel={(n) => `${n} more store${n === 1 ? "" : "s"}`}
-        paddingBottom={22}
+      <StoreSection
+        stores={byStore.stores}
+        categories={storeCategoryOptions}
+        selectedCategory={activeStoreCategory}
+        onSelectCategory={setStoreCategory}
       />
     </div>
   );

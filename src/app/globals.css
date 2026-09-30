@@ -25,6 +25,12 @@
   --amber: #d6a45f;
   --amber-soft: #2f2617;
   --danger: #e0806b;
+  /* Categorical chart palette — colorblind-validated in both themes. */
+  --cat-1: #5fa858;
+  --cat-2: #3b7fc4;
+  --cat-3: #ba8712;
+  --cat-4: #bc4432;
+  --cat-5: #a47fc9;
   --elevation-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
   --elevation-lg: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.35);
 
@@ -51,6 +57,11 @@
   --amber: #8f5f22;
   --amber-soft: #eedbb0;
   --danger: #b4442f;
+  --cat-1: #3f7a3a;
+  --cat-2: #2c6e9e;
+  --cat-3: #b8790a;
+  --cat-4: #b23a2c;
+  --cat-5: #7a4f9e;
   --elevation-sm: 0 1px 2px rgba(43, 35, 24, 0.06);
   --elevation-lg: 0 1px 2px rgba(43, 35, 24, 0.05), 0 10px 30px rgba(43, 35, 24, 0.09);
 
@@ -78,6 +89,11 @@
   --color-amber: var(--amber);
   --color-amber-soft: var(--amber-soft);
   --color-danger: var(--danger);
+  --color-cat-1: var(--cat-1);
+  --color-cat-2: var(--cat-2);
+  --color-cat-3: var(--cat-3);
+  --color-cat-4: var(--cat-4);
+  --color-cat-5: var(--cat-5);
 
   --shadow-raised: var(--elevation-sm);
   --shadow-frame: var(--elevation-lg);

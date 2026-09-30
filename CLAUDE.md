@@ -11,14 +11,13 @@ rules this app has to render faithfully — read it first.
 ## tRPC wiring
 
 - `src/lib/trpc.ts` — `createTRPCReact<AppRouter>()`, importing the router
-  **type only** from `@cookhouse/api-contract` (currently `file:../cookhouse-api/contract`
-  in `package.json`, a local link — swap for a real published version once
-  `cookhouse-api` is its own repo). Not a direct import of `cookhouse-api`'s
-  source: the two are meant to become separate repos, and this package is what
-  keeps tRPC's type inference working across that boundary. See
-  `cookhouse-api/CLAUDE.md` → Contract package for how it's built and why it's
-  safe. `import type` is erased at compile time either way, so no backend code
-  (and no Prisma) ships in the bundle.
+  **type only** from `@benson-d/api-contract`, published to GitHub Packages.
+  Not a direct import of `cookhouse-api`'s source: the two are separate repos,
+  and this package is what keeps tRPC's type inference working across that
+  boundary — `cookhouse-mobile` consumes the same published package the same
+  way. See `cookhouse-api/CLAUDE.md` → Contract package for how it's built and
+  why it's safe. `import type` is erased at compile time either way, so no
+  backend code (and no Prisma) ships in the bundle.
 - `src/app/providers.tsx` — client + `QueryClientProvider`. `httpBatchLink`
   attaches the Clerk token via `getToken()` on every request.
 - Backend URL comes from `NEXT_PUBLIC_BACKEND_URL`, defaulting to
@@ -65,7 +64,7 @@ drafts. **react-hook-form + zod** handle forms; reuse the backend's input
 schemas where practical so validation can't drift.
 
 `zod` is pinned to **v3 to match the backend** — the `AppRouter` type crosses
-the package boundary via `@cookhouse/api-contract`, and mismatched majors break
+the package boundary via `@benson-d/api-contract`, and mismatched majors break
 inference in confusing ways.
 
 ## Folder & component architecture
@@ -462,17 +461,26 @@ follows is what actually got built, not just the plan.
   earns its place, since "am I trending up or down" is a shape-over-time
   question a table of six numbers doesn't answer as fast. The table alongside
   it gives exact monthly figures for whoever wants to check one precisely.
-- **Category and store breakdowns are one bar-list component each, not a
-  separate chart and table.** A pie/bar chart next to a table showing the
-  same handful of category-or-store totals is the same numbers rendered
-  twice. One list where each row has the label, the exact dollar amount, and
-  an inline bar for relative size (e.g. `Produce  $120  ▓▓▓▓▓▓▓`) gives both
-  the visual comparison and the precise number without the duplication.
-- **Drill-down is tap, never hover.** Tapping a month on the trend chart
-  calls `spending.topItems` for just that month, on demand — hover doesn't
-  exist on the phones this app is meant to work on (see the grocery list's
-  own mobile-first note below), so a hover-only interaction would just be
-  broken there, not merely suboptimal.
+- **The category breakdown is a bar-list (`SpendBarList`), not a chart plus
+  a table** — one list where each row has the label, the exact dollar
+  amount, and an inline bar for relative size (e.g. `Produce  $120  ▓▓▓▓▓▓▓`)
+  gives both the comparison and the precise number without rendering the
+  same numbers twice.
+- **The store breakdown is a real bar chart** (`StoreSection` →
+  `StoreChart`). `byStore` returns the top 5 stores plus one "Other" row
+  folding the rest, each named store carrying its own top 5 items, so the
+  hover tooltip needs no second query. Bars use the categorical `--cat-1`
+  – `--cat-5` tokens in `globals.css` (colorblind-validated in both themes);
+  "Other" is `--ink-faint`, since it's a leftover bucket, not a peer store.
+  Long store names wrap onto two tick lines (`splitLabel`). A single-select
+  category chip row narrows the chart; its options are the categories with
+  spend in the current range (from `byCategory`), and a selection that falls
+  out of range resets to All.
+- **Trend's drill-down is tap; store's is hover.** Tapping a month on the
+  trend chart calls `spending.topItems` for just that month, on demand —
+  hover doesn't exist on phones. The store chart uses Recharts' own
+  `<Tooltip>` instead: it has no native mobile equivalent to design for,
+  and Recharts' tooltip still opens on tap in a phone-width browser.
 - **Date-range presets are this month, last month, trailing 3/6/9/12 months,
   and this calendar year (Jan–Dec)** — computed client-side into `from`/`to`
   and sent as-is; the backend has no preset concept at all (see root
@@ -488,7 +496,7 @@ semantics, since which one applies is entirely the caller's choice of what
 to do with `onToggle`, not something the chip itself needs to know. And
 **`ExpandRow`** (the dashed "N more, view all" row) started in the receipt
 review's matched-items list and is now shared by the trend table's collapsed
-exact-figures and both spending bar-lists' truncation — generalized to accept
+exact-figures and the category bar-list's truncation — generalized to accept
 `label`/`actionLabel` text directly rather than baking in "view all" or
 "collapse," since a expand-once row and a expand/collapse toggle read
 differently and the component shouldn't need to know which.

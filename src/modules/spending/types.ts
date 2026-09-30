@@ -10,8 +10,9 @@ export type SpendingTopItems = RouterOutputs["spending"]["topItems"];
 export type TopItem = SpendingTopItems["items"][number];
 export type SpendingByCategory = RouterOutputs["spending"]["byCategory"];
 export type SpendingByStore = RouterOutputs["spending"]["byStore"];
+export type StoreSpend = SpendingByStore["stores"][number];
 
-/** This is the one shape `SpendBarList` renders — `byCategory`'s `category` and `byStore`'s `store` both map to `label`. */
+/** The one shape `SpendBarList` renders — `byCategory`'s `category` maps to `label`. */
 export type SpendBarRow = { label: string; total: number };
 
 export type RangePreset = "thisMonth" | "lastMonth" | "3mo" | "6mo" | "9mo" | "12mo" | "thisYear";

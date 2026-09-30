@@ -5,7 +5,36 @@ import {
   formatMonthLong,
   formatCurrency,
   formatRangeLabel,
+  formatStoreName,
+  formatCategory,
+  splitLabel,
 } from "./utils";
+
+describe("formatStoreName", () => {
+  it("title-cases an uppercased store name", () => {
+    expect(formatStoreName("WHOLE FOODS MARKET #10245")).toBe("Whole Foods Market #10245");
+  });
+});
+
+describe("formatCategory", () => {
+  it("capitalizes a raw category", () => {
+    expect(formatCategory("produce")).toBe("Produce");
+  });
+});
+
+describe("splitLabel", () => {
+  it("leaves a short label on one line", () => {
+    expect(splitLabel("Aldi")).toEqual(["Aldi"]);
+  });
+
+  it("breaks a long label at the space nearest its middle", () => {
+    expect(splitLabel("Whole Foods Market #10245")).toEqual(["Whole Foods", "Market #10245"]);
+  });
+
+  it("keeps a long label with no spaces whole", () => {
+    expect(splitLabel("SUPERCALIFRAGILISTIC")).toEqual(["SUPERCALIFRAGILISTIC"]);
+  });
+});
 
 describe("resolveRangePreset", () => {
   beforeEach(() => {

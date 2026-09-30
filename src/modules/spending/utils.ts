@@ -75,3 +75,34 @@ export function formatRangeLabel(from: Date, to: Date): string {
   const toLabel = format(to, sameMonth ? "d, yyyy" : "MMM d, yyyy");
   return `${fromLabel}–${toLabel}`;
 }
+
+/** Stores are stored uppercased ("WHOLE FOODS MARKET"); reads as "Whole Foods Market". */
+export function formatStoreName(name: string): string {
+  return name.toLowerCase().replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+/** "produce" → "Produce", for a raw `Ingredient.category` value shown as a label. */
+export function formatCategory(category: string): string {
+  return category.charAt(0).toUpperCase() + category.slice(1);
+}
+
+/**
+ * Splits a long label onto two lines at the space nearest its middle, for
+ * a chart tick too narrow for one line. Short or unbreakable labels stay whole.
+ */
+export function splitLabel(label: string, maxLineLength = 12): string[] {
+  if (label.length <= maxLineLength) return [label];
+
+  const middle = Math.floor(label.length / 2);
+  const spaceBefore = label.lastIndexOf(" ", middle);
+  const spaceAfter = label.indexOf(" ", middle);
+  const breakAt =
+    spaceBefore === -1
+      ? spaceAfter
+      : spaceAfter === -1 || middle - spaceBefore <= spaceAfter - middle
+        ? spaceBefore
+        : spaceAfter;
+
+  if (breakAt === -1) return [label];
+  return [label.slice(0, breakAt), label.slice(breakAt + 1)];
+}
