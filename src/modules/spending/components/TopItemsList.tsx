@@ -24,7 +24,7 @@ export function TopItemsList({
         <div>
           {items.map((item) => (
             <div
-              key={item.ingredientId}
+              key={item.ingredientId ?? `label:${item.name}`}
               className="flex items-baseline justify-between gap-3 border-b border-line-soft py-[6px] text-[13.5px] last:border-b-0"
             >
               <span>
