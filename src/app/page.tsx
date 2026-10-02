@@ -1,6 +1,6 @@
 "use client";
 
-import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
+import { Show, SignInButton, SignUpButton } from "@clerk/nextjs";
 import { CHButton, CHLink, CartIcon, PotIcon, ReceiptIcon } from "@/common";
 import { placeholderGradient } from "@/modules/recipes/utils/placeholder";
 
@@ -77,7 +77,7 @@ export default function Home() {
           </div>
         </div>
 
-        <SignedOut>
+        <Show when="signed-out">
           <div className="flex w-full flex-col gap-2.5 md:w-auto md:flex-row md:gap-3">
             <SignInButton mode="modal">
               <CHButton variant="primary" className="w-full text-center md:w-auto">
@@ -90,13 +90,13 @@ export default function Home() {
               </CHButton>
             </SignUpButton>
           </div>
-        </SignedOut>
+        </Show>
 
-        <SignedIn>
+        <Show when="signed-in">
           <CHLink variant="primary" href="/recipes">
             Go to recipes
           </CHLink>
-        </SignedIn>
+        </Show>
       </div>
     </div>
   );
