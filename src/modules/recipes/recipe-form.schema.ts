@@ -29,14 +29,14 @@ const optionalInt = (message: string, min: number) =>
     .string()
     .transform((value) => (blank(value) ? undefined : Number(value)))
     .refine((value) => value === undefined || (Number.isInteger(value) && value >= min), {
-      message,
+      error: message,
     });
 
 const optionalPositiveNumber = z
   .string()
   .transform((value) => (blank(value) ? undefined : Number(value)))
   .refine((value) => value === undefined || (Number.isFinite(value) && value > 0), {
-    message: "Must be more than zero",
+    error: "Must be more than zero",
   });
 
 /** Phase 1 of the create flow: a name alone is enough to get an id. */
@@ -100,7 +100,7 @@ export const recipeFormSchema = z
       if (!row.ingredientId) return;
       if (seen.has(row.ingredientId)) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           path: ["ingredients", index, "ingredientId"],
           message: `${row.ingredientName || "This ingredient"} is already listed — combine the amounts into one row`,
         });

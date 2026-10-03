@@ -63,9 +63,11 @@ rolling local copies.
 drafts. **react-hook-form + zod** handle forms; reuse the backend's input
 schemas where practical so validation can't drift.
 
-`zod` is pinned to **v3 to match the backend** — the `AppRouter` type crosses
-the package boundary via `@benson-d/api-contract`, and mismatched majors break
-inference in confusing ways.
+**`zod` versions independently of the backend.** The published
+`@benson-d/api-contract` flattens every procedure's input into plain
+TypeScript — it contains no `zod` types at all — so the frontend's zod major
+has no effect on tRPC's type inference. Here zod only backs the recipe form
+(`recipe-form.schema.ts`, via `@hookform/resolvers`), and is on v4.
 
 ## Folder & component architecture
 
