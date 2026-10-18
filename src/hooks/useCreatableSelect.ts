@@ -7,7 +7,7 @@ const CREATE_OPTION_ID = "__create__";
 
 /**
  * Populates options from an async search function and adds a create option
- * only when the search turns up no options at all.
+ * unless one of them already matches the typed text exactly.
  */
 export function useCreatableSelect<T extends NamedOption>({
   options,
@@ -19,7 +19,10 @@ export function useCreatableSelect<T extends NamedOption>({
   findOrCreate: (name: string) => Promise<T>;
 }) {
   const trimmedSearchValue = inputValue.trim();
-  const canCreate = trimmedSearchValue.length > 0 && options.length === 0;
+  const hasExactMatch = options.some(
+    (option) => option.name.toLowerCase() === trimmedSearchValue.toLowerCase()
+  );
+  const canCreate = trimmedSearchValue.length > 0 && !hasExactMatch;
 
   const createOption = canCreate
     ? ({ id: CREATE_OPTION_ID, name: `Add "${trimmedSearchValue}"` } as T)
