@@ -65,7 +65,17 @@ export function TrendSection({
       </div>
 
       {selectedMonth && (
-        <TopItemsList monthKey={selectedMonth} items={topItems} isLoading={isTopItemsLoading} />
+        <TopItemsList
+          title={`Top items — ${formatMonthLong(selectedMonth)}`}
+          items={topItems.map((item) => ({
+            key: item.ingredientId ?? `label:${item.name}`,
+            name: item.name,
+            total: item.total,
+            count: item.purchaseCount,
+          }))}
+          emptyMessage="No purchases this month."
+          isLoading={isTopItemsLoading}
+        />
       )}
     </div>
   );

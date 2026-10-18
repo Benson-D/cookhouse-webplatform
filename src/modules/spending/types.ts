@@ -12,6 +12,9 @@ export type SpendingByCategory = RouterOutputs["spending"]["byCategory"];
 export type SpendingByStore = RouterOutputs["spending"]["byStore"];
 export type StoreSpend = SpendingByStore["stores"][number];
 
+/** One line of a drill-down list — an item (with its purchase count) or, for a store's "Other" bar, a folded-in store. */
+export type BreakdownRow = { key: string; name: string; total: number; count?: number };
+
 /** The one shape `SpendBarList` renders — `byCategory`'s `category` maps to `label`. */
 export type SpendBarRow = { label: string; total: number };
 

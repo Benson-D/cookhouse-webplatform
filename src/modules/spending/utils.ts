@@ -1,5 +1,5 @@
 import { endOfMonth, format, isSameMonth, startOfMonth, startOfYear, subMonths } from "date-fns";
-import type { DateRange, RangePreset } from "./types";
+import type { BreakdownRow, DateRange, RangePreset, StoreSpend } from "./types";
 
 export const RANGE_PRESETS: { id: RangePreset; label: string }[] = [
   { id: "thisMonth", label: "This month" },
@@ -105,4 +105,21 @@ export function splitLabel(label: string, maxLineLength = 12): string[] {
 
   if (breakAt === -1) return [label];
   return [label.slice(0, breakAt), label.slice(breakAt + 1)];
+}
+
+/** What a store's bar breaks down into: its top items, or for "Other", the stores folded into it. */
+export function storeBreakdownRows(store: StoreSpend): BreakdownRow[] {
+  if (store.foldedStores) {
+    return store.foldedStores.map((folded) => ({
+      key: folded.store,
+      name: formatStoreName(folded.store),
+      total: folded.total,
+    }));
+  }
+  return (store.topItems ?? []).map((item) => ({
+    key: item.ingredientId ?? `label:${item.name}`,
+    name: item.name,
+    total: item.total,
+    count: item.purchaseCount,
+  }));
 }

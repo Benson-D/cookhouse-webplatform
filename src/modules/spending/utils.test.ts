@@ -8,6 +8,7 @@ import {
   formatStoreName,
   formatCategory,
   splitLabel,
+  storeBreakdownRows,
 } from "./utils";
 
 describe("formatStoreName", () => {
@@ -107,5 +108,35 @@ describe("formatRangeLabel", () => {
     expect(formatRangeLabel(new Date(2026, 2, 1), new Date(2026, 7, 23))).toBe(
       "Mar 1, 2026–Aug 23, 2026"
     );
+  });
+});
+
+describe("storeBreakdownRows", () => {
+  it("lists a store's top items with their purchase counts", () => {
+    const rows = storeBreakdownRows({
+      store: "ALDI",
+      storeId: "s1",
+      total: 9,
+      topItems: [
+        { ingredientId: "i1", name: "milk", total: 6, purchaseCount: 2 },
+        { ingredientId: null, name: "soap", total: 3, purchaseCount: 1 },
+      ],
+      foldedStores: null,
+    });
+    expect(rows).toEqual([
+      { key: "i1", name: "milk", total: 6, count: 2 },
+      { key: "label:soap", name: "soap", total: 3, count: 1 },
+    ]);
+  });
+
+  it("lists the stores folded into Other, without counts", () => {
+    const rows = storeBreakdownRows({
+      store: "Other",
+      storeId: null,
+      total: 12,
+      topItems: null,
+      foldedStores: [{ store: "TRADER JOES", total: 12 }],
+    });
+    expect(rows).toEqual([{ key: "TRADER JOES", name: "Trader Joes", total: 12 }]);
   });
 });
