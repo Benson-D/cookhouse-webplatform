@@ -17,7 +17,7 @@ import type { DateRange } from "../types";
  */
 export function useSpendingTrend(range: DateRange) {
   const trendQuery = trpc.spending.trend.useQuery(
-    { from: range.from, to: range.to },
+    { from: range.from, to: range.to, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone },
     { placeholderData: keepPreviousData }
   );
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
